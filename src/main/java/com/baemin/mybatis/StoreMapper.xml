@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="store">
+
+	<select id="storeList" resultType="store">
+
+		SELECT * FROM BM_STORE WHERE CATEGORY = #{category} AND STORE_ADDRESS1 LIKE '${address1}%' 
+
+	</select>
+
+	<select id="storeDetail" resultType="Store">
+		SELECT
+			id,
+			category,
+			store_name,
+			store_address1,
+			store_address2,
+			store_address3,
+			store_phone,
+			store_img,
+			store_thumb,
+			opening_time,
+			closing_time,
+			min_delevery,
+			delevery_time,
+			score,
+			delevery_tip,
+			store_des
+		FROM
+			bm_store
+		WHERE 
+			id = #{id }	
+	</select>
+	
+	<select id="foodList" resultType="Food">
+		SELECT
+		    id,
+		    store_id,
+		    food_name,
+		    food_price,
+		    food_dec,
+		    food_img,
+		    food_thumb
+		FROM
+		    bm_food
+		WHERE
+			STORE_ID = #{id }    
+	</select>
+	
+	<select id="foodOption" resultType="FoodOption">
+		SELECT
+		    id,
+		    food_id,
+		    option_name,
+		    option_price
+		FROM
+		    bm_food_option
+		WHERE
+			food_id = #{foodId }    
+	</select>
+	
+
+
+</mapper>

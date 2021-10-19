@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>배민</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/baemin/css/layout/reset.css">
+    <link rel="stylesheet" href="/baemin/css/layout/header.css">
+    <link rel="stylesheet" href="/baemin/css/layout/nav.css">
+    <link rel="stylesheet" href="/baemin/css/layout/footer.css">
+
+    <!-- 제이쿼리 -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+    <!-- 스윗얼럿 -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <!-- 폰트 어썸 -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+        integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+
+    <!-- 배민 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+    <!-- 파비콘 -->
+    <link href="/img/baemin_favicon.png" rel="shortcut icon" type="image/x-icon">
+
+    <link rel="stylesheet" href="/baemin/css/user/myPage.css">
+
+</head>
+
+
+
+<body>
+
+
+    <header>
+        <div id="header">
+            <a href="/baemin/home.html"><img src="/img/baemin.jpg" alt="이미지"> </a>
+            <button class="clear"
+                style="position: absolute; top:10px; background: #fff; border: 1px solid #ddd; padding: 5px; border-radius: 10px;">
+                장바구니 세션 초기화</button>
+
+            <!-- 임시 -->
+            <div class="admin" style="font-size: 13px;
+                             position: absolute; right: 10px; top : 10px;
+                             font-weight: bold ; ">
+                <div
+                    style="border: 1px solid #ddd; border-radius: 10px; padding: 5px; background: #fff; font-size: 13px;">
+                    <a href="/admin">임시 사장님 페이지</a>
+                </div>
+                <c:if test="${empty user }">
+                    <span>
+                        ${guest }
+                    </span>
+                </c:if>
+            </div>
+            <!-- 임시 -->
+
+        </div>
+        <script type="text/javascript">
+            $(".clear").click(function () {
+                $.ajax({
+                    url: "/clear",
+                    type: "post",
+                    async: false,
+                    success: function (result) {
+
+                        alert("장바구니 세션 초기화 성공");
+
+                    } // success
+                }); // ajax
+            })
+
+
+
+
+        </script>
+    </header>
+    <!-- 헤더 -->
+
+
+    <script>
+        console.log(location.href);
+        console.log(location.host);
+        console.log(location.pathname); // baemin/home
+        console.log(location.hostname);
+    </script>
+
+
+    <section class="title">
+        <h1>my 배민</h1>
+    </section>
+
+
+    <!-- 콘텐츠 -->
+    <main>
+        <div class="container">
+
+            <div class="content">
+
+                <div class="content_box">
+                    <c:if test="${empty user}">
+                        <span class="user">
+                            <a href="/baemin/user/login.html"><span>로그인을 해주세요</span></a>
+                        </span>
+                    </c:if>
+
+                    <c:if test="${!empty user}">
+                        <span class="user">
+                            <a href="/myPage/info"><span>shol7684</span></a>
+                            <button type="button" class="logout">로그아웃</button>
+                        </span>
+                    </c:if>
+
+                    <ul>
+                        <li><a href="/myPage/point"><span><img src="/img/icon11.png"
+                                        alt="이미지"></span><span>포인트</span></a></li>
+                        <li><a class="updating" href="/myPage/coupon" onclick="return false;"><span><img
+                                        src="/img/icon22.png" alt="이미지"></span><span>쿠폰함</span></a></li>
+                        <li><a class="updating" href="/myPage/gift" onclick="return false;"><span><img
+                                        src="/img/icon33.png" alt="이미지"></span><span>선물함</span></a></li>
+                    </ul>
+
+                    <ul>
+                        <li><a href="/myPage/dibs"><span></span><img src="/img/icon44.png"
+                                    alt="이미지"><span>찜한가게</span></a></li>
+                        <li><a href="/orderList"><span></span><img src="/img/icon55.png"
+                                    alt="이미지"><span>주문내역</span></a></li>
+                        <li><a href="/myPage/myReview"><span></span><img src="/img/icon66.png"
+                                    alt="이미지"><span>리뷰관리</span></a></li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <!-- 콘텐츠 -->
+
+
+    <!-- 하단 메뉴 -->
+    <nav>
+        <ul>
+            <li><a href="/baemin/home.html"></a></li>
+            <li><a href="/baemin/storeSerch.html"></a></li>
+            <li><a href="/baemin/likes.html"></a></li>
+            <li><a href="/baemin/orderList.html"></a></li>
+            <li><a href="/baemin/user/myPage.html"></a></li>
+
+        </ul>
+    </nav>
+    <!-- 하단 메뉴 -->
+
+    <!-- 푸터 -->
+    <footer>
+        <div class="box">
+            <div>박수민</div>
+            <div>010-2885-7684</div>
+            <div>shol7684@naver.com</div>
+        </div>
+    </footer>
+    <!-- 푸터 -->
+
+    <script type="text/javascript">
+
+        $(".updating").click(function () {
+            swal("업데이트 중 입니다");
+        })
+
+        $(".logout").click(function () {
+            location.href = "/logout2";
+        })
+    </script>
+
+
+
+
+
+</body>
+
+</html>

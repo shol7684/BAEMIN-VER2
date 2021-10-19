@@ -1,0 +1,148 @@
+main {
+	width: 70%;
+	margin: 40px auto;
+	border: 1px solid #ddd;
+	border-radius: 15px;
+	padding-bottom: 40px;
+}
+
+.login_box {
+	margin: 0px auto;
+	text-align: center;
+}
+
+.login_box img {
+	width: 50%;
+}
+
+.login_box .input_aera {
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	margin: 10px auto;
+	height: 50px;
+	width: 80%;
+}
+
+.login_box input {
+	display: block;
+	margin: 10px auto;
+	width: 97%;
+	height: 30px;
+	font-size: 15px;
+	border: none;
+	padding-left: 3%;
+}
+
+.login_box .login_btn,
+#login_btn  {
+	background: #2AC1BC;
+	border-radius: 10px;
+	width: 80%;
+	height: 50px;
+	color: #fff;
+	cursor: pointer;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.login_box .box {
+	display: flex;
+	justify-content: space-between; 
+	width: 80%;
+	margin: 0 auto 40px auto;
+}
+
+.login_box .box i {
+	font-size: 20px;
+	color: #999999;
+}
+
+.login_box .box label {
+	font-size: 16px;
+}
+
+input[type="checkbox"] {
+	width: 20px;
+	height: 20px;
+	display: none;
+}
+
+.login_box .box span {
+	font-size: 16px;
+}
+
+#kakao_id_login img {
+	width: 200px;
+}
+
+#oauth_login div {
+	width: 600px;
+	margin: 5px auto;
+	height: 65px;
+}
+
+#oauth_login img {
+	height: 100%;
+}
+
+.join {
+	margin-top: 20px;
+}
+.join a {
+	color: rgb(43,206,203);
+	font-weight: bold;
+	font-size: 16px;
+	margin-top: 20px;
+}
+
+@media ( max-width :1023px) {
+	main {
+		width: 90%;
+	}
+}
+
+@media ( max-width : 767px ) {
+	main {
+		width: 99%;
+	}
+	
+	.login_box .input_aera {
+		width: 90%;
+	}
+	
+	.login_box .login_btn {
+		width: 90%;
+	}
+	
+	.login_box .box {
+		width: 90%;
+	}
+
+	#oauth_login div {
+		width: 500px;
+		height: 50px;
+	}
+
+	
+}
+@media (max-width: 550px) {
+	#oauth_login div {
+		width: 90%;
+		height: 40px;
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

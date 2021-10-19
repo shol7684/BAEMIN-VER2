@@ -1,0 +1,124 @@
+
+
+section.title {
+    width: 100%;
+}
+
+section.title h1 {
+    text-align: center;
+    margin : 30px 0 30px 0 ;
+}
+
+/* 콘텐츠 */
+
+
+main .container {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+main .content {
+	padding-bottom: 50px;
+}
+
+main .content .content_box{
+	border: 1px solid #ddd; 
+	width: 67%;
+	margin: 0 auto;
+}
+
+
+main .content .user {
+    display: block;
+    font-size: 18px;
+    padding: 20px 50px 20px 50px;
+    margin: 0 auto;
+    border-bottom: 1px solid #e4e8eb;
+    position: relative;
+}
+
+main .content .user a {
+	display: inline-block;
+	width: 90%;
+}
+
+main .content .user span::after {
+	content: '>';
+	color: rgb(202, 198, 198);
+	margin-left: 2%;
+}
+
+main .content .user button {
+	position: absolute;
+	right: 15px;
+	top : 23px;
+	font-size: 15px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	
+}
+
+main .content ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+}
+
+
+main .content li {
+    width: 33%;
+    border-bottom: 1px solid #e4e8eb;
+	border-right: 1px solid #e4e8eb;
+	
+	display: flex;
+	justify-content: center;
+}
+
+main .content li:last-child {
+	border-right: none;
+}
+
+main .content li a span:last-child {
+	display: block;
+	text-align: center;
+	margin-top: -15px;
+	margin-bottom: 15px;
+}
+
+
+
+
+main .content img {
+    width: 130px;
+}
+
+/* 콘텐츠 */
+
+
+@media (max-width:1023px) {
+	main .container {
+	    width: 95%;
+	}
+	
+	main .content .content_box{
+		width: 99%;
+	}
+}
+@media  (max-width:767px) {
+	main .container {
+	    width: 100%;
+	}
+	
+	section.title h1 {
+	    margin : 30px 0 20px 0 ;
+	}
+	
+	main .content img {
+	    width: 80px;
+	}
+
+}
+
+

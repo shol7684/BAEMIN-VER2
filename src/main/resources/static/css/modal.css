@@ -1,0 +1,150 @@
+/*--------- 모달 공통 ---------*/
+
+ .modal {
+        width: 560px;
+        height:85vh;
+        max-height:670px; 
+        position: fixed;
+        left: 50%;
+        top: 100%;
+        z-index: 200;
+        margin-left: -275px;
+        margin-top: 3%;
+        font-size: 20px;
+        border-radius: 10px;
+        overflow-x : hidden;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 3px 3px 20px 10px rgb(0 0 0 / 25%);
+    }
+    
+	#modal_header {
+		background: #333333;
+		height: 40px;
+		position: relative;
+		width: 100%;
+		display: block;
+       
+	} 
+    
+    .closeA {
+        
+		background: #333333;
+        border: none;
+        color: #fff;
+        position: absolute;
+        top : 30%;
+        right: 2%;
+        width: 4%;
+        font-size: 40px;
+        line-height: 10px;
+        cursor: pointer;
+    }
+    
+    .closeB {
+    	background: #808080;
+    }
+
+    .modal h1 {
+ 
+        font-size: 24px;
+        color: #fff;
+        text-align: center;
+        padding-top: 5px;
+    }
+        
+	#modal_bg {
+		background: rgba(0,0,0,0.3);
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
+		top: 0;
+		left: 0;
+		display: none;
+	}
+
+    
+	.modal_box {
+		position: relative;
+		overflow: auto;
+		overflow-x:hidden; 
+		/* height: 70vh; */
+		height :calc(100% - 81px);
+	}
+	
+	.modal_box::-webkit-scrollbar {
+	    display: none; /* Chrome, Safari, Opera*/
+	}
+    
+    .modal #btn_box {
+    	position: absolute;
+		bottom: 0;
+		width: 100%;
+		font-size: 18px;
+		border-top: 1px solid #ddd;
+    }
+    
+    .modal .btn_box input,
+    .modal #btn_box button{
+		height: 40px;
+		font-size: 20px;
+		width: 50%;
+		float: left;
+		border: none;
+	    color: white;    
+    }
+    
+    .modal .btn_box input[type="submit"] {
+    	background:#30DAD9;
+    }
+    
+    
+/*--------- 모달 공통 ---------*/
+
+@media (max-width:1023px) {
+	
+}
+
+
+@media  (max-width:767px) {
+	 .modal {
+        width: 80%;
+        margin-left: -40%;
+    }
+    
+     .closeA {
+        display: none;
+    }
+    
+   	 .modal {
+		width: 100%;
+		height:99vh;
+		margin: 0;
+		margin-top: 1%;
+		left: 0;
+		max-height: 100vh;
+    }
+    
+	.modal h1 {
+        height: 30px;
+        font-size: 20px;
+    }
+    
+	.modal .btn_box input,
+    .modal .btn_box button{
+		height: 45px;
+    }
+	
+}
+
+@media  (max-width:480px) {
+      .modal h1 {
+        height: 30px;
+        font-size: 20px;
+    }
+    
+	
+}
+
+
+
