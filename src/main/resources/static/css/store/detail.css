@@ -65,7 +65,7 @@ nav .inf button {
 /* -------------- 장바구니 -------------- */
 
 /* 모바일 카트 */
-.cart_img {
+.m_cart_img {
 	position: fixed;
 	bottom: 3%;
 	right: 3%;
@@ -73,7 +73,7 @@ nav .inf button {
 	z-index:10;
 }
 
-.cart_img_box {
+.m_cart_img_box {
 	width: 70px;
 	height:70px;
 	border-radius: 50%;
@@ -87,7 +87,7 @@ nav .inf button {
 	color: #fff;
 }
 
-.cart_count {
+.m_cart_count {
 	width: 15px;
 	height:15px;
 	border-radius: 50%;
@@ -665,7 +665,7 @@ main .comment li .boss {
 	#cart {
 		display: none;
 	}
-	.cart_img {
+	.m_cart_img {
 		display: block;
 	}
 	main {

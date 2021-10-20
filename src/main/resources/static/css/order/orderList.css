@@ -1,0 +1,286 @@
+body {
+	background: #F6F6F6;
+}
+
+/* ------------리뷰 쓰기-------------- */
+	.review_modal form,
+	.review_modify_modal form {
+		height: 100%;
+	}
+	
+	.review_modal .modal_box,
+	.review_modify_modal .modal_box {
+		height: calc(100% - 80px);
+	}
+
+	.score_box {
+		width: 80%;
+		margin: 0 auto;
+		text-align: center;
+		padding: 20px;
+	}
+	
+	.score_box .fas {
+		color: gold;
+	}
+	
+	
+	.review_text {
+		margin: 0 auto;
+		width: 90%;	
+	}
+	
+	.review_text textarea {
+		width: 90%;
+		margin: 0 auto 30px auto;
+		display: block;
+		padding: 5px;
+		font-size: 16px;
+		
+	
+	}
+	
+	.review_btn {
+		position:absolute;
+		width: 100%;
+		bottom: 0;
+	}
+
+
+    .modal .btn_box input[type="submit"] {
+    	background: #ddd;
+    }
+
+	.img_box {
+		width: 80%;
+		margin: 0 auto;
+		
+	}
+	
+	.img_box div {
+		width: 200px;
+		margin-top: 20px;
+		position: relative;
+		display: none;
+	}
+	
+	.img_box img {
+		width: 200px;
+		height:200px;
+		border-radius: 10px;
+		
+		margin-bottom: 50px;
+
+	}
+	
+	.img_close {
+		background: rgba(0,0,0,0.7);
+		position: absolute;
+		top:0;
+		right:0;
+		width: 25px;
+		height: 25px;
+		color: #fff;
+		border-radius: 5px;
+		
+	}
+
+
+/* ------------리뷰 쓰기-------------- */
+
+	.wrap {
+	    width: 1000px;
+	    margin: 0 auto;
+	    display: flex;
+	    flex-wrap: wrap;
+	    min-height: calc(100vh - 210px);
+	}
+	
+	section.title {
+	    width: 100%;
+	}
+	
+	section.title h1 {
+	    text-align: center;
+	    margin : 30px 0 50px 0 ;
+	}
+
+	/* main */
+	main {
+	    width: 100%;
+	}
+	
+	main .order_list .temp_img {
+		margin: 20px auto;
+	    display: block;
+	    width: 90%;
+	    max-width: 500px;
+	}
+	    
+ 	main ul .order_box {
+	    width: 1000px;
+	    height: 150px;
+	    margin:  0 auto;
+	    border-bottom: 1px solid #ccc;
+	
+	    background: cornsilk;
+	    padding: 20px ;
+	} 
+	
+	
+	
+ 	
+	#order_list li {
+	    border : 1px solid #ddd;
+	    height: 150px;
+	    padding : 30px 0px 50px 70px;
+	    margin: 20px;
+	    position: relative;
+	    border-bottom: 2px solid #ddd;
+	    
+	}
+
+	#order_list .delevery_state {
+		position : relative;
+		bottom: 5px;
+		left:145px;
+		font-size: 15px;
+		color: #999;
+		width: 50%;
+	}
+		
+	
+	#order_list li img {
+	    width: 180px;
+	    height: 180px;
+	    position: absolute;
+	    top: 15px;
+	    left: 15px;
+	    background-size: cover;
+	    border-radius: 10px;
+	}
+	
+	.review_btn_box {
+		position: absolute;
+		right: 15px;
+		top:15px;
+		width:100px;
+		height: 200px;
+	}
+	
+	
+	.review_btn_box button {
+		margin-top: 10px;
+		width: 100%;
+		padding: 5px;
+		background: #fff;
+	}
+
+	#order_list .inf {
+	     left : 145px;
+	     position: relative;
+	     font-size: 18px;
+	}
+	
+	#order_list .inf h2{
+	     font-size: 18px;
+	     font-weight: bold;
+	     display: inline;
+	} 
+	
+	    /* main */
+	    
+	
+/* 	footer {
+	    clear: both;
+	    height: 200px;
+	} */
+	
+
+	
+	
+	
+@media (max-width:1023px) {
+	.wrap {
+		width: 99%;
+	}
+	section.title {
+	    height: 80px;
+	}	
+	
+	#order_list li img {
+	    width: 130px;
+	    height: 130px;
+	    top: 20px;
+	    left: 15px;
+	}
+	#order_list .delevery_state {
+		bottom: 6px;
+		left:83px;
+		font-size: 13px;
+	}
+		#order_list .inf {
+	     left : 83px;
+	}
+	
+	
+}
+
+
+@media  (max-width:767px) {
+	.wrap {
+		width: 99%;
+		min-height: calc(100vh - 160px);
+	}
+	#order_list li {
+		width: 100%;
+		margin:0;
+		padding: 10px 0 10px 0;
+		height: 100px;
+	}	
+	
+	#order_list li img {
+	    width: 90px;
+	    height: 90px;
+	    top: 10px;
+	    left: 5px;
+	}
+	
+	#order_list .delevery_state {
+		bottom: 0px;
+		left:105px;
+	}
+	
+	.review_btn_box {
+		right: 0px;
+		top: 5px
+	}
+	
+	.review_btn_box button {
+		width:80px;
+		font-size: 10px;
+	}
+
+	
+	#order_list .inf {
+	     left : 105px;
+	     font-size: 15px;
+	}
+	
+	#order_list .inf h2{
+	     font-size: 15px;
+	     display: inline;
+	} 
+
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

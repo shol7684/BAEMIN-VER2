@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.baemin.vo.Cart;
+import com.baemin.vo.OrderInfo;
+import com.baemin.vo.OrderList;
 
 @Repository
 public class OrderDAOImp implements OrderDAO {
@@ -16,26 +18,38 @@ public class OrderDAOImp implements OrderDAO {
 	private SqlSession sql;
 
 	@Override
+	public int getDeleveryTip(int storeId) {
+		return sql.selectOne("order.getDeleveryTip", storeId);
+	}
+
+	@Override
 	public List<Long> foodPriceList(List<Cart> cartList) {
-		return sql.selectList("order.foodPriceList" , cartList);
+		return sql.selectList("order.foodPriceList", cartList);
 	}
 
 	@Override
 	public List<Integer> optionPriceList(List<Cart> cartList) {
-		return sql.selectList("order.optionPriceList" , cartList);
+		return sql.selectList("order.optionPriceList", cartList);
 	}
 
 	@Override
-	public void nonUserPayment(Map cartMap) {
-		sql.insert("order.nonUserPayment" , cartMap);
+	public void order(OrderInfo info) {
+		sql.insert("order.order", info);
 	}
 
 	@Override
-	public void userPayment(Map cartMap) {
-		sql.insert("order.userPayment" , cartMap);
-		
+	public void orderDetail(Map<String, String> orderDetail) {
+		sql.insert("order.orderDetail", orderDetail);
 	}
 
-	
+	@Override
+	public List<OrderList> orderList(long userId) {
+		return sql.selectList("order.orderList", userId);
+	}
+
+	@Override
+	public OrderList orderListDetail(String orderNum) {
+		return sql.selectOne("order.orderListDetail", orderNum);
+	}
 
 }

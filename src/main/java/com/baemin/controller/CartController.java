@@ -22,7 +22,7 @@ public class CartController {
 
 	@ResponseBody
 	@PostMapping("/addCart")
-	public Map<String, Object> addCart(Cart cart, int amount, int deleveryTip, String storeName, HttpSession session) {
+	public Map<String, Object> addCart(Cart cart, int storeId, int amount, int deleveryTip, String storeName, HttpSession session) {
 
 		Map<String, Object> cartMap = (Map<String, Object>) session.getAttribute("cartMap");
 
@@ -49,7 +49,7 @@ public class CartController {
 			totalPriceList.add(totalPrice);
 			
 			// 장바구니가 비었을때 최초 한번만 입력
-			cartMap.put("storeId", cart.getStoreId());  // 다른 가게에서 다시 장바구니에 담는경우를 구분하기 위해 추가
+			cartMap.put("storeId", storeId);  // 다른 가게에서 다시 장바구니에 담는경우를 구분하기 위해 추가
 			cartMap.put("menuTotalPrice", totalPrice);
 			cartMap.put("storeName", storeName);
 			cartMap.put("deleveryTip", deleveryTip);

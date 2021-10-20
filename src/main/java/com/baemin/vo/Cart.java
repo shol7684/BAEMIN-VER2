@@ -11,7 +11,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Cart {
-	private int storeId;
 	private long foodId;
 	private String foodName;
 	private long foodPrice;
@@ -21,6 +20,8 @@ public class Cart {
 	private String[] foodOptionName;
 	private int[] foodOptionPrice;
 	private long[] foodOptionId;
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -28,7 +29,7 @@ public class Cart {
 		result = prime * result + Arrays.hashCode(foodOptionId);
 		result = prime * result + Arrays.hashCode(foodOptionName);
 		result = prime * result + Arrays.hashCode(foodOptionPrice);
-		result = prime * result + Objects.hash(foodId, foodName, foodPrice, storeId);
+		result = prime * result + Objects.hash(foodId, foodName, foodPrice);
 		return result;
 	}
 	@Override
@@ -43,10 +44,11 @@ public class Cart {
 		return foodId == other.foodId && Objects.equals(foodName, other.foodName)
 				&& Arrays.equals(foodOptionId, other.foodOptionId)
 				&& Arrays.equals(foodOptionName, other.foodOptionName)
-				&& Arrays.equals(foodOptionPrice, other.foodOptionPrice) && foodPrice == other.foodPrice
-				&& storeId == other.storeId;
+				&& Arrays.equals(foodOptionPrice, other.foodOptionPrice) && foodPrice == other.foodPrice;
 	}
-
+	
+	
+	
 
 	
 }

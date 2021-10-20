@@ -4,11 +4,23 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="order">
 
+
+	<select id="getDeleveryTip" resultType="int">
+		SELECT DELEVERY_TIP FROM BM_STORE WHERE ID = #{storeId }
+	</select>
+
+
+
+
+
 	<select id="foodPriceList" resultType="long">
 		<foreach collection="list" item="item"  separator="union all" >
 			select sum(food_price) sum from bm_food where id = #{item.foodId}
 		</foreach>
 	</select>
+	
+	
+	
 	
 	<select id="optionPriceList" resultType="int">
 		
@@ -27,6 +39,157 @@
 		</foreach>
 		
 	</select>
+	
+	
+	
+	<insert id="order">
+		
+		<if test="userId == 0">
+		
+			INSERT INTO BM_ORDER_NON_USER (
+			    ORDER_NUM
+			    ,PAY_METHOD
+			    ,PHONE
+			    ,DELEVERY_ADDRESS1
+			    ,DELEVERY_ADDRESS2
+			    ,DELEVERY_ADDRESS3
+		    ) VALUES (
+			    ${orderNum }
+			    ,#{payMethod }
+			    ,#{phone }
+			    ,#{deleveryAddress1 }
+			    ,#{deleveryAddress2 }
+			    ,#{deleveryAddress3 } 
+		    )
+		</if>
+		
+		<if test="userId != 0">
+		
+			INSERT INTO BM_ORDER_USER (
+			    ORDER_NUM
+			    ,USER_ID
+			    ,PAY_METHOD
+			    ,PHONE
+			    ,DELEVERY_ADDRESS1
+			    ,DELEVERY_ADDRESS2
+			    ,DELEVERY_ADDRESS3
+		    ) VALUES (
+			    ${orderNum }
+			    ,#{userId }
+			    ,#{payMethod }
+			    ,#{phone }
+			    ,#{deleveryAddress1 }
+			    ,#{deleveryAddress2 }
+			    ,#{deleveryAddress3 } 
+		    )
+		</if>
+	</insert>
+	
+	
+	<insert id="orderDetail">
+		INSERT INTO BM_ORDER_DETAIL_USER (
+			ORDER_NUM
+			,AMOUNT
+			,FOOD_PRICE
+			,TOTAL_PRICE
+			,FOOD_INFO
+			,STORE_ID
+			,USED_POINT
+			,REQUEST
+		) VALUES (
+			#{orderNum }
+			,#{amount }
+			,#{foodPrice }
+			,#{totalPrice }
+			,#{foodInfo }
+			,#{storeId }
+			,#{usedPoint }
+			,#{request }
+		)
+	
+	</insert>
+	
+	
+	
+	<select id="orderList" resultType="OrderList">
+        SELECT
+		    o.order_num,
+		    o.user_id,
+		    o.order_date,
+		    o.pay_method,
+		    o.delevery_status,
+		    o.delevery_address1,
+		    o.delevery_address2,
+		    o.delevery_address3,
+		    d.store_id,
+		    d.amount,
+		    d.food_price,
+		    d.total_price,
+		    d.food_info,
+		    d.used_point,
+		    s.store_name,
+		    s.store_img,
+		    s.store_thumb,
+		    s.delevery_tip
+		FROM
+		    bm_order_user o
+		LEFT JOIN
+		    bm_order_detail_user d
+		ON
+		    o.order_num = d.order_num
+		LEFT JOIN
+		    bm_store s
+		ON
+		    d.store_id = s.id 
+		 WHERE 
+		    o.user_id = #{userId }
+		 ORDER BY
+		 	o.order_date desc   
+	</select>
+	
+	
+	
+	<select id="orderListDetail" resultType="OrderList">
+		SELECT
+		    o.order_num,
+		    o.user_id,
+		    o.phone,
+		    o.order_date,
+		    o.pay_method,
+		    o.delevery_status,
+		    o.delevery_address1,
+		    o.delevery_address2,
+		    o.delevery_address3,
+		    d.store_id,
+		    d.amount,
+		    d.food_price,
+		    d.total_price,
+		    d.food_info,
+		    d.used_point,
+		    d.request,
+		    s.store_name,
+		    s.store_img,
+		    s.store_thumb,
+		    s.delevery_tip
+		FROM
+		    bm_order_user o
+		LEFT JOIN
+		    bm_order_detail_user d
+		ON
+		    o.order_num = d.order_num
+		LEFT JOIN
+		    bm_store s
+		ON
+		    d.store_id = s.id 
+		 WHERE 
+		    o.order_num = #{orderNum }
+		 ORDER BY
+		 	o.order_date desc   
+	</select>
+	
+
+	
+	
 	
 	
 	

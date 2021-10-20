@@ -49,10 +49,10 @@
 	    </nav>
 	         
 	<!-- ---------------------------------- 모바일 카트 ---------------------------------- -->
-   	<div class="cart_img">
-   		<div class="cart_img_box">
+   	<div class="m_cart_img">
+   		<div class="m_cart_img_box">
    			<i class="fas fa-shopping-cart"></i>
-   			<span class="cart_count"></span>
+   			<span class="m_cart_count"></span>
    		</div>
    	</div>
   	<!-- ---------------------------------- 모바일 카트 ---------------------------------- -->

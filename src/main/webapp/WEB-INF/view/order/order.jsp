@@ -30,7 +30,7 @@
 				<h2>주문정보</h2>
 				
 				<ul>
-					<c:forEach  begin="0" end="${fn:length(cartMap.cartList)  }" var="j"  >
+					<c:forEach begin="0" end="${fn:length(cartMap.cartList) -1 }" var="j"  >
 					
 						<li>
 							<input type="hidden" value="${cartList1.menuName }" name="menuName">
@@ -79,21 +79,19 @@
 				<h2>배달정보 </h2>
 				<div class="address1">주소 : ${BMaddress2} <button type="button">주소 변경하기</button></div>
 				
-				<input type="hidden" value="${cartList[0].storeNum }" name="storeNum"> 
-				<input type="hidden" value="${cartList[0].storeName }" name="storeName"> 
-				<input type="hidden" value="${address.address1 }" name="userAddress1">
-				<input type="hidden" value="${address.address2 }" name="userAddress2">
+				<input type="hidden" value="${BMaddress1 }" name="deleveryAddress1"> 
+				<input type="hidden" value="${BMaddress2 }" name="deleveryAddress2"> 
 				
 				
 				<div>상세 주소</div>
-				<div class="input_area"><input type="text" value="${BMaddress3 }"  name="userAddress3"> </div>
+				<div class="input_area"><input type="text" value="${BMaddress3 }"  name="deleveryAddress3"> </div>
 				 
 				<div>전화번호</div>
 				<c:if test="${!empty user  }">
-					<div class="input_area"> <input type="number" value="${user.phone }" name="userPhone" required> </div>
+					<div class="input_area"> <input type="number" value="${user.phone }" name="phone" required readonly> </div>
 				</c:if>
 				<c:if test="${empty user  }">
-					<div class="input_area"> <input type="number" value="01028857684" name="userPhone" required> </div>
+					<div class="input_area"> <input type="number" value="01028857684" name="phone" required> </div>
 				</c:if>
 			</div>
 		<hr>
@@ -101,7 +99,7 @@
 		
 		<li class="request">
 			<div>요청사항</div>
-				<textarea rows="5" cols="50" name="request" maxlength="1000"  ></textarea> 
+				<textarea rows="5" cols="50" name="request" maxlength="500"  ></textarea> 
 			<hr>
 		</li>
 		
@@ -132,7 +130,7 @@
 				
 				<div class="point_input_box" >
 					<span>
-						<input type="number" name="usePoint" min="0" class="point_input" placeholder="사용 할 포인트"  >
+						<input type="number" name="usedPoint" value="0" min="0" class="point_input" placeholder="사용 할 포인트"  >
 						<button class="use_point" type="button">사용하기</button>
 					</span>
 				</div>
@@ -149,10 +147,11 @@
 			<div class="point_dis"><span>포인트 할인 </span><span></span> </div>
 				
 			<div class="total">
-				<fm:formatNumber value="${cartMap.menuTotalPrice + cartMap.deleveryTip}"  pattern="###,###" />원 결제하기</div>
+				<fm:formatNumber value="${cartMap.menuTotalPrice + cartMap.deleveryTip}"  pattern="###,###" />원 결제하기
+			</div>
 			
 			<input type="hidden" value="${cartMap.menuTotalPrice + cartMap.deleveryTip}" name="total" id="total"> 
-			<input type="hidden" value="${cartList[0].deleveryTip }" name="deleveryTip" id="delevery_tip"> 
+			<input type="hidden" value="${cartMap.deleveryTip }" name="deleveryTip" id="delevery_tip"> 
 			
 			
 			<input type="submit" value="주문하기" class="order_btn">

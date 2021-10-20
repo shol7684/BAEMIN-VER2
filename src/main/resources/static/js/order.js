@@ -1,11 +1,8 @@
 	
 	$(".amount_box button").click(function(){
 		const amount = $(this).siblings("#amount");
-		let foodPrice = $(this).parent().siblings(".sum");
-		
-		
-		
 		const cartId = $(this).parent().parent().parent("li").index() / 2;
+		let foodPrice = $(this).parent().siblings(".sum");
 		let clickBtn = "";
 		
 		if($(this).hasClass("plus")){
@@ -38,7 +35,8 @@
     	}); // ajax
 		
 	})
-	
+
+
 
 	
 	if($("#user_id").val() != ""){
@@ -47,20 +45,21 @@
 			$(".point_input_box").fadeToggle(200);
 		});
 		
-		
-		
-		
 		$(".use_point").click(function(){
 			
 			const point = Number($(".point_input").val());
-			const deleveryTip = Number($("#delevery_tip").val());
+			/*const deleveryTip = Number($("#delevery_tip").val());*/
 			const total = Number($("#total").val());
+			
+			
 			if(point != 0) {
 				$(".total").html("");
 				
-				const ht = (deleveryTip + total - point).toLocaleString() +"원 결제하기";
+				
+				const html = (total - point).toLocaleString() +"원 결제하기";
 				         
-				$(".total").html(ht);
+				         
+				$(".total").html(html);
 				
 				$(".point_dis").show();
 				$(".point_dis").html("포인트 할인 -" + point.toLocaleString() + "원");
@@ -82,7 +81,8 @@
 				$(this).val(null);
 		});
 		
-	} else {
+	} 
+	else {
 		 swal("", {
 			  buttons: ["비회원으로 주문하기", "로그인"],
 			})
