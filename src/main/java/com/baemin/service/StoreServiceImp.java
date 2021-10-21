@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baemin.dao.StoreDAO;
 import com.baemin.vo.Food;
+import com.baemin.vo.Review;
 import com.baemin.vo.Store;
 
 @Service
@@ -32,11 +33,13 @@ public class StoreServiceImp implements StoreService {
 		
 		Store storeInfo = storeDAO.storeDetail(id); 
 		List<Food> foodList = storeDAO.foodList(id);
+		List<Review> reviewList = storeDAO.reviewList(id);
 		
 		System.out.println(foodList);
 		
 		map.put("storeInfo", storeInfo);
 		map.put("foodList", foodList);
+		map.put("reviewList", reviewList);
 		
 		return map;
 	}
@@ -44,6 +47,12 @@ public class StoreServiceImp implements StoreService {
 	@Override
 	public List<String> foodOption(int foodId) {
 		return storeDAO.foodOption(foodId);
+	}
+
+	@Override
+	public void reviewWrite(Review review) {
+		storeDAO.reviewWrite(review);
+		
 	}
 	
 	

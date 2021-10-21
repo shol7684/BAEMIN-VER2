@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin">
+
+	<select id="orderList" resultType="OrderList">
+SELECT * FROM (
+	SELECT
+	    U.order_num, U.user_id, U.order_date, U.pay_method, U.delevery_status, U.phone, U.delevery_address1,
+	    U.delevery_address2, U.delevery_address3, UD.store_id, UD.amount, UD.used_point, UD.food_price,
+	    UD.total_price, UD.food_info, UD.request
+	FROM bm_order_user U LEFT JOIN     
+	    bm_order_detail_user UD ON  U.ORDER_NUM = UD.ORDER_NUM
+	    
+	  UNION ALL 
+	 
+	SELECT
+	    NU.order_num, NU.user_id, NU.order_date, NU.pay_method, NU.delevery_status, NU.phone, NU.delevery_address1,
+	    NU.delevery_address2, NU.delevery_address3, NUD.store_id, NUD.amount, NUD.used_point, NUD.food_price,
+	    NUD.total_price, NUD.food_info, NUD.request
+	FROM bm_order_non_user NU LEFT JOIN 
+	    bm_order_detail_non_user NUD ON  NU.ORDER_NUM = NUD.ORDER_NUM  
+)
+	</select>
+	
+	
+	
+	<select id="storeList" resultType="Store">
+	SELECT * FROM 
+		BM_STORE s
+	        LEFT JOIN    
+				( SELECT r.store_id, r.score, r.review_count, r.boss_comment_count, c.order_count FROM  
+					( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r ,
+					( SELECT store_id, SUM(order_count) order_count from (
+						SELECT store_id, count(*) order_count FROM bm_order_detail_user GROUP BY store_id
+							UNION ALL
+						SELECT store_id, count(*) order_count FROM bm_order_detail_non_user GROUP BY store_id ) GROUP BY store_id ) c 
+				) t
+			ON s.id = t.store_id     
+	
+	</select>
+	
+	
+	<insert id="storeRegist">
+		INSERT INTO bm_store (
+		    id,
+		    category,
+		    store_name,
+		    store_address1,
+		    store_address2,
+		    store_address3,
+		    store_phone,
+		    store_img,
+		    store_thumb,
+		    opening_time,
+		    closing_time,
+		    min_delevery,
+		    delevery_time,
+		    delevery_tip,
+		    store_des
+		) VALUES (
+		    STORE_ID_SEQ.NEXTVAL
+		    ,#{category }
+		    ,#{storeName }
+		    ,#{storeAddress1 }
+		    ,#{storeAddress2 }
+		    ,#{storeAddress3 }
+		    ,#{storePhone }
+		    ,#{storeImg }
+		    ,#{storeThumb }
+		    ,#{openingTime }
+		    ,#{closingTime }
+		    ,#{minDelevery }
+		    ,#{deleveryTime }
+		    ,#{deleveryTip }
+		    ,#{storeDes }
+		)
+	
+	</insert>
+	
+	
+	
+	<update id="bossComment">
+		UPDATE BM_REVIEW SET
+			BOSS_COMMENT = #{bossComment }
+		WHERE
+			ORDER_NUM = #{orderNum }  			 
+	</update>
+	
+		
+</mapper>
+   

@@ -9,14 +9,18 @@
     <header>
         <div id="header">
             <a href="/"><img src="/img/baemin.jpg" alt="이미지"> </a>
-
+			
+			<c:if test="${SPRING_SECURITY_CONTEXT != null }">
+				로그인중			
+			</c:if>
+			
             <!-- 임시 -->
             <div class="admin" style="font-size: 13px;
                              position: absolute; right: 10px; top : 10px;
                              font-weight: bold ; ">
                 <div
                     style="border: 1px solid #ddd; border-radius: 10px; padding: 5px; background: #fff; font-size: 13px;">
-                    <a href="/admin/home">임시 사장님 페이지</a>
+                    <a href="/admin/main">임시 사장님 페이지</a>
                 </div>
             </div>
             <!-- 임시 -->

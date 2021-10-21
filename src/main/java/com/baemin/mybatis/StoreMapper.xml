@@ -5,33 +5,32 @@
 <mapper namespace="store">
 
 	<select id="storeList" resultType="store">
-
-		SELECT * FROM BM_STORE WHERE CATEGORY = #{category} AND STORE_ADDRESS1 LIKE '${address1}%' 
-
+    
+	SELECT * FROM 
+		BM_STORE s
+	        LEFT JOIN    
+				( SELECT r.store_id, r.score, r.review_count, r.boss_comment_count, c.order_count FROM  
+					( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r ,
+					( SELECT store_id, SUM(order_count) order_count from (
+						SELECT store_id, count(*) order_count FROM bm_order_detail_user GROUP BY store_id
+							UNION ALL
+						SELECT store_id, count(*) order_count FROM bm_order_detail_non_user GROUP BY store_id ) GROUP BY store_id ) c 
+				) t
+			ON s.id = t.store_id     
+			WHERE CATEGORY = #{category} AND STORE_ADDRESS1 LIKE '${address1}%'
 	</select>
 
 	<select id="storeDetail" resultType="Store">
-		SELECT
-			id,
-			category,
-			store_name,
-			store_address1,
-			store_address2,
-			store_address3,
-			store_phone,
-			store_img,
-			store_thumb,
-			opening_time,
-			closing_time,
-			min_delevery,
-			delevery_time,
-			score,
-			delevery_tip,
-			store_des
-		FROM
-			bm_store
-		WHERE 
-			id = #{id }	
+		SELECT * FROM 
+			BM_STORE,
+			( SELECT * FROM  
+				( SELECT AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review WHERE store_id = #{id } ),
+				( SELECT SUM(order_count) order_count from (
+					SELECT count(*) order_count FROM bm_order_detail_user WHERE store_id = #{id }
+						UNION ALL
+					SELECT count(*) order_count FROM bm_order_detail_non_user WHERE store_id = #{id } ) )
+			) 
+		WHERE ID = #{id }
 	</select>
 	
 	<select id="foodList" resultType="Food">
@@ -61,6 +60,47 @@
 			food_id = #{foodId }    
 	</select>
 	
+	
+	
+	<insert id="reviewWrite">
+		INSERT INTO BM_REVIEW (
+		    ORDER_NUM
+		    ,STORE_ID
+		    ,REVIEW_CONTENT
+		    ,USER_ID
+		    ,SCORE
+		    ,REVIEW_IMG 
+		) VALUES (
+			${orderNum }
+			,#{storeId }
+			,#{reviewContent }
+			,#{userId}
+			,#{score}
+			,#{reviewImg }
+		)		
+	</insert>
+
+
+	<select id="reviewList" resultType="Review">
+		SELECT
+		    r.order_num,
+		    r.store_id,
+		    r.review_content,
+		    r.boss_comment,
+		    r.regi_date,
+		    r.score,
+		    r.review_img,
+		    r.user_id,
+		    u.nickname
+		FROM
+		    bm_review r
+		LEFT JOIN
+		    bm_user u
+		ON
+		    r.user_id = u.id
+		WHERE
+		    r.store_id = #{id}
+	</select>
 
 
 </mapper>

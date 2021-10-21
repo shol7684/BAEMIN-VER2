@@ -9,16 +9,6 @@ $(document).ready(function() {
 	})
 
 
-
-
-	// 가게 별점
-	let score = Math.round($("#score").val());
-	if (score <= 0) {
-		score = 0;
-	}
-	$(".score_box i").eq(score).addClass("fas").prevAll().addClass("fas");
-
-
 	
 	// 장바구니에 담은 메뉴가격 총합
 	let menuTotalPrice = 0;
@@ -280,8 +270,6 @@ $(document).ready(function() {
 
 
 
-
-
 	// 장바구니 전부 삭제
 	$("#cart i").click(function(){
 		$.ajax({
@@ -296,6 +284,8 @@ $(document).ready(function() {
 		})
 		
 	})	
+
+
 
 
 
@@ -366,17 +356,6 @@ $(document).ready(function() {
 
 
 
-	// 주문하기
-	$(".order_btn").click(function() {
-		location.href = "/order";
-	});
-	// 모바일 주문하기
-	$(".cart_img_box").click(function() {
-		location.href = "/order";
-	});
-
-
-
 	// 탭 눌렀을때 색변경 콘텐츠 변경
 	$("ul.tab > li").click(function() {
 
@@ -414,6 +393,21 @@ $(document).ready(function() {
 		$(".m_cart_count").css("display" , "none");
 		$(".m_cart_count").text("");
 	};
+	
+	
+	
+	
+	// 주문하기
+	$(".order_btn").click(function() {
+		location.href = "/order";
+	});
+	// 모바일 주문하기
+	$(".cart_img_box").click(function() {
+		location.href = "/order";
+	});
+	
+	
+
 
 
 });

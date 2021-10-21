@@ -67,6 +67,14 @@ public class OrderServiceImp implements OrderService {
 			int random = (int) (Math.random() * 10);
 			sb.append(random);
 		}
+		
+		info.setOrderNum(sb.toString());
+		long userId = 0;
+		if (user != null) {
+			userId = user.getUser().getId();
+			info.setUserId(userId);
+		}
+		
 
 		Map<String, String> orderDetail = new HashMap<>();
 		Gson gson = new Gson();
@@ -86,18 +94,11 @@ public class OrderServiceImp implements OrderService {
 		orderDetail.put("storeId", storeId);
 		orderDetail.put("usedPoint", info.getUsedPoint() + "");
 		orderDetail.put("request", info.getRequest());
+		orderDetail.put("userId", userId + "");
 		
 		
-		info.setOrderNum(sb.toString());
-		if (user != null) {
-			long userId = user.getUser().getId();
-			info.setUserId(userId);
-			
-		}
 		System.out.println("사용 포인트 = " + info.getUsedPoint() );
 
-		System.out.println("cartMap.get(\"cartList\") =" + cartMap.get("cartList"));
-		System.out.println("orderDetail =" + orderDetail);
 		orderDAO.order(info);
 		orderDAO.orderDetail(orderDetail);
 		

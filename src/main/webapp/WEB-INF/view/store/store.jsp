@@ -57,9 +57,7 @@
 	                    <div>
 	                        <a href="/store/detail/${storeList.id }">   
 	                                
-	                            <img src="${storeList.storeThumb }" alt="이미지">
-	                            
-	                            
+	                            <img src="${storeList.storeImg }" alt="이미지">
 	                            
 	                            <div class="inf">
 	                              ${storeList.openingTime } ${storeList.closingTime } ${storeList.score }
@@ -70,41 +68,23 @@
 	                            </c:if> --%>
 	                            
 	                            
-	                            
-	                            
 	                                <div>
 	                                	<span>평점 ${storeList.score }</span>
 	                                	
 	                                	<span class="score_box">
 	                                	
-	                                	<c:set var="score" value="${Math.round(storeList.score) -1 }" />
-	                                	
-	                                	<c:if test="${score <= 0}" >
-	                                		<c:set var="score" value="0" />
-	                                		
-	                                	</c:if>
-	                                	
-	                                	
-	                                	<c:forEach begin="0" end="4" var="i">
-	                                		<c:if test="${score >= i }">
-												<i class="fas far fa-star"></i>
-	                                		</c:if>
-	                                		
-	                                		<c:if test="${score < i }">
-												<i class="far fa-star"></i>
-	                                		</c:if>
-					                   	</c:forEach>
+					                	<c:forEach begin="0" end="4" var="i">
+				                   			<c:if test="${storeList.score >= i }">
+						                   		<i class="far fas fa-star"></i>
+				                   			</c:if>
+				                   			<c:if test="${storeList.score < i }">
+						                   		<i class="far fa-star"></i>
+				                   			</c:if>
+				                   		</c:forEach>
 					                   	
 				               			</span>
 	                                </div>
-	                              <%--
-	                                
-	                                <div><span>리뷰 ${storeList.reviewCount }</span><span>ㅣ</span><span>사장님 댓글 ${storeList.bossComment }</span></div>
-	                                <div><span>배달시간 ${storeList.deleveryTime }분</span><span>최소주문금액 <fm:formatNumber value="${storeList.minDelevery }"  pattern="###,###" />원</span></div>
-	                                <div>배달팁 <fm:formatNumber value="${storeList.deleveryTip }"  pattern="###,###" />원</div>
-	                                
-	                                 --%>
-	                                   <div><span>리뷰 13</span><span>ㅣ</span><span>사장님 댓글 15</span></div>
+                                    <div><span>리뷰 ${storeList.reviewCount }</span><span>ㅣ</span><span>사장님 댓글 ${storeList.bossCommentCount }</span></div>
 	                                <div><span>배달시간 ${storeList.deleveryTime }분</span><span>최소주문금액 <fm:formatNumber value="${storeList.minDelevery }"  pattern="###,###" />원</span></div>
 	                                <div>배달팁 <fm:formatNumber value="${storeList.deleveryTip }"  pattern="###,###" />원</div>
 	                                 

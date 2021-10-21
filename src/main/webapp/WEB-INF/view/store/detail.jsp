@@ -24,6 +24,7 @@
 	
 	
  	<script type="text/javascript" src="/js/storeDetail2.js" ></script>
+ 	<script type="text/javascript" src="/js/admin/adminDetail.js" ></script>
     <script type="text/javascript" src="/js/openModal.js" ></script> 
     <script type="text/javascript" src="/js/modal.js" ></script> 
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3fe0c2eaecb263f09df91a81c2ec64a0&libraries=services,clusterer,drawing"></script>

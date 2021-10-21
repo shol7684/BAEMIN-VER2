@@ -1,0 +1,161 @@
+/*-------------- 매장 등록 모달 -----------------*/
+.store_reg_modal form {
+	display: inline;
+}
+
+.store_reg_modal .modal_box h2 {
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.store_reg_modal .modal_box ul {
+	padding-bottom: 100px;
+	margin-left: 15px;
+}
+
+.store_reg_modal .modal_box ul li {
+	padding: 20px 20px 0px 20px;
+	text-align: center;
+}
+
+.store_reg_modal .modal_box ul li>div {
+	border: 1px solid #28a8a8;
+	border-radius: 5px;
+	width: 70%;
+	height: 35px;
+	margin: 0 auto;
+	font-size: 15px;
+}
+
+.store_reg_modal .modal_box ul li select {
+	width: 95%;
+	height: 100%;
+	font-size: 16px;
+	border: none;
+	padding-left: 5px;
+}
+
+.store_reg_modal .modal_box ul li select:focus {
+	outline: none;
+}
+
+.store_reg_modal .modal_box ul li input {
+	font-size: 16px;
+	margin-top: 6px;
+	width: 90%;
+	border: none;
+}
+
+.store_reg_modal .modal_box .business_hour h2 {
+	margin-bottom: 10px;
+}
+
+.store_reg_modal .modal_box .business_hour div {
+	border: none;
+	position: relative;
+	left: 20px;
+}
+
+.store_reg_modal .business_hour div span select {
+	border: 1px solid #28a8a8;
+	margin-right: 20px;
+	width: 100px;
+	height: 30px;
+	border-radius: 5px;
+}
+
+.store_reg_modal .modal_box .store_des {
+	height: 100px;
+	font-size: 16px;
+}
+
+.store_reg_modal .modal_box #store_des {
+	border: none;
+	font-size: 16px;
+	height: 100px;
+	width: 95%;
+}
+
+.store_reg_modal .modal_box #store_des:focus {
+	outline: none;
+}
+
+.store_reg_modal .modal_box .location {
+	height: 180px;
+}
+
+.store_reg_modal .modal_box .location div {
+	height: 150px;
+}
+
+.store_reg_modal .sample #sample2_btn {
+	width: 100%;
+	margin-top: 0px;
+	background: #ddd;
+}
+
+#img_area {
+	border: none;
+}
+
+#img_area label {
+	width: 50px;
+	height: 50px;
+	background: #ddd;
+	display: block;
+}
+
+.store_reg_modal #modify_img {
+	position: relative;
+	width: 70%;
+}
+
+.store_reg_modal .img_box {
+	border: none;
+	margin: 20px 0 0 0;
+	position: relative;
+	width: 200px;
+	height: 200px;
+	display: none;
+	padding-bottom: 30px;
+}
+
+.store_reg_modal .preview {
+	width: 200px;
+	height: 200px;
+	object-fit: cover;
+	border-radius: 10px;
+	margin-bottom: 50px;
+}
+
+.img_close {
+	background: rgba(0, 0, 0, 0.7);
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 25px;
+	height: 25px;
+	color: #fff;
+	border-radius: 5px;
+}
+
+.regist_btn {
+	background: rgb(48, 218, 217);
+}
+
+
+
+@media ( max-width :1023px) {
+	.store_reg_modal .modal_box ul li div {
+		width: 80%;
+	}
+	.store_reg_modal .modal_box ul {
+		margin-left: 0px;
+	}
+}
+
+@media ( max-width :767px) {
+	.store_reg_modal .modal_box ul li div {
+		width: 95%;
+	}
+}

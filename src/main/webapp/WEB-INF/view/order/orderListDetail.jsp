@@ -39,16 +39,19 @@
 					<ul>
 						<li>기본가격 <fm:formatNumber value="${cart[i].foodPrice }" />원</li>
 
+						<c:set var="foodTotalPrice" value="${cart[i].foodPrice }" />
 						<c:if test="${fn:length(cart[i].foodOptionName) != 0}">
 							<c:forEach begin="0" end="${fn:length(cart[i].foodOptionName) -1 }" var="j">
 								<li>
 									<span>${cart[i].foodOptionName[j] }</span> 
 									<span><fm:formatNumber value="${cart[i].foodOptionPrice[j] }" pattern="###,###" />원</span>
 								</li>
+								
+								
+								<c:set var="foodTotalPrice" value="${foodTotalPrice + cart[i].foodOptionPrice[j] }" />
 							</c:forEach>
 						</c:if>
-						
-						<li class="menu_price_sum"><fm:formatNumber value="${cart[i].foodPrice }" pattern="###,###" />원</li>
+						<li class="menu_price_sum"><fm:formatNumber value="${foodTotalPrice }" pattern="###,###" />원</li>
 					</ul>
 					<hr>
 				</li>

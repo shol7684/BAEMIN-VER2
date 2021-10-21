@@ -11,13 +11,15 @@
                <div class="inf">
                    <div>
 	                   <span class="score_box">
-							<i class="far fa-star"></i>
-	                   		<i class="far fa-star"></i>
-	                   		<i class="far fa-star"></i>
-	                   		<i class="far fa-star"></i>
-	                   		<i class="far fa-star"></i>
-	                   		<span>${store.storeInfo.score }</span>	
-	                   		      
+	                   		<c:forEach begin="0" end="4" var="i">
+	                   			<c:if test="${store.storeInfo.score >= i }">
+			                   		<i class="far fas fa-star"></i>
+	                   			</c:if>
+	                   			<c:if test="${store.storeInfo.score < i }">
+			                   		<i class="far fa-star"></i>
+	                   			</c:if>
+	                   		</c:forEach>
+	                   		<span>${store.storeInfo.score }</span>
                			</span><br>
 	                   
                   		<c:if test="${storeVO.goodCheck == 0 }">
@@ -32,7 +34,7 @@
 		                   <span class="good"></span>
 	                   
                    </div>
-                   <div><span> 리뷰 ${storeVO.reviewCount } ㅣ </span><span>사장님 댓글 ${storeVO.bossCommentCount }</span></div>
+                   <div><span> 리뷰 ${store.storeInfo.reviewCount } ㅣ </span><span>사장님 댓글 ${store.storeInfo.bossCommentCount }</span></div>
                    
                    <div>최소주문금액 <fm:formatNumber value="${store.storeInfo.minDelevery }" pattern="###,###" /> 원</div>
                    <div>예상 배달시간 ${store.storeInfo.deleveryTime  }분</div>
@@ -179,9 +181,9 @@
 		            	</div>
 		            	
 		            	<div class="info_detail">
-		            		<div>${storeVO.orderCount }</div>
-		            		<div>${storeVO.reviewCount }</div>
-		            		<div>${storeVO.dibsCount }</div>
+		            		<div>${store.storeInfo.orderCount }</div>
+		            		<div>${store.storeInfo.reviewCount }</div>
+		            		<div>${storeVO.dibsCount } 1222313213</div>
 		            	</div>
 		            </div>	
 	            </li>
@@ -193,16 +195,13 @@
 		
 		<!-- ----------------------------------- 리뷰 탭 ------------------------------------- -->        
 	        <ul class="comment" >
-	        	
 	        	<li>
 	        		<div class="score_info">
-	        			
 	        			<div>
 	        				<div class="score">${store.storeInfo.score }</div>
 		                   		
 	        				<div>
 		        				<c:forEach begin="0" end="4" var="i">
-		        				
 		        					<c:if test="${store.storeInfo.score >= i }">
 		        						<i class="fas fa-star"></i>
 		        					</c:if>
@@ -270,7 +269,7 @@
 	        
 	        
 	        
-	        	<c:forEach items="${reviewList }" var="reviewList">
+	        	<c:forEach items="${store.reviewList }" var="reviewList">
 	            <li>
 	            	<div class="client">
 	            		
@@ -278,17 +277,16 @@
 	            			<div>
 				                <div class="nickname">${reviewList.nickname }</div>
 				                <div>
-				                	<span><c:set var="score" value="${Math.round(reviewList.score)  }" /> </span>
 				                	
-					                	<c:forEach begin="0" end="4" var="i">
-					                		<c:if test="${i < score }">
-						                		<i class="fas far fa-star"></i>
-					                		</c:if>
-					                		
-					                		<c:if test="${i >= score }">
-						                		<i class="far fa-star"></i>
-					                		</c:if>
-					                	</c:forEach>
+				                	<c:forEach begin="0" end="4" var="i">
+				                		<c:if test="${i < reviewList.score }">
+					                		<i class="fas far fa-star"></i>
+				                		</c:if>
+				                		
+				                		<c:if test="${i >= reviewList.score }">
+					                		<i class="far fa-star"></i>
+				                		</c:if>
+				                	</c:forEach>
 				                	
 				                	<span><fm:formatDate value="${reviewList.regiDate }" pattern="yyyy-MM-dd" /> </span>
 				                </div>
@@ -297,11 +295,11 @@
 			                 <div>
 			                
 			                	<c:if test="${!empty reviewList.bossComment}">
-			                		<button class="reply_btn reply " >댓글 수정하기</button>
+			                		<button class="review_btn reply " >댓글 수정하기</button>
 			                	</c:if>
 			                	
 			                	<c:if test="${empty reviewList.bossComment}">
-			                		<button class="reply_btn reply " >댓글 달기</button>
+			                		<button class="review_btn reply " >답장하기</button>
 			                	</c:if>
 			                	
 			                	
@@ -315,30 +313,33 @@
 			                	<div><img src="${reviewList.reviewImg }" alt="이미지" class="review_img"></div>
 			                </c:if>
 		                
-		                	<div>${reviewList.content } </div>
-		                
+		                	<div>${reviewList.reviewContent } </div>
 		                </div>
 		                
 	                </div>
 	                
-	                <c:if test="${!empty reviewList.bossComment }">	
-	                <div class="boss">
-	                	<div class="nickname">사장님</div>
-	                	<div class="boss_content">${reviewList.bossComment }</div>
+	                <div class="boss aa">
+		                <c:if test="${!empty reviewList.bossComment }">	
+			                <div class="boss_comment_box">
+			                	<div class="nickname">사장님</div>
+			                	<div class="boss_comment">${reviewList.bossComment }</div>
+			                </div>
+		                </c:if>
 	                </div>
-	                </c:if>
 	                
-	                <div class="temp"></div>
+	                <!-- <div class="temp"></div> -->
 	                
 	                 <div class="boss input">
-	        		 	<div class="nickname">사장님</div>
-	        			<div class='boss_content'>
-	        				<textarea class="comment_area" spellcheck="false"></textarea>
-	        			</div>
-	        			
-	        			<div>
-	        				<button class="boss_reply reply" >댓글 달기</button>
-	        				<input type="hidden" value="${reviewList.orderNum }" class="order_num">
+	               	 	<div class="boss_comment_box">
+	        		 		<div class="nickname">사장님</div>
+	        				<div class="boss_comment">
+		        				<textarea class="comment_area" spellcheck="false"></textarea>
+	        				</div>
+	        				
+		        			<div>
+		        				<button class="boss_comment_btn reply" >댓글 달기</button>
+		        				<input type="hidden" value="${reviewList.orderNum }" class="order_num">
+		        			</div>
 	        			</div>
 	       			</div>
 	                

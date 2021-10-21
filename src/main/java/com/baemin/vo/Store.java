@@ -22,9 +22,13 @@ public class Store {
 	private int closingTime;
 	private long minDelevery;
 	private int deleveryTime;
-	private double score;
+	private float score;
 	private long deleveryTip;
 	private String storeDes;
+	
+	private int orderCount;
+	private int reviewCount;
+	private int bossCommentCount;
 	
 	
 	

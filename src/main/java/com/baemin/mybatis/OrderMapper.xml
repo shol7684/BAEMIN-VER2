@@ -87,25 +87,47 @@
 	
 	
 	<insert id="orderDetail">
-		INSERT INTO BM_ORDER_DETAIL_USER (
-			ORDER_NUM
-			,AMOUNT
-			,FOOD_PRICE
-			,TOTAL_PRICE
-			,FOOD_INFO
-			,STORE_ID
-			,USED_POINT
-			,REQUEST
-		) VALUES (
-			#{orderNum }
-			,#{amount }
-			,#{foodPrice }
-			,#{totalPrice }
-			,#{foodInfo }
-			,#{storeId }
-			,#{usedPoint }
-			,#{request }
-		)
+		<if test="userId == 0">
+			INSERT INTO BM_ORDER_DETAIL_NON_USER (
+					ORDER_NUM
+					,AMOUNT
+					,FOOD_PRICE
+					,TOTAL_PRICE
+					,FOOD_INFO
+					,STORE_ID
+					,REQUEST
+				) VALUES (
+					#{orderNum }
+					,#{amount }
+					,#{foodPrice }
+					,#{totalPrice }
+					,#{foodInfo }
+					,#{storeId }
+					,#{request }
+				)
+		</if>	
+
+		<if test="userId != 0">
+			INSERT INTO BM_ORDER_DETAIL_USER (
+				ORDER_NUM
+				,AMOUNT
+				,FOOD_PRICE
+				,TOTAL_PRICE
+				,FOOD_INFO
+				,STORE_ID
+				,USED_POINT
+				,REQUEST
+			) VALUES (
+				#{orderNum }
+				,#{amount }
+				,#{foodPrice }
+				,#{totalPrice }
+				,#{foodInfo }
+				,#{storeId }
+				,#{usedPoint }
+				,#{request }
+			)
+		</if>
 	
 	</insert>
 	

@@ -102,20 +102,9 @@ public class OrderController {
 			
 			System.out.println(orderList);
 			
-			List<Map> cart = new ArrayList<>();
-			
-			Gson gson = new Gson();
-			for(int i=0;i<orderList.size();i++) {
-//				cart.add(gson.fromJson(orderList.get(i).getOrderInfo(), Map.class));
-			}
-			
-			System.out.println(cart);
 			
 			model.addAttribute("orderList", orderList);
-//			model.addAttribute("cart", cart);
-			
-			
-			
+			model.addAttribute("user", user.getUser());
 		}
 		
 		return "order/orderList";

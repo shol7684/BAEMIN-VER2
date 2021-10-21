@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,8 @@ import com.baemin.vo.Cart;
 
 @Controller
 public class CartController {
+	
+	private static final Logger LOGGER = LogManager.getLogger(CartController.class);
 
 	@ResponseBody
 	@PostMapping("/addCart")

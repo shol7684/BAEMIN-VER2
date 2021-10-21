@@ -2,92 +2,6 @@ body {
 	background: #F6F6F6;
 }
 
-/* ------------리뷰 쓰기-------------- */
-	.review_modal form,
-	.review_modify_modal form {
-		height: 100%;
-	}
-	
-	.review_modal .modal_box,
-	.review_modify_modal .modal_box {
-		height: calc(100% - 80px);
-	}
-
-	.score_box {
-		width: 80%;
-		margin: 0 auto;
-		text-align: center;
-		padding: 20px;
-	}
-	
-	.score_box .fas {
-		color: gold;
-	}
-	
-	
-	.review_text {
-		margin: 0 auto;
-		width: 90%;	
-	}
-	
-	.review_text textarea {
-		width: 90%;
-		margin: 0 auto 30px auto;
-		display: block;
-		padding: 5px;
-		font-size: 16px;
-		
-	
-	}
-	
-	.review_btn {
-		position:absolute;
-		width: 100%;
-		bottom: 0;
-	}
-
-
-    .modal .btn_box input[type="submit"] {
-    	background: #ddd;
-    }
-
-	.img_box {
-		width: 80%;
-		margin: 0 auto;
-		
-	}
-	
-	.img_box div {
-		width: 200px;
-		margin-top: 20px;
-		position: relative;
-		display: none;
-	}
-	
-	.img_box img {
-		width: 200px;
-		height:200px;
-		border-radius: 10px;
-		
-		margin-bottom: 50px;
-
-	}
-	
-	.img_close {
-		background: rgba(0,0,0,0.7);
-		position: absolute;
-		top:0;
-		right:0;
-		width: 25px;
-		height: 25px;
-		color: #fff;
-		border-radius: 5px;
-		
-	}
-
-
-/* ------------리뷰 쓰기-------------- */
-
 	.wrap {
 	    width: 1000px;
 	    margin: 0 auto;
@@ -188,14 +102,92 @@ body {
 	     display: inline;
 	} 
 	
-	    /* main */
-	    
+
+
+/* ------------리뷰 쓰기-------------- */
 	
-/* 	footer {
-	    clear: both;
-	    height: 200px;
-	} */
+	.review_modal .modal_box {
+		height: calc(100% - 80px);
+	}
 	
+	.review_modal form {
+		display: inline;
+	} 
+
+	.score_box {
+		width: 80%;
+		margin: 0 auto;
+		text-align: center;
+		padding: 20px;
+	}
+	
+	.score_box .fas {
+		color: gold;
+	}
+	
+	
+	.review_text {
+		margin: 0 auto;
+		width: 90%;	
+	}
+	
+	.review_text textarea {
+		width: 90%;
+		margin: 0 auto 30px auto;
+		display: block;
+		padding: 5px;
+		font-size: 16px;
+	}
+
+	.img_box {
+		width: 80%;
+		margin: 0 auto 50px;
+	}
+	
+	.img_box label {
+		width: 40px;
+		height: 40px;
+		background: #ddd;
+		display: inline-block;
+		
+	}
+	
+	.img_box div {
+		width: 200px;
+		margin-top: 20px;
+		position: relative;
+		display: none;
+	}
+	
+	.img_box img {
+		width: 200px;
+		height:200px;
+		border-radius: 10px;
+		
+		margin-bottom: 50px;
+
+	}
+	
+	.img_close {
+		background: rgba(0,0,0,0.7);
+		position: absolute;
+		top:0;
+		right:0;
+		width: 25px;
+		height: 25px;
+		color: #fff;
+		border-radius: 5px;
+		
+	}
+
+
+
+    .review_submit_btn {
+    	background: #ddd;
+    } 
+    
+
+/* ------------리뷰 쓰기-------------- */
 
 	
 	
