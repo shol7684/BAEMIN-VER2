@@ -1,0 +1,149 @@
+/* -------------- 메뉴 추가 모달 -------------- */
+.add_menu_modal li {
+	width: 80%;
+	margin: 0 auto;
+	max-width: 300px;
+	margin-bottom: 15px;
+}
+
+.add_menu_modal li:last-child {
+	padding-bottom: 50px;
+}
+
+.add_menu_modal form {
+	display: inline;
+}
+
+.add_menu_modal .modal_box h2 {
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.add_menu_modal .modal_box .input_area {
+	text-align: center;
+}
+
+.add_menu_modal .modal_box input {
+	font-size: 18px;
+	padding: 5px;
+	border: 1px solid #28a8a8;
+	width: 100%;
+	border-radius: 5px;
+}
+
+.add_menu_modal .option_box>div:first-child {
+	position: relative;
+}
+
+.add_menu_modal .option_box button {
+	position: absolute;
+	right: 0;
+	top: 0;
+	border-radius: 5px;
+	background: #fff;
+	padding: 3px;
+	font-weight: bold;
+	font-size: 10px;
+}
+
+.add_menu_modal .option {
+	width: 100%;
+	padding: 5px;
+	border: 1px solid #28a8a8;
+	border-radius: 5px;
+	margin-bottom: 10px;
+}
+
+.add_menu_modal .option div {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 5px;
+}
+
+.add_menu_modal .option span {
+	font-size: 16px;
+	line-height: 30px;
+}
+
+.add_menu_modal .option input {
+	width: 70%;
+	height: 20px;
+}
+
+.add_menu_modal input[type="file"] {
+	border: none;
+}
+
+.add_menu_modal #img_area {
+	border: none;
+}
+
+.add_menu_modal #img_area label {
+	width: 50px;
+	height: 50px;
+	display: block;
+	background: #ddd;
+}
+.add_menu_modal #img_area input[type=file] {
+	width: auto;
+}
+
+.add_menu_modal  #modify_img {
+	position: relative;
+	width: 70%;
+}
+
+.add_menu_modal  .img_box {
+	border: none;
+	margin: 20px 0 0 0;
+	position: relative;
+	width: 200px;
+	height: 200px;
+	display: none;
+	padding-bottom: 30px;
+}
+
+.add_menu_modal  .preview {
+	width: 200px;
+	height: 200px;
+	object-fit: cover;
+	border-radius: 10px;
+	margin-bottom: 50px;
+}
+
+.add_menu_modal .img_close {
+	background: rgba(0, 0, 0, 0.7);
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 25px;
+	height: 25px;
+	color: #fff;
+	border-radius: 5px;
+}
+
+.add_menu_modal button[type=submit] {
+	background: #30DAD9;
+}
+
+
+/* .add_menu_modal .modal_box .btn {
+	width: 100%;
+	text-align: center;
+	margin: 0 auto;
+	margin-top: 50px;
+	margin-bottom: 100px;
+} */
+
+/* .add_menu_modal .modal_box .btn button {
+	width: 150px;
+	height: 30px;
+	font-size: 20px;
+} */
+
+/* .modify_menu {
+	background: #30DAD9;
+}
+ */
+/*--------- 메뉴 추가 모달 ---------*/

@@ -5,8 +5,8 @@
 <mapper namespace="store">
 
 	<select id="storeList" resultType="store">
-    
-	SELECT * FROM 
+SELECT * FROM     
+	( SELECT rownum rn, s.*,t.* FROM 
 		BM_STORE s
 	        LEFT JOIN    
 				( SELECT r.store_id, r.score, r.review_count, r.boss_comment_count, c.order_count FROM  
@@ -17,7 +17,8 @@
 						SELECT store_id, count(*) order_count FROM bm_order_detail_non_user GROUP BY store_id ) GROUP BY store_id ) c 
 				) t
 			ON s.id = t.store_id     
-			WHERE CATEGORY = #{category} AND STORE_ADDRESS1 LIKE '${address1}%'
+			WHERE CATEGORY = #{category} AND STORE_ADDRESS1 LIKE '${address1}%' )
+	WHERE rn BETWEEN ${startPage } AND ${endPage }		
 	</select>
 
 	<select id="storeDetail" resultType="Store">
@@ -80,6 +81,14 @@
 		)		
 	</insert>
 
+	<update id="reviewModify">
+		UPDATE BM_REVIEW SET
+		    REVIEW_CONTENT = #{reviewContent }
+		    ,SCORE = #{score}
+		    ,REVIEW_IMG = #{reviewImg }
+		WHERE
+			ORDER_NUM = ${orderNum }    
+	</update>
 
 	<select id="reviewList" resultType="Review">
 		SELECT

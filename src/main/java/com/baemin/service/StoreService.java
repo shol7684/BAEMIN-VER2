@@ -8,13 +8,15 @@ import com.baemin.vo.Store;
 
 public interface StoreService {
 
-	List<Store> storeList(int category, int address);
+	List<Store> storeList(int category, int address, int page);
 
 	Map storeDetail(int id);
 
 	List<String> foodOption(int foodId);
 
 	void reviewWrite(Review review);
+
+	void reviewModify(Review review);
 
 	
 }

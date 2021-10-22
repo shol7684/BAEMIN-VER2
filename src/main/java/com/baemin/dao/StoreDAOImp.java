@@ -19,11 +19,8 @@ public class StoreDAOImp implements StoreDAO {
 	private SqlSession sql;
 
 	@Override
-	public List<Store> storeList(int category, int address1) {
-		Map<String, Integer> map = new HashMap<>();
-
-		map.put("category", category);
-		map.put("address1", address1);
+	public List<Store> storeList(Map map) {
+		
 
 		return sql.selectList("store.storeList", map);
 	}
@@ -49,9 +46,15 @@ public class StoreDAOImp implements StoreDAO {
 	}
 
 	@Override
+	public void reviewModify(Review review) {
+		sql.update("store.reviewModify", review);
+	}
+	
+	@Override
 	public List<Review> reviewList(int id) {
 		return sql.selectList("store.reviewList", id);
 	}
+
 	
 
 }

@@ -27,17 +27,17 @@
                 </ul>
             </div>
 
+			<input type="hidden" value="${category }" class="cate">
+			<input type="hidden" value="${address1 }" class="address1">
 
 
 
            <div class="option">
-                
                 <ul>    
                 	<li>기본순</li>
                     <li>배달 빠른 순</li>
                     <li>배달팁 낮은 순</li>
                     <li>별점 높은 순</li>
-                    
                 </ul> 
            </div>
            
@@ -47,6 +47,8 @@
 				
 				<c:if test="${empty storeList }">
 					<img alt="이미지" src="/img/temp2.png">
+					
+					<style>main .box {background: #F6F6F6; max-width: 100%; }</style>
 				</c:if>
 				
                 <ul class="store">
@@ -94,9 +96,6 @@
                     </li>
                     
                     </c:forEach>
-                    
-                    <li class="temp">
-                    </li>
                 </ul>
             </div>
 
@@ -116,12 +115,12 @@
     <!-- 푸터 -->
 
 
-<%-- 	<input type="hidden" value="${category }" class="cate">
+<%-- 	
 	<input type="hidden" value="${address.address1 }" class="address">
 	<input type="hidden" value="${storeList[0].storeName }" class="store_list" >
  --%>
 
-
+	<script type="text/javascript" src="/js/store/store.js" ></script>
     
 </body>
 </html>

@@ -20,8 +20,22 @@ public class StoreServiceImp implements StoreService {
 	private StoreDAO storeDAO;
 
 	@Override
-	public List<Store> storeList(int category, int address1) {
-		return storeDAO.storeList(category, address1);
+	public List<Store> storeList(int category, int address1, int page) {
+		
+		int view = 10;
+		
+		int startPage = (page * view - view) + 1;
+		int endPage = page * view;
+		
+		Map map = new HashMap<>();
+
+		map.put("category", category);
+		map.put("address1", address1);
+		map.put("startPage", startPage);
+		map.put("endPage", endPage);
+		
+		
+		return storeDAO.storeList(map);
 	}
 
 	@Transactional
@@ -52,6 +66,12 @@ public class StoreServiceImp implements StoreService {
 	@Override
 	public void reviewWrite(Review review) {
 		storeDAO.reviewWrite(review);
+		
+	}
+
+	@Override
+	public void reviewModify(Review review) {
+		storeDAO.reviewModify(review);
 		
 	}
 	

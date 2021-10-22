@@ -1,23 +1,101 @@
 
 $(document).ready(function() {
 
-
-	const storeList = $(".store_list").val();
-
-console.log(storeList);
-
-	//가게 없으면 
-	if (!storeList) {
-		$(".box").css("background", "#F6F6F6").css("max-width", "100%")
-	}
-
-
 	const category = $(".cate").val();
+	const address1 = $(".address1").val();
 
-	console.log(category);
 	$("li[data-category = '" + category + "'] > span").css("border-bottom", "3px solid #333333");
 	$("li[data-category = '" + category + "'] > span").css("color", "#333333");
 
+	
+	let winHeight = 0;
+	let docHeight = 0;
+	let page = 1;
+	let run = false;
+
+	$(window).scroll(function(){
+		winHeight = $(window).height();
+		docHeigth = $(document).height();
+		
+		const top = $(window).scrollTop();
+		
+		if(docHeigth <= winHeight + top + 10 ) {
+			if(run) {
+				return;
+			}
+			console.log("페이지 추가");
+			
+			run = true;
+			
+			const data = {
+				category : category,
+				address1 : address1,
+				page : page
+			}
+			
+			$.ajax({
+				url: "/storeNextPage",
+				type: "GET",
+				data : data,
+				success: function(storeList){
+					page++;
+					
+					let html = "";
+					for(var i=0;i<storeList.length;i++) {
+						html += `<li >
+		                    <div>
+		                        <a href="/store/detail/${storeList[i].id }">   
+		                            <img src="${storeList[i].storeImg }" alt="이미지">
+		                            <div class="inf">
+		                              ${storeList[i].openingTime } ${storeList[i].closingTime } ${storeList[i].score }
+		                                <h2>${storeList[i].storeName }</h2>
+		                                <div>
+		                                	<span>평점 ${storeList[i].score }</span>
+		                                	<span class="score_box">
+		                                	
+						                	<c:forEach begin="0" end="4" var="i">
+					                   			<c:if test="${storeList[i].score >= i }">
+							                   		<i class="far fas fa-star"></i>
+					                   			</c:if>
+					                   			<c:if test="${storeList[i].score < i }">
+							                   		<i class="far fa-star"></i>
+					                   			</c:if>
+					                   		</c:forEach>
+						                   	
+					               			</span>
+		                                </div>
+	                                    <div><span>리뷰 ${storeList[i].reviewCount }</span><span>ㅣ</span><span>사장님 댓글 ${storeList[i].bossCommentCount }</span></div>
+		                                <div><span>배달시간 ${storeList[i].deleveryTime }분</span><span>최소주문금액 <fm:formatNumber value="${storeList[i].minDelevery }"  pattern="###,###" />원</span></div>
+		                                <div>배달팁 <fm:formatNumber value="${storeList[i].deleveryTip }"  pattern="###,###" />원</div>
+		                                 
+		                            </div>
+		                        </a>
+	                        </div>
+	                    </li>`;
+						
+					}
+					
+					$(".store").append(html);
+					
+					run = false;
+					
+				}
+			})
+			
+		}
+		
+	})
+	
+	
+	
+	
+	
+	function cs(value){
+		console.log(value);
+	}
+	
+	
+	
 
 
 	/* ------------------------------ 가게 정렬 ------------------------------ */

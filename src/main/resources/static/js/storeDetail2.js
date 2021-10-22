@@ -14,7 +14,7 @@ $(document).ready(function() {
 	let menuTotalPrice = 0;
 
 	// 메뉴 클릭시 모달창 
-	const food = $(".menu > li");
+	const food = $(".menu > li .in");
 	food.click(function() {
 		
 		const foodId = $(this).find("#food_id").val();

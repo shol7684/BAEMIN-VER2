@@ -134,7 +134,8 @@
 	
 	
 	<select id="orderList" resultType="OrderList">
-        SELECT
+       SELECT
+       
 		    o.order_num,
 		    o.user_id,
 		    o.order_date,
@@ -152,7 +153,10 @@
 		    s.store_name,
 		    s.store_img,
 		    s.store_thumb,
-		    s.delevery_tip
+		    s.delevery_tip,
+            r.review_content,
+            r.score,
+            r.review_img
 		FROM
 		    bm_order_user o
 		LEFT JOIN
@@ -163,10 +167,15 @@
 		    bm_store s
 		ON
 		    d.store_id = s.id 
+        LEFT JOIN
+            bm_review r
+        ON
+            o.order_num = r.order_num
 		 WHERE 
 		    o.user_id = #{userId }
 		 ORDER BY
-		 	o.order_date desc   
+		 	o.order_date desc  
+             
 	</select>
 	
 	

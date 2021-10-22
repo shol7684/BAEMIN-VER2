@@ -20,7 +20,6 @@ main {
     overflow-y: hidden; 
     padding: 15px 0;
     box-shadow: 0px 2px 3px 0px rgb(0 0 0 / 25%);
-    
     margin: 0 auto;
     max-width: 1200px;
 }
@@ -96,17 +95,17 @@ main {
 .box .store {
     display: flex;
     flex-wrap: wrap;
-    margin: 0px 0 40px 0;
 }
 
 .box .store li {
     border : 1px solid #ddd;
     border-radius:10px;
-    width: 46%;
-    margin: 10px auto;
+    width: 47%;
+    margin: 15px;
     padding : 25px 0;
     position: relative; 
 }
+
 .box .store li.temp {
 	border: none;
 }
@@ -159,6 +158,10 @@ main {
 
 @media (max-width:1150px) {
 	
+	.box .store li {
+	    margin: 13px;
+	}
+
 	.box .store li img {
 	    width: 150px;
 	    height: 150px;
@@ -179,11 +182,12 @@ main {
 	
 	.box .store li {
 	    width: 100%;
-	    margin: 20px auto 0px;
 	    border:none;
 	    border-radius: 0;
 	    border-bottom: 2px solid #ddd;
 	}
+	
+	
 	.box .store li img {
 	    top: 5px;
 	    left: 5px;

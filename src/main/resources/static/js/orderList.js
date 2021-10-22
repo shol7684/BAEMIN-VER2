@@ -21,10 +21,14 @@ $(document).ready(function() {
 		let modal;
 
 		if ($(this).hasClass("regi")) {
-			console.log("ok");
 			modal = $(".review_modal");
 		} else {
 			modal = $(".review_modify_modal");
+			
+			const reviewContent = $(this).siblings(".review_content").val();
+			const reviewScore = $(this).siblings(".review_score").val();
+			
+			$(".review_modify_modal textarea").val(reviewContent);
 		}
 
 		openModal(modal, size);
@@ -58,6 +62,8 @@ $(document).ready(function() {
 			$(".review_submit_btn").attr("disabled", false);
 			$(".review_submit_btn").css("background", "#30DAD9");
 		}
+		
+		console.log("채ㅔ크");
 	}
 	
 	
@@ -108,7 +114,7 @@ $(document).ready(function() {
 
 	/* -----------------------------이미지 미리보기----------------------------- */
 	/* -----------------------------리뷰 수정 이미지 미리보기----------------------------- */
-	var modifyImg = document.querySelector(".modify_img");
+	/*var modifyImg = document.querySelector(".modify_img");
 
 	modifyImg.onchange = function(e) {
 		var fileReader = new FileReader();
@@ -127,7 +133,7 @@ $(document).ready(function() {
 	$(".img_close").click(function() {
 		$(".preview").attr("src", "");
 		$(".img_box div").css("display", "none");
-	});
+	});*/
 	/* -----------------------------리뷰 수정 이미지 미리보기----------------------------- */
 /*	var modal = $(".modal");
 	var closeA = $(".closeA");

@@ -32,4 +32,9 @@ public class OrderList {
 	private int usedPoint;
 	private String request;
 	
+	// 리뷰 상태 추가
+	private String reviewContent;
+	private float score;
+	private String reviewImg;
+	
 }

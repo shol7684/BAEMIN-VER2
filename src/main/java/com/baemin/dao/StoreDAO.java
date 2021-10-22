@@ -1,6 +1,7 @@
 package com.baemin.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.baemin.vo.Food;
 import com.baemin.vo.Review;
@@ -8,7 +9,7 @@ import com.baemin.vo.Store;
 
 public interface StoreDAO {
 
-	List<Store> storeList(int category, int address1);
+	List<Store> storeList(Map map);
 
 	Store storeDetail(int id);
 
@@ -19,6 +20,8 @@ public interface StoreDAO {
 	void reviewWrite(Review review);
 
 	List<Review> reviewList(int id);
+
+	void reviewModify(Review review);
 
 
 }

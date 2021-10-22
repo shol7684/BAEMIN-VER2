@@ -31,21 +31,32 @@ public class StoreController {
 
 	private static final Logger LOGGER = LogManager.getLogger(StoreController.class);
 
-	@GetMapping("store/{category}/{address1}")
+	@GetMapping("/store/{category}/{address1}")
 	public String store(@PathVariable int category, @PathVariable int address1, Model model) {
 
 		System.out.println(category);
 		System.out.println(address1);
-
-		List<Store> storeList = storeService.storeList(category, address1 / 100);
+		int page = 1;
+		
+		List<Store> storeList = storeService.storeList(category, address1 / 100, page);
 
 		model.addAttribute("storeList", storeList);
 
 		return "store/store";
 	}
+	
+	
+	@ResponseBody
+	@GetMapping("/storeNextPage")
+	public List<Store> storeNextPage(int category, int address1, int page) {
+		
+		List<Store> storeList = storeService.storeList(category, address1 / 100, page);
+		
+		return storeList;
+	}
 
 	@GetMapping("/store/detail/{id}")
-	public String storeDetail(@PathVariable int id, Model model) {
+	public String storeDetail(@PathVariable int id, Model model, @AuthenticationPrincipal LoginDetail user) {
 
 		Map<String, Object> store = storeService.storeDetail(id);
 
@@ -53,9 +64,14 @@ public class StoreController {
 
 		model.addAttribute("store", store);
 
+		if(user != null) {
+			model.addAttribute("role", user.getUser().getRole());
+		}
+		
 		return "store/detail";
 	}
 
+	// 메뉴 클릭시 음식 추가옵션 가져요기
 	@ResponseBody
 	@GetMapping("/foodOption")
 	public List menuDetail(int foodId) {
@@ -64,6 +80,8 @@ public class StoreController {
 		return foodOption;
 	}
 
+	
+	// 리뷰 작성
 	@PostMapping("/store/review")
 	public String review(Review review, MultipartFile file, @AuthenticationPrincipal LoginDetail user) {
 
@@ -89,6 +107,28 @@ public class StoreController {
 		System.out.println("유져" + review);
 
 		storeService.reviewWrite(review);
+
+		return "redirect:/orderList";
+	}
+	
+	// 리뷰 수정
+	@PostMapping("/store/reviewModify")
+	public String reviewModify(Review review, MultipartFile file, @AuthenticationPrincipal LoginDetail user) {
+
+		// 이미지 첨부 x
+		if (file.isEmpty()) {
+			String img = File.separator + "img" + File.separator + "none.gif";
+			review.setReviewImg(img);
+		}
+		// 이미지 첨부 o
+		else {
+			String img = File.separator + "upload" + File.separator + file.getOriginalFilename();
+			review.setReviewImg(img);
+		}
+		long userId = user.getUser().getId();
+		review.setUserId(userId);
+
+		storeService.reviewModify(review);
 
 		return "redirect:/orderList";
 	}

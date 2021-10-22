@@ -99,11 +99,9 @@
 	
 	/*폰번호 길이제한 11자*/
 	function lenthCheck(e, length) {
-		
 		if(e.value.length > length) {
 			return false;
 		}
-		
 		return true;
 	}
 	

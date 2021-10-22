@@ -1,5 +1,6 @@
 package com.baemin.dao;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
 import com.baemin.vo.Store;
 
@@ -41,6 +43,32 @@ public class AdminDAOImp implements AdminDAO {
 		map.put("orderNum", orderNum);
 
 		sql.update("admin.bossComment", map);
+
+	}
+
+	@Override
+	public void menuDelete(int storeId, long[] deleteNumber) {
+		Map<String, Object> map = new HashMap<>();
+
+		map.put("storeId", storeId);
+		map.put("deleteNumber", deleteNumber);
+
+		sql.delete("admin.menuDelete", map);
+	}
+
+	@Override
+	public long addMenu(Food food) {
+		sql.insert("admin.addMenu", food);
+		
+		System.out.println("food.getId() = " + food.getId()); 
+		
+		return food.getId();
+
+	}
+
+	@Override
+	public void addMenuOption(Map<String, Object> map) {
+		sql.insert("admin.addMenuOption", map);
 
 	}
 

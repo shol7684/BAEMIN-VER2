@@ -19,9 +19,6 @@
 	text-align: center;
 }
 
-#admin_button_box {
-	display: none;
-}
 
 #wrap {
 	width: 100%;
@@ -484,12 +481,12 @@ main .comment li .boss_comment_box {
 }
 
 /* 임시 */
-.menu {
+/* .menu {
 	display: none;
 }
 main .comment {
 	display: block;
-}
+} */
 /* 임시 */
 
 .boss_comment .comment_area {

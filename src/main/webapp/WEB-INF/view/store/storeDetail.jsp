@@ -40,12 +40,13 @@
                    <div>예상 배달시간 ${store.storeInfo.deleveryTime  }분</div>
                    <div>배달팁 <fm:formatNumber value="${store.storeInfo.deleveryTip }" pattern="###,###" />원</div>
                    
-                   
+                   <c:if test="${adminPage && role == 'ROLE_ADMIN'  }">
                    <div id="admin_button_box">
 	                   <button class="inf_modify">정보 수정</button>
 	                   <button class="add_menu">메뉴 추가</button>
 	                   <button class="delete_menu">메뉴 삭제</button>
                    </div>
+                   </c:if>
 	    
                </div>
 	    </nav>
@@ -103,13 +104,16 @@
 	        <ul class="menu">
 	        <c:forEach items="${store.foodList }" var="foodList" >
 	            <li>
+	            <c:if test="${adminPage && role == 'ROLE_ADMIN' }">
 	                <input type="checkbox" class="menu_delete_checkbox" name="deleteNumber" value="${foodList.id }">
+                </c:if>
+                
 	                <div class="in">
 	                    <h2>${foodList.foodName } </h2>
 	                    <div><img src="${foodList.foodImg }" alt="이미지"></div>
 	                    <div><fm:formatNumber value="${foodList.foodPrice }" pattern="###,###" />원 </div>
 	                    
-	                     <input type="hidden" value="${foodList.storeId }" name="storeId" id ="store_id"  >
+	                     <input type="hidden" value="${foodList.storeId }" name="storeId" >
 			             <input type="hidden" value="${foodList.id }" name="foodId" id ="food_id"   >
 			             <input type="hidden" value="${foodList.foodName }" name="foodName" id ="food_name" >
 			             <input type="hidden" value="${foodList.foodPrice }" name="foodPrice" id ="food_price"   >
@@ -292,33 +296,34 @@
 				                </div>
 		                	</div>
 		                	
+		                	
+		                	 <c:if test="${role == 'ROLE_ADMIN' }">
 			                 <div>
 			                
 			                	<c:if test="${!empty reviewList.bossComment}">
-			                		<button class="review_btn reply " >댓글 수정하기</button>
+			                		<button class="review_btn comment_modify">댓글 수정하기</button>
 			                	</c:if>
 			                	
 			                	<c:if test="${empty reviewList.bossComment}">
-			                		<button class="review_btn reply " >답장하기</button>
-			                	</c:if>
-			                	
-			                	
+			                		<button class="review_btn comment_write" >답장하기</button>
+			                	</c:if> 
 			                	<input type="hidden" value="${reviewList.orderNum }" class="order_num">
 			                </div>
-		                </div> 
+			                </c:if>
 			                
+			                
+		                </div> 
 			                
 		                <div>
 			                <c:if test="${!empty reviewList.reviewImg }">
 			                	<div><img src="${reviewList.reviewImg }" alt="이미지" class="review_img"></div>
 			                </c:if>
-		                
 		                	<div>${reviewList.reviewContent } </div>
 		                </div>
-		                
 	                </div>
 	                
-	                <div class="boss aa">
+	                
+	                <div class="boss">
 		                <c:if test="${!empty reviewList.bossComment }">	
 			                <div class="boss_comment_box">
 			                	<div class="nickname">사장님</div>

@@ -1,22 +1,27 @@
 package com.baemin.controller;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.baemin.config.LoginDetail;
 import com.baemin.service.AdminService;
 import com.baemin.service.StoreService;
+import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
 import com.baemin.vo.Store;
 
@@ -71,7 +76,13 @@ public class AdminController {
 			
 		}
 		
-		adminService.storeRegist(store);
+		for(int i=0;i<30;i++) {
+			String s = store.getStoreName() + i;
+			store.setStoreName(s);
+			
+			adminService.storeRegist(store);
+		}
+		
 		
 		
 		return "redirect:/admin/storeManagement";
@@ -79,7 +90,7 @@ public class AdminController {
 	
 	
 	@GetMapping("/admin/detail/{id}")
-	public String adminStoreDetail(@PathVariable int id,Model model) {
+	public String adminStoreDetail(@PathVariable int id,Model model, @AuthenticationPrincipal LoginDetail user) {
 		
 		Map<String, Object> store = storeService.storeDetail(id);
 
@@ -87,24 +98,66 @@ public class AdminController {
 
 		model.addAttribute("store", store);
 		
-		return "store/detail";
+		if(user != null) {
+			model.addAttribute("role", user.getUser().getRole());
+			model.addAttribute("adminPage" , true);
+		}
+		
+		return "admin/adminStoreDetail";
 	}
 	
 	@ResponseBody
 	@PostMapping("/admin/bossComment")
-	public String bossComment(String orderNum, String bossComment) {
-		
-		System.out.println("bossComment = " + bossComment);
-		
-//		adminService.bossComment(orderNum, bossComment);
-		
+	public String bossComment(String orderNum, String bossComment, String clickBtn) {
+		bossComment = adminService.bossComment(orderNum, bossComment);
 		
 		return bossComment;
 	}
 	
 	
 	
+	@ResponseBody
+	@DeleteMapping("/admin/menu")
+	public void deleteMenu(int storeId, long[] deleteNumber) {
+		
+		System.out.println("storeId = " + storeId);
+		System.out.println("deleteNumber = " + Arrays.toString(deleteNumber));
+		
+		adminService.menuDelete(storeId, deleteNumber);
+		
+	}
+	
+	@PostMapping("/admin/menu")
+	public String addMenu(Food food, String[] foodOption, Integer[] foodOptionPrice, MultipartFile file) {
+		
+		System.out.println("food = " + food);
+		System.out.println("foodOption= " + Arrays.toString(foodOption));
+		System.out.println("foodOptionPrice= " + Arrays.toString(foodOptionPrice));
+//		이미지 첨부 x 
+		if(file.isEmpty()) {
+			String img = File.separator + "img" + File.separator + "none.gif";
+			food.setFoodImg(img);
+			food.setFoodThumb(img);
+			
+		} 
+//		이미지 첨부 o 
+		else {
+		}
+		
+		adminService.addMenu(food, foodOption, foodOptionPrice);
+		
+		
+		
+		
+		
+		
+		
+		return "redirect:/admin/detail/" + food.getStoreId() ;
+	}
+	
+	
 	
 	
 
 }
+ 

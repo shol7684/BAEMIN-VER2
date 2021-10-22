@@ -88,6 +88,57 @@ SELECT * FROM (
 			ORDER_NUM = #{orderNum }  			 
 	</update>
 	
+	
+	
+	<delete id="menuDelete">
+		DELETE BM_FOOD WHERE STORE_ID = ${storeId } AND ID IN 
+		
+		<foreach collection="deleteNumber" item="arr" open="(" close=")" separator="," >
+			${arr }
+		</foreach>
+	
+	</delete>
+	
+	
+	<insert id="addMenu">
+	
+	<selectKey keyProperty="id" resultType="long" order="BEFORE" >
+		SELECT FOOD_ID_SEQ.NEXTVAL FROM DUAL
+	</selectKey>
+	
+		INSERT INTO BM_FOOD (
+			ID
+			,STORE_ID
+			,FOOD_NAME
+			,FOOD_PRICE
+			,FOOD_DEC
+			,FOOD_IMG
+			,FOOD_THUMB
+		) VALUES (
+			#{id }
+			,#{storeId }
+			,#{foodName }
+			,#{foodPrice }
+			,#{foodDec }
+			,#{foodImg }
+			,#{foodThumb }
+		)
+	</insert>
+	
+	
+	<insert id="addMenuOption">
+		INSERT INTO BM_FOOD_OPTION (
+			ID
+			,FOOD_ID
+			,OPTION_NAME
+			,OPTION_PRICE
+		) VALUES (
+			OPTION_ID_SEQ.NEXTVAL
+			,#{foodId }
+			,#{foodOption }
+			,#{foodOptionPrice }
+		)
+	</insert>
 		
 </mapper>
    

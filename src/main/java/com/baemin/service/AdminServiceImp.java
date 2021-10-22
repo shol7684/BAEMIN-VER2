@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.baemin.dao.AdminDAO;
 import com.baemin.vo.Food;
@@ -35,8 +36,49 @@ public class AdminServiceImp implements AdminService {
 	}
 
 	@Override
-	public void bossComment(String orderNum, String bossComment) {
+	public String bossComment(String orderNum, String bossComment) {
+		
+		bossComment = bossComment.replace("\n","<br>").replaceAll(" ", "&nbsp");
+		
 		adminDAO.bossComment(orderNum, bossComment);
+		
+		return bossComment; 
+	}
+
+	@Override
+	public void menuDelete(int storeId, long[] deleteNumber) {
+		adminDAO.menuDelete(storeId, deleteNumber);
+	}
+
+	@Transactional
+	@Override
+	public void addMenu(Food food, String[] foodOption, Integer[] foodOptionPrice) {
+
+		long foodId = adminDAO.addMenu(food);
+		
+		System.out.println("food Id = "  + foodId);
+		
+//		if(foodOption.length != 0) {
+//			Map<String, Object> map = new HashMap<>();
+//			map.put("foodOption", foodOption);
+//			map.put("foodOptionPrice", foodOptionPrice);
+//			map.put("foodId", foodId);
+//			adminDAO.addMenuOption(map);
+//		}
+		
+		for(int i=0;i<foodOption.length;i++) {
+			Map<String, Object> map = new HashMap<>();
+			
+			if(foodOptionPrice[i] == null ) {
+				foodOptionPrice[i] = 0;
+			}
+			
+			map.put("foodOption", foodOption[i]);
+			map.put("foodOptionPrice", foodOptionPrice[i]);
+			map.put("foodId", foodId);
+			adminDAO.addMenuOption(map);
+		}
+		
 		
 	}
 
