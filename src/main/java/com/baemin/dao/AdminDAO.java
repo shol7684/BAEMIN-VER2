@@ -9,7 +9,7 @@ import com.baemin.vo.Store;
 
 public interface AdminDAO {
 
-	List<OrderList> orderList();
+	List<OrderList> orderList(String list);
 
 	List<Store> storeList();
 
@@ -22,5 +22,9 @@ public interface AdminDAO {
 	long addMenu(Food food);
 
 	void addMenuOption(Map<String, Object> map);
+
+	void storeModify(Store store);
+
+	void orderAccept(String orderNum, int time, long userId);
 
 }

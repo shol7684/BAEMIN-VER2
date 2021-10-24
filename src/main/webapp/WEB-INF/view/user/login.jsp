@@ -30,7 +30,7 @@
 				<div class="box">
 					<div class="continue_login">
 						<i class="fas fa-check-square" ></i>
-						<input type="checkbox" id="continue_login" name="continueLogin"> 
+						<input type="checkbox" id="continue_login" name="remember-me" > 
 						<label for="continue_login">로그인 유지하기</label> 
 					</div>
 					

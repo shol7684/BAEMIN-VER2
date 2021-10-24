@@ -8,12 +8,10 @@
 <div class="store_reg_modal modal" >
 	<div id="modal_header">
 	 	<button class="closeA">×</button>
-		<h1>매장 등록</h1>
+		<h1>가게정보 수정</h1>
 	 </div>
 
-    <form action="/admin/storeRegist" method="post" enctype="multipart/form-data"> 
-
-    
+    <form action="/admin/storeModify" method="post" enctype="multipart/form-data"> 
 		<div class="modal_box">
 	         <ul>
 	            <li>
@@ -41,7 +39,7 @@
 	                <label for="storeName" >
 	                    <h2>매장 이름</h2>
 	                </label>
-	                <div><input type="text" id="storeName" name="storeName" value="" required spellcheck="false" ></div>
+	                <div><input type="text" id="storeName" name="storeName" value="${store.storeInfo.storeName }" required spellcheck="false" ></div>
 	
 	            <li class="location">
 	                <label for="location">
@@ -50,10 +48,10 @@
 					
 	                    <div class="sample">
 	                        <input type="button" onclick="sample2_execDaumPostcode()" value="우편번호 찾기" id="sample2_btn" ><br>
-	                        <input type="text" onclick="sample2_execDaumPostcode()" id="sample2_postcode" placeholder="우편번호" readonly name="storeAddress1" required>
+	                        <input type="text" onclick="sample2_execDaumPostcode()" value="${store.storeInfo.storeAddress1 }" id="sample2_postcode" placeholder="우편번호" readonly name="storeAddress1" required>
 	
-	                        <input type="text" onclick="sample2_execDaumPostcode()" id="sample2_address" placeholder="주소" readonly name="storeAddress2" required><br>
-	                        <input type="text" id="sample2_detailAddress" placeholder="상세주소" name="storeAddress3">
+	                        <input type="text" onclick="sample2_execDaumPostcode()" value="${store.storeInfo.storeAddress2 }" id="sample2_address" placeholder="주소" readonly name="storeAddress2" required><br>
+	                        <input type="text" id="sample2_detailAddress" value="${store.storeInfo.storeAddress3 }" placeholder="상세주소" name="storeAddress3">
 	                        <input type="hidden" id="sample2_extraAddress" placeholder="참고항목" readonly>
 	
 	                       <%@ include file="/WEB-INF/view/include/addressSearch.jsp" %>
@@ -65,7 +63,7 @@
 	                <label for="storePhoneNumber">
 	                    <h2>매장 전화번호</h2>
 	                </label>
-	                <div><input type="number" onkeypress="return lenthCheck(this, 10);" id="storePhoneNumber" name="storePhone" required></div>
+	                <div><input type="number" value="${store.storeInfo.storePhone }" onkeypress="return lenthCheck(this, 11);" id="storePhoneNumber" name="storePhone" required></div>
 	            </li>
 	
 	            <li class="business_hour">
@@ -95,28 +93,28 @@
 	                <label for="minDeleveryPrice">
 	                    <h2>최소 배달금액</h2>
 	                </label>
-	                <div><input type="number" onkeypress="return lenthCheck(this, 8);" id="minDeleveryPrice" name="minDelevery" required>원</div>
+	                <div><input type="number" value="${store.storeInfo.minDelevery }" onkeypress="return lenthCheck(this, 8);" id="minDeleveryPrice" name="minDelevery" required>원</div>
 	            </li>
 	            
 	            <li>
 	                <label for="minDeleveryPrice">
 	                    <h2>배달팁</h2>
 	                </label>
-	                <div><input type="number" onkeypress="return lenthCheck(this, 8);" id="deleveryTip" name="deleveryTip" required >원</div>
+	                <div><input type="number" value="${store.storeInfo.deleveryTip }" onkeypress="return lenthCheck(this, 8);" id="deleveryTip" name="deleveryTip" required >원</div>
 	            </li>
 	            
 	            <li>
 	                <label for="deleveryTime">
 	                    <h2>예상 배달시간</h2>
 	                </label>
-	                <div><input type="number"  onkeypress="return lenthCheck(this, 3);"  pattern="/d*" value="" id="deleveryTime" name="deleveryTime" required>분</div>
+	                <div><input type="number" value="${store.storeInfo.deleveryTime }" onkeypress="return lenthCheck(this, 3);"  pattern="/d*" value="" id="deleveryTime" name="deleveryTime" required>분</div>
 	            </li>
 	            
 	             <li>
 	                <label for="store_des">
 	                    <h2>가게 정보</h2>
 	                </label>
-	                <div class="store_des"><textarea id="store_des" name="storeDes" maxlength="500" ></textarea></div>
+	                <div class="store_des"><textarea  id="store_des" name="storeDes" maxlength="500" >${store.storeInfo.storeDes }</textarea></div>
 	                
 	            </li> 
 	
@@ -137,6 +135,10 @@
 	        </ul>
 		</div>
 		
+		
+		<input type="hidden" name="storeImg" value="${store.storeInfo.storeImg }" >
+		<input type="hidden" name="storeThumb" value="${storeVO.storeThumb }" >
+		<input type="hidden" value="${store.storeInfo.id }" name="id">
 		<div id="btn_box">
        		<button class=closeB type="button">취소</button>
        		<button class="regist_btn" type="submit">등록</button>

@@ -1,11 +1,6 @@
 
 $(document).ready(function() {
 
-	/* let orderList = "${orderList[0].storeName }";
-	if(orderList != null && orderList != "") {
-		$("body").css("background" , "#fff");
-	} */
-
 
 	let size = $(window).width();
 
@@ -38,49 +33,63 @@ $(document).ready(function() {
 		
 		console.log(orderNum);
 
-		$(".review_modal .order_num").val(orderNum);
-		$(".review_modal .store_id").val(storeId);
-	});
-	
-	
-	
-	
-	// 리뷰 작성 별점 체크 했는지 확인
-	$(".review_text textarea").keyup(function() {
-		inputCheck();
-	})
-
-
-	function inputCheck() {
-		let text = $(".review_text textarea").val();
-		let score = $(".score").val();
+		modal.find(".order_num").val(orderNum);
+		modal.find(".store_id").val(storeId);
 		
-		if(text.length == 0 || score == "" || score == null) {
-			$(".review_submit_btn").css("background", "#ddd");
-			$(".review_submit_btn").attr("disabled", true);
-		} else {
-			$(".review_submit_btn").attr("disabled", false);
-			$(".review_submit_btn").css("background", "#30DAD9");
+		
+		
+		// 별점주기
+		let score = 0;
+	
+		$(".score_box i").off().click(function() {
+			score = $(this).index() + 1;
+				
+			$(".score_box i").removeClass("fas");
+			$(this).addClass("fas").prevAll().addClass("fas");
+	
+			modal.find(".score").val(score);
+	
+			inputCheck(modal);
+		});
+		
+		
+		
+		$(".review_text textarea").off().keyup(function() {
+			inputCheck(modal);
+		})
+		
+		
+		
+		// 리뷰 작성, 별점 체크 했는지 확인
+		function inputCheck(modal) {
+			let text = modal.find(".review_text textarea").val();
+			let score = modal.find(".score").val();
+			
+			console.log("text = " + text) ;
+			console.log("score = " + score) ;
+			 
+			
+			if(text.length == 0 || score == "" || score == null) {
+				modal.find(".review_submit_btn").css("background", "#ddd");
+				modal.find(".review_submit_btn").attr("disabled", true);
+			} else {
+				modal.find(".review_submit_btn").attr("disabled", false);
+				modal.find(".review_submit_btn").css("background", "#30DAD9");
+			}
+			
+			console.log("채ㅔ크");
 		}
-		
-		console.log("채ㅔ크");
-	}
-	
-	
-	
-	// 별점주기
-	let score = 0;
-
-	$(".score_box i").click(function() {
-		score = $(this).index() + 1;
-
-		$(".score_box i").removeClass("fas");
-		$(this).addClass("fas").prevAll().addClass("fas");
-
-		$(".review_modal .score").val(score);
-
-		inputCheck();
 	});
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
 
 
 

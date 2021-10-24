@@ -36,7 +36,7 @@
 	position: relative;
 }
 
-.add_menu_modal .option_box button {
+.add_menu_modal .option_box .add_option {
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -53,6 +53,16 @@
 	border: 1px solid #28a8a8;
 	border-radius: 5px;
 	margin-bottom: 10px;
+	position: relative;
+}
+
+.add_menu_modal .add_option_cancle {
+	padding: 3px 8px;
+	border-radius: 5px;
+	background: #fff;
+	position: absolute;
+	right: -16%;
+	top: 9%;
 }
 
 .add_menu_modal .option div {
@@ -85,6 +95,7 @@
 	display: block;
 	background: #ddd;
 }
+
 .add_menu_modal #img_area input[type=file] {
 	width: auto;
 }
@@ -126,7 +137,6 @@
 .add_menu_modal button[type=submit] {
 	background: #30DAD9;
 }
-
 
 /* .add_menu_modal .modal_box .btn {
 	width: 100%;

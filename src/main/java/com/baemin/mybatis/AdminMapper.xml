@@ -5,23 +5,34 @@
 <mapper namespace="admin">
 
 	<select id="orderList" resultType="OrderList">
-SELECT * FROM (
-	SELECT
-	    U.order_num, U.user_id, U.order_date, U.pay_method, U.delevery_status, U.phone, U.delevery_address1,
-	    U.delevery_address2, U.delevery_address3, UD.store_id, UD.amount, UD.used_point, UD.food_price,
-	    UD.total_price, UD.food_info, UD.request
-	FROM bm_order_user U LEFT JOIN     
-	    bm_order_detail_user UD ON  U.ORDER_NUM = UD.ORDER_NUM
-	    
-	  UNION ALL 
-	 
-	SELECT
-	    NU.order_num, NU.user_id, NU.order_date, NU.pay_method, NU.delevery_status, NU.phone, NU.delevery_address1,
-	    NU.delevery_address2, NU.delevery_address3, NUD.store_id, NUD.amount, NUD.used_point, NUD.food_price,
-	    NUD.total_price, NUD.food_info, NUD.request
-	FROM bm_order_non_user NU LEFT JOIN 
-	    bm_order_detail_non_user NUD ON  NU.ORDER_NUM = NUD.ORDER_NUM  
-)
+	SELECT O.*,S.STORE_NAME,C.* FROM 
+	   ( SELECT * FROM 
+		  ( SELECT COUNT(*) COUNT1 FROM ( SELECT  * FROM bm_order_non_user  UNION ALL SELECT * FROM bm_order_user ) WHERE delevery_status = '주문접수 대기 중' ),
+          ( SELECT COUNT(*) COUNT2 FROM ( SELECT  * FROM bm_order_non_user  UNION ALL SELECT * FROM bm_order_user ) WHERE delevery_status = '처리 중' ),
+          ( SELECT COUNT(*) COUNT3 FROM ( SELECT  * FROM bm_order_non_user  UNION ALL SELECT * FROM bm_order_user ) WHERE delevery_status = '완료' )) C,	
+	   ( SELECT
+		    U.order_num, U.user_id, U.order_date, U.pay_method, U.delevery_status, U.phone, U.delevery_address1,
+		    U.delevery_address2, U.delevery_address3, UD.store_id, UD.amount, UD.used_point, UD.food_price,
+		    UD.total_price, UD.food_info, UD.request
+		FROM bm_order_user U LEFT JOIN     
+		    bm_order_detail_user UD ON  U.ORDER_NUM = UD.ORDER_NUM
+		    
+		  UNION ALL 
+		 
+		SELECT
+		    NU.order_num, NU.user_id, NU.order_date, NU.pay_method, NU.delevery_status, NU.phone, NU.delevery_address1,
+		    NU.delevery_address2, NU.delevery_address3, NUD.store_id, NUD.amount, NUD.used_point, NUD.food_price,
+		    NUD.total_price, NUD.food_info, NUD.request
+		FROM bm_order_non_user NU LEFT JOIN 
+		    bm_order_detail_non_user NUD ON  NU.ORDER_NUM = NUD.ORDER_NUM  
+	) O
+	LEFT JOIN
+	    BM_STORE S
+	ON 
+		O.STORE_ID = S.ID
+	WHERE 
+		DELEVERY_STATUS = #{list }
+	ORDER BY ORDER_DATE
 	</select>
 	
 	
@@ -139,6 +150,43 @@ SELECT * FROM (
 			,#{foodOptionPrice }
 		)
 	</insert>
+	
+	
+	
+	<update id="storeModify">
+		UPDATE BM_STORE SET
+			CATEGORY = #{category }
+			,STORE_NAME = #{storeName }
+			,STORE_ADDRESS1 = #{storeAddress1 }
+			,STORE_ADDRESS2 = #{storeAddress2 }
+			,STORE_ADDRESS3 = #{storeAddress3 }
+			,STORE_PHONE = #{storePhone }
+			,STORE_IMG = #{storeImg }
+			,STORE_THUMB = #{storeThumb }
+			,OPENING_TIME = #{openingTime }
+			,CLOSING_TIME = #{closingTime }
+			,MIN_DELEVERY = #{minDelevery }
+			,DELEVERY_TIME = #{deleveryTime }
+			,DELEVERY_TIP = #{deleveryTip }
+			,STORE_DES = #{storeDes }
+		WHERE
+		    ID = #{id }  
+	</update>
+	
+	
+	<update id="orderAccept">
+		<if test="userId == 0">
+			UPDATE BM_ORDER_NON_USER SET 
+			DELEVERY_STATUS = '처리 중'
+			WHERE ORDER_NUM = #{orderNum }
+		</if>
+		
+		<if test="userId != 0">
+			UPDATE BM_ORDER_USER SET
+			DELEVERY_STATUS = '처리 중'
+			WHERE ORDER_NUM = #{orderNum }
+		</if>
+	</update>
 		
 </mapper>
    

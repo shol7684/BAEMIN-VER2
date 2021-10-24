@@ -9,23 +9,23 @@ SELECT * FROM
 	( SELECT rownum rn, s.*,t.* FROM 
 		BM_STORE s
 	        LEFT JOIN    
-				( SELECT r.store_id, r.score, r.review_count, r.boss_comment_count, c.order_count FROM  
-					( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r ,
-					( SELECT store_id, SUM(order_count) order_count from (
-						SELECT store_id, count(*) order_count FROM bm_order_detail_user GROUP BY store_id
-							UNION ALL
-						SELECT store_id, count(*) order_count FROM bm_order_detail_non_user GROUP BY store_id ) GROUP BY store_id ) c 
+				( SELECT r.store_id, r.score, r.review_count, r.boss_comment_count FROM  
+					( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
 				) t
 			ON s.id = t.store_id     
 			WHERE CATEGORY = #{category} AND STORE_ADDRESS1 LIKE '${address1}%' )
 	WHERE rn BETWEEN ${startPage } AND ${endPage }		
 	</select>
 
+
+
+
 	<select id="storeDetail" resultType="Store">
 		SELECT * FROM 
 			BM_STORE,
 			( SELECT * FROM  
 				( SELECT AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review WHERE store_id = #{id } ),
+				( SELECT COUNT(*) LIKES_COUNT FROM BM_LIKES WHERE STORE_ID = #{id } ),
 				( SELECT SUM(order_count) order_count from (
 					SELECT count(*) order_count FROM bm_order_detail_user WHERE store_id = #{id }
 						UNION ALL
@@ -33,6 +33,9 @@ SELECT * FROM
 			) 
 		WHERE ID = #{id }
 	</select>
+	
+	
+	
 	
 	<select id="foodList" resultType="Food">
 		SELECT
@@ -109,7 +112,64 @@ SELECT * FROM
 		    r.user_id = u.id
 		WHERE
 		    r.store_id = #{id}
+		ORDER BY    
+			regi_date DESC
 	</select>
 
+	<insert id="addLikes">
+		INSERT INTO BM_LIKES (
+			USER_ID
+			,STORE_ID
+		) VALUES (
+			#{userId }
+			,#{storeId }
+		)
+	</insert>
 
+	<delete id="deleteLikes">
+		DELETE BM_LIKES  WHERE 
+		USER_ID = #{userId } AND
+		STORE_ID = #{storeId }			
+	</delete>
+	
+	<select id="isLikes" resultType="long">
+		SELECT STORE_ID FROM BM_LIKES WHERE USER_ID = #{userId } AND STORE_ID = #{storeId }
+	</select>
+	
+	
+	<select id="likesList" resultType="Store">
+		SELECT 
+		    s.id
+		    ,s.category
+		    ,s.store_name
+		    ,s.store_address1
+		    ,s.store_address2
+		    ,s.store_address3
+		    ,s.store_phone
+		    ,s.store_img
+		    ,s.store_thumb
+		    ,s.opening_time
+		    ,s.closing_time
+		    ,s.delevery_tip
+		    ,s.store_des
+		    ,t.score
+		    ,t.review_count
+		    ,t.boss_comment_count
+		    ,l.user_id
+		    ,l.likes_date
+    	FROM 
+            BM_STORE s
+        LEFT JOIN    
+            ( SELECT r.store_id, r.score, r.review_count, r.boss_comment_count FROM  
+                ( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r 
+            ) t
+        ON s.id = t.store_id
+        RIGHT JOIN
+            ( SELECT USER_ID,STORE_ID,LIKES_DATE FROM BM_LIKES WHERE USER_ID = #{userId} ) l
+        ON s.id = l.store_id 
+        ORDER BY LIKES_DATE DESC
+	
+	</select>
+	
+	
 </mapper>

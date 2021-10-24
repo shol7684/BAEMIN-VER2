@@ -1,0 +1,64 @@
+
+.order_accept_modal section {
+	width: 95%;
+	padding-top: 20px;
+	margin: 0 auto;
+}
+
+
+.order_accept_modal section div {
+	font-size: 18px;
+}
+
+.order_accept_modal article {
+	border-bottom: 1px solid #999999;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+	min-height: 100px;
+}
+
+.order_accept_modal article.delevery_info  {
+	position: relative;
+}
+
+.order_accept_modal .delevery_info .order_cancle_btn {
+	background: #808080;
+	color: #fff;
+	padding: 10px;
+	border: none;
+	border-radius: 10px;
+	position: absolute;
+	right: 0;
+}
+
+.order_accept_modal .delevery_info .info_area {
+	width: 82%;
+	display: flex;
+}
+
+.order_accept_modal .delevery_info .info_area > div:first-child {
+	display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: 3%;
+    color: #808080;
+}
+
+
+.order_accept_modal article.request div {
+	min-height: 50px;
+	border: 1px solid #333333;
+	margin-top: 5px;
+	padding: 5px;
+	border-radius: 10px;
+}
+
+
+.order_accept_modal .menu {
+	font-size: 18px;
+}
+
+.order_accept_modal button.delevery_timer_btn {
+	background: #30DAD9;
+}
+

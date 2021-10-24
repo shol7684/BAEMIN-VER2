@@ -11,17 +11,25 @@ public interface StoreDAO {
 
 	List<Store> storeList(Map map);
 
-	Store storeDetail(int id);
+	Store storeDetail(long storeId);
 
-	List<Food> foodList(int id);
+	List<Food> foodList(long id);
 
 	List<String> foodOption(int foodId);
 
 	void reviewWrite(Review review);
 
-	List<Review> reviewList(int id);
+	List<Review> reviewList(long id);
 
 	void reviewModify(Review review);
+
+	void addLikes(Map<String, Long> map);
+
+	void deleteLikes(Map<String, Long> map);
+
+	Long isLikes(Map<String, Long> m);
+
+	List likesList(long userId);
 
 
 }

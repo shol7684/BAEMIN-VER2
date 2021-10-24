@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baemin.config.LoginDetail;
+import com.baemin.controller.StoreController;
 import com.baemin.dao.OrderDAO;
 import com.baemin.vo.Cart;
 import com.baemin.vo.OrderInfo;
@@ -22,6 +25,8 @@ public class OrderServiceImp implements OrderService {
 	@Autowired
 	private OrderDAO orderDAO;
 
+	private static final Logger LOGGER = LogManager.getLogger(OrderServiceImp.class);
+	
 	@Transactional
 	@Override
 	public long orderPriceCheck(Map cartMap) {
@@ -96,11 +101,18 @@ public class OrderServiceImp implements OrderService {
 		orderDetail.put("request", info.getRequest());
 		orderDetail.put("userId", userId + "");
 		
-		
-		System.out.println("사용 포인트 = " + info.getUsedPoint() );
+		LOGGER.info("사용 포인트 = " + info.getUsedPoint());
 
 		orderDAO.order(info);
 		orderDAO.orderDetail(orderDetail);
+		
+		if(info.getUsedPoint() != 0 ) {
+			long updatePoint = user.getUser().getPoint() - info.getUsedPoint();
+			orderDAO.updatePoint(updatePoint, userId);
+			
+			LOGGER.info("포인트 차감 " + info.getUsedPoint());
+			LOGGER.info("현재 포인트 " + updatePoint);
+		}
 		
 		
 	}

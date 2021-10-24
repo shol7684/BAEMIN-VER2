@@ -139,7 +139,6 @@ public class OrderController {
 			}
 		}
 		
-		
 		int[] amount = gson.fromJson(orderListDetail.getAmount(), int[].class);
 		
 		model.addAttribute("orderListDetail" , orderListDetail);

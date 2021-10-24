@@ -42,6 +42,17 @@ $(document).ready(function() {
 					
 					let html = "";
 					for(var i=0;i<storeList.length;i++) {
+						
+						let scoreHtml = "";
+						for(var j=0;j<5;j++) {
+							if(storeList[i].score >= j) {
+								scoreHtml += `<i class="fas fa-star"></i> `;
+							}
+							if(storeList[i].score < j) {
+								scoreHtml += `<i class="far fa-star"></i> `;
+							}
+						}
+						
 						html += `<li >
 		                    <div>
 		                        <a href="/store/detail/${storeList[i].id }">   
@@ -52,21 +63,12 @@ $(document).ready(function() {
 		                                <div>
 		                                	<span>평점 ${storeList[i].score }</span>
 		                                	<span class="score_box">
-		                                	
-						                	<c:forEach begin="0" end="4" var="i">
-					                   			<c:if test="${storeList[i].score >= i }">
-							                   		<i class="far fas fa-star"></i>
-					                   			</c:if>
-					                   			<c:if test="${storeList[i].score < i }">
-							                   		<i class="far fa-star"></i>
-					                   			</c:if>
-					                   		</c:forEach>
-						                   	
+		                                	${scoreHtml}
 					               			</span>
 		                                </div>
 	                                    <div><span>리뷰 ${storeList[i].reviewCount }</span><span>ㅣ</span><span>사장님 댓글 ${storeList[i].bossCommentCount }</span></div>
-		                                <div><span>배달시간 ${storeList[i].deleveryTime }분</span><span>최소주문금액 <fm:formatNumber value="${storeList[i].minDelevery }"  pattern="###,###" />원</span></div>
-		                                <div>배달팁 <fm:formatNumber value="${storeList[i].deleveryTip }"  pattern="###,###" />원</div>
+		                                <div><span>배달시간 ${storeList[i].deleveryTime }분</span><span>최소주문금액 ${storeList[i].minDelevery.toLocaleString() }원</span></div>
+		                                <div>배달팁 ${storeList[i].deleveryTip.toLocaleString()}원</div>
 		                                 
 		                            </div>
 		                        </a>
@@ -77,14 +79,13 @@ $(document).ready(function() {
 					
 					$(".store").append(html);
 					
-					run = false;
-					
+					if(storeList != "") {
+						run = false;
+					}
 				}
-			})
-			
-		}
-		
-	})
+			}) // ajax
+		} // if
+	}) // scroll
 	
 	
 	

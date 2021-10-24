@@ -33,11 +33,6 @@
 					<c:forEach begin="0" end="${fn:length(cartMap.cartList) -1 }" var="j"  >
 					
 						<li>
-							<input type="hidden" value="${cartList1.menuName }" name="menuName">
-							<input type="hidden" value="${cartList1.menuPrice }" name="menuPrice">
-							<input type="hidden" value="${cartList1.amount }" name="amount">
-						
-						
 							<div>${cartMap.cartList[j].foodName }</div>
 							<div class="price">ㆍ기본가격 <fm:formatNumber value="${cartMap.cartList[j].foodPrice }"  pattern="###,###" />원</div>
 						

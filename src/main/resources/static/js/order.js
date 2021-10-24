@@ -27,6 +27,7 @@
     	    	
     	    	$(".order_price").text("주문금액 : " + menuTotalPrice.toLocaleString() + "원");
     	    	$(".total").text((menuTotalPrice + deleveryTip).toLocaleString() +  "원 결제하기");
+    	    	$("#total").val(menuTotalPrice + deleveryTip);
     	    	
     		},
     		fail : function(){

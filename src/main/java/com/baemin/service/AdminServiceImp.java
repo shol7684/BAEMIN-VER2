@@ -21,8 +21,8 @@ public class AdminServiceImp implements AdminService {
 	private AdminDAO adminDAO;
 	
 	@Override
-	public List<OrderList> orderList() {
-		return adminDAO.orderList();
+	public List<OrderList> orderList(String list) {
+		return adminDAO.orderList(list);
 	}
 
 	@Override
@@ -55,30 +55,28 @@ public class AdminServiceImp implements AdminService {
 	public void addMenu(Food food, String[] foodOption, Integer[] foodOptionPrice) {
 
 		long foodId = adminDAO.addMenu(food);
-		
-		System.out.println("food Id = "  + foodId);
-		
-//		if(foodOption.length != 0) {
-//			Map<String, Object> map = new HashMap<>();
-//			map.put("foodOption", foodOption);
-//			map.put("foodOptionPrice", foodOptionPrice);
-//			map.put("foodId", foodId);
-//			adminDAO.addMenuOption(map);
-//		}
-		
-		for(int i=0;i<foodOption.length;i++) {
-			Map<String, Object> map = new HashMap<>();
-			
-			if(foodOptionPrice[i] == null ) {
-				foodOptionPrice[i] = 0;
+		if(foodOption != null) {
+			for(int i=0;i<foodOption.length;i++) {
+				Map<String, Object> map = new HashMap<>();
+				
+				map.put("foodOption", foodOption[i]);
+				map.put("foodOptionPrice", foodOptionPrice[i]);
+				map.put("foodId", foodId);
+				adminDAO.addMenuOption(map);
 			}
-			
-			map.put("foodOption", foodOption[i]);
-			map.put("foodOptionPrice", foodOptionPrice[i]);
-			map.put("foodId", foodId);
-			adminDAO.addMenuOption(map);
 		}
+	}
+
+	
+	@Override
+	public void storeModify(Store store) {
+		adminDAO.storeModify(store);
 		
+	}
+
+	@Override
+	public void orderAccept(String orderNum, int time,long userId) {
+		adminDAO.orderAccept(orderNum, time,userId);
 		
 	}
 

@@ -40,16 +40,25 @@ public class StoreServiceImp implements StoreService {
 
 	@Transactional
 	@Override
-	public Map<String, Object> storeDetail(int id) {
+	public Map<String, Object> storeDetail(long storeId, long userId) {
 		
 		Map<String, Object> map = new HashMap<>();
 		
 		
-		Store storeInfo = storeDAO.storeDetail(id); 
-		List<Food> foodList = storeDAO.foodList(id);
-		List<Review> reviewList = storeDAO.reviewList(id);
+		Store storeInfo = storeDAO.storeDetail(storeId); 
+		List<Food> foodList = storeDAO.foodList(storeId);
+		List<Review> reviewList = storeDAO.reviewList(storeId);
 		
-		System.out.println(foodList);
+		if(userId != 0) {
+			Map<String, Long> m = new HashMap<>();
+			m.put("storeId" , storeId);
+			m.put("userId", userId);
+			Long isLikes = storeDAO.isLikes(m);
+			
+			if(isLikes != null) {
+				map.put("isLikes", true);
+			}
+		}
 		
 		map.put("storeInfo", storeInfo);
 		map.put("foodList", foodList);
@@ -73,6 +82,25 @@ public class StoreServiceImp implements StoreService {
 	public void reviewModify(Review review) {
 		storeDAO.reviewModify(review);
 		
+	}
+
+	@Override
+	public void likes(long storeId, String likes, long userId) {
+		Map<String, Long> map = new HashMap<>();
+		map.put("storeId", storeId);
+		map.put("userId", userId);
+		
+		if(likes.equals("on")) {
+			storeDAO.addLikes(map);
+		} else {
+			storeDAO.deleteLikes(map);
+		}
+		
+	}
+
+	@Override
+	public List likesList(long userId) {
+		return storeDAO.likesList(userId);
 	}
 	
 	

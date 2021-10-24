@@ -68,8 +68,6 @@
 			<input type="hidden" class="add_cart_food_price" >
 			<input type="hidden" class="add_cart_food_id" >
 		
-		
-		
 			<div class="min_delevery">배달최소주문금액 <fm:formatNumber value="${store.storeInfo.minDelevery }" pattern="###,###" />원 </div>
             <div class="sum"><span>총 주문금액</span><span class="total_price">0</span></div>
           		

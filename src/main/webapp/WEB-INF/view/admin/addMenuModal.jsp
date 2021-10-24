@@ -42,16 +42,15 @@
 						<button type="button" class="add_option">+ 옵션 추가</button>
 					</div>
 
-					<div class="option">
+					<!-- <div class="option">
 						<div>
 							<span>옵션 1 </span> <input type="text" maxlength="30" name="foodOption">
 						</div>
 						<div>
 							<span>가격</span> <input type="number" onkeypress="return lenthCheck(this,8);" pattern="\d*" name="foodOptionPrice">
 						</div>
-					</div>
-					<div id="option_box"></div>
-
+						<button type="button class="add_option_cancle">취소</button>
+					</div> -->
 				</li>
 
 
@@ -87,14 +86,6 @@
 		</div>
 	</form>
 </div>
-<!-------------------  메뉴 추가 모달 --------------->
-
-
-
-
-
-
-<!------------------- 메뉴 수정 모달 --------------->
 <<%-- div class="add_menu_modal modify modal"> <form
 action="/modifyMenu" method="post" enctype="multipart/form-data"> <div
 id="modal_header"> <h1>메뉴 수정</h1> <button class="closeA"
@@ -121,19 +112,7 @@ class="preview"> <button type="button" class="img_close">x</button>
 </div> </div></li> </ul> </div> <div class="btn_box"> <button
 class="closeB" type="button">취소</button> <input type="submit"
 value="수정"> </div> </form> </div> --%>
-<!-------------------  메뉴 수정 모달 --------------->
-<script>
-function submitCheck() {
-	console.log("체크");
-	
-	var a = $("input[name=foodOption]").val();
-	var b = $("input[name=foodOptionPrice]").val();
-	
-	console.log("a = " + a);
-	console.log("b = " + b);
-	return false;
-}
-</script>
+
 
 
 

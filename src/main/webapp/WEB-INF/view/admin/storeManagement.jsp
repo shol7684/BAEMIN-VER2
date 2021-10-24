@@ -98,12 +98,20 @@
 	
 	
 	/*폰번호 길이제한 11자*/
-	function lenthCheck(e, length) {
-		if(e.value.length > length) {
-			return false;
-		}
-		return true;
+function lenthCheck(e, length) {
+	
+	if(e.value.length >= length) {
+		return false;
 	}
+	
+	$(this).off().focusout(function(){
+		if(e.value.length > length) {
+			e.value = "";
+		}
+	})
+	
+	return true;
+}
 	
 	</script>
 	  

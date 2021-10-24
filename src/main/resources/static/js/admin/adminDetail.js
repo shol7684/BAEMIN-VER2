@@ -71,28 +71,47 @@ $(document).ready(function() {
 	})
 	
 	
-	let addOptionNum = 2;
+	// 메뉴 추가 모달  옵션 추가하기
+	let addOptionNum = 1;
 	$(".add_option").click(function(){
 		let html = `<div class="option">
 						<div>
-							<span>옵션 ${addOptionNum} </span> <input type="text" maxlength="30" name="foodOption">
+							<span>옵션 ${addOptionNum} </span> <input type="text" required maxlength="30" name="foodOption">
 						</div>
 						<div>
-							<span>가격</span> <input type="number" onkeypress="return lenthCheck(this,8);" pattern="\d*" name="foodOptionPrice">
+							<span>가격</span> <input type="number" required onkeypress="return lenthCheck(this,8);" pattern="\d*" name="foodOptionPrice">
 						</div>
+						<button type="button" class="add_option_cancle">취소</button>
 					</div>`;
 					
 		$(".option_box").append(html);		
 		addOptionNum++;	
-					
 	})
 	
 	
 	
+	
+	// 메뉴 추가 모달  옵션 삭제하기
+	$(document).on("click", ".add_option_cancle", function(){
+		$(this).parent(".option").remove();
+	})
 
 
-
-
+	// 매장 정보 수정
+	$(".inf_modify").click(function(){
+		const modal = $(".store_reg_modal");
+		openModal(modal, size);
+		
+		const category =$("#store_category").val();
+		const openingTime =$("#store_opening_time").val();
+		const closingTime =$("#store_closing_time").val();
+		
+		$("#category").val(category).prop("selected", true);
+		$("#opening_time").val(openingTime).prop("selected", true);
+		$("#closing_time").val(closingTime).prop("selected", true);
+	})
+	
+	
 
 
 
@@ -101,13 +120,12 @@ $(document).ready(function() {
 		if($(this).is(":checked")){
 			console.log($(this).siblings().find("#menu_num").val());
 		}
-			
 	})
 
 
 
 
-	
+	// 메뉴 삭제
 	$(".delete_menu").click(function(){
 		const deleteNumber = [];
 		

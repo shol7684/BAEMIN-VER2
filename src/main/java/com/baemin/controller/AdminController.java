@@ -1,7 +1,9 @@
 package com.baemin.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +23,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.baemin.config.LoginDetail;
 import com.baemin.service.AdminService;
 import com.baemin.service.StoreService;
+import com.baemin.util.FoodInfoFromJson;
+import com.baemin.vo.Cart;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
 import com.baemin.vo.Store;
+import com.google.gson.Gson;
 
 @Controller
 public class AdminController {
@@ -44,12 +49,19 @@ public class AdminController {
 
 	@ResponseBody
 	@GetMapping("/admin/orderList")
-	public List<OrderList> orderList() {
+	public List<Map> orderList(String list) {
 
-		List<OrderList> orderList = adminService.orderList();
-		System.out.println("관리자 메인 주문 목록 = " + orderList);
-
-		return orderList;
+		System.out.println(list);
+		
+		List<OrderList> orderList = adminService.orderList(list);
+		
+		List<Map> deleveryInfo = new ArrayList<>();
+		
+		for(int i=0;i<orderList.size();i++) {
+			deleveryInfo.add(FoodInfoFromJson.foodInfoFromJson(orderList.get(i)));
+		}
+		
+		return deleveryInfo;
 	}
 
 	@GetMapping("/admin/storeManagement")
@@ -92,16 +104,20 @@ public class AdminController {
 	@GetMapping("/admin/detail/{id}")
 	public String adminStoreDetail(@PathVariable int id,Model model, @AuthenticationPrincipal LoginDetail user) {
 		
-		Map<String, Object> store = storeService.storeDetail(id);
+		long userId = 0;
+		String role = "";
+		if(user != null) {
+			userId = user.getUser().getId();
+			role = user.getUser().getRole();
+			model.addAttribute("adminPage" , true);
+		}
+		
+		Map<String, Object> store = storeService.storeDetail(id, userId);
 
 		System.out.println("가게 정보 = " + store);
 
 		model.addAttribute("store", store);
-		
-		if(user != null) {
-			model.addAttribute("role", user.getUser().getRole());
-			model.addAttribute("adminPage" , true);
-		}
+		model.addAttribute("role", role);
 		
 		return "admin/adminStoreDetail";
 	}
@@ -155,6 +171,26 @@ public class AdminController {
 		return "redirect:/admin/detail/" + food.getStoreId() ;
 	}
 	
+	
+	
+	@PostMapping("/admin/storeModify")
+	public String storeModify(Store store) {
+		adminService.storeModify(store);
+		return "redirect:/admin/detail/" + store.getId();
+	}
+	
+	
+	@ResponseBody
+	@PostMapping("/admin/orderAccept")
+	public String orderAccept(String orderNum, int time, long userId) {
+		System.out.println(orderNum);
+		System.out.println(time);
+		System.out.println(userId);
+		
+		adminService.orderAccept(orderNum, time, userId);
+		
+		return "";
+	}
 	
 	
 	

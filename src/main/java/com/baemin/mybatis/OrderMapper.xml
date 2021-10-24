@@ -128,8 +128,13 @@
 				,#{request }
 			)
 		</if>
-	
 	</insert>
+	
+	
+	<update id="updatePoint">
+		UPDATE BM_USER SET POINT = #{updatePoint } WHERE ID = #{userId }
+	</update>
+	
 	
 	
 	

@@ -83,28 +83,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			          request.getRequestDispatcher("/WEB-INF/view/user/login.jsp").forward(request, response);
 			      }
 			 })
-//			.successHandler(new AuthenticationSuccessHandler() {
-//				
-//				@Override
-//				public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-//						Authentication authentication) throws IOException, ServletException {
-//					  System.out.println("AuthenticationSuccessHandler");
-//					  response.sendRedirect("/myPage");
-//					  
-//					
-//				}
-//			})
-			  
-			  
-			  
-//			.defaultSuccessUrl("/myPage")
-			
 			.and()
 			.logout()
 			.logoutSuccessUrl("/myPage")
-			
 		
 		;
+		http.rememberMe()
+			.key("uniqueAndSecret")
+			.rememberMeParameter("remember-me")
+			.tokenValiditySeconds(60 * 60 * 24 * 7)
+			.userDetailsService(userDetailsService)
+			;
 		
 //		http.authorizeRequests().
 //		anyRequest().

@@ -5,9 +5,10 @@
 
  <div id="wrap">
 
+
 	    <nav>
+	<%-- <img alt="" src="${store.storeInfo.storeImg }"> --%>
 	        <h1>${store.storeInfo.storeName }</h1>
-	
                <div class="inf">
                    <div>
 	                   <span class="score_box">
@@ -22,27 +23,26 @@
 	                   		<span>${store.storeInfo.score }</span>
                			</span><br>
 	                   
-                  		<c:if test="${storeVO.goodCheck == 0 }">
+                  		<c:if test="${!store.isLikes }">
 		                   <span><i class="far fa-heart" ></i> 찜 </span>
-		                   <span class="count">${storeVO.dibsCount }</span>
 	                   </c:if>
-	                   
-	                   <c:if test="${storeVO.goodCheck != 0 }">
+	                   <c:if test="${store.isLikes }">
 		                   <span><i class="fas fa-heart" ></i> 찜 </span>
-		                   <span class="count">${storeVO.dibsCount }</span>
-	                   </c:if> 
-		                   <span class="good"></span>
+	                   </c:if>
+	                     
+		                   <span class="likes_count" data-count=${store.storeInfo.likesCount } >${store.storeInfo.likesCount }</span>
+		                   <!-- <span class="good"></span> -->
 	                   
                    </div>
                    <div><span> 리뷰 ${store.storeInfo.reviewCount } ㅣ </span><span>사장님 댓글 ${store.storeInfo.bossCommentCount }</span></div>
                    
-                   <div>최소주문금액 <fm:formatNumber value="${store.storeInfo.minDelevery }" pattern="###,###" /> 원</div>
+                   <div>최소주문금액 <fm:formatNumber value="${store.storeInfo.minDelevery }" pattern="###,###" />원</div>
                    <div>예상 배달시간 ${store.storeInfo.deleveryTime  }분</div>
                    <div>배달팁 <fm:formatNumber value="${store.storeInfo.deleveryTip }" pattern="###,###" />원</div>
                    
                    <c:if test="${adminPage && role == 'ROLE_ADMIN'  }">
                    <div id="admin_button_box">
-	                   <button class="inf_modify">정보 수정</button>
+	                   <button class="inf_modify">가게정보 수정</button>
 	                   <button class="add_menu">메뉴 추가</button>
 	                   <button class="delete_menu">메뉴 삭제</button>
                    </div>
@@ -187,7 +187,7 @@
 		            	<div class="info_detail">
 		            		<div>${store.storeInfo.orderCount }</div>
 		            		<div>${store.storeInfo.reviewCount }</div>
-		            		<div>${storeVO.dibsCount } 1222313213</div>
+		            		<div>${store.storeInfo.likesCount }</div>
 		            	</div>
 		            </div>	
 	            </li>
@@ -367,11 +367,18 @@
 	<input type="hidden" value="${store.storeInfo.minDelevery }" id="min_delevery">
 	<input type="hidden" value="${store.storeInfo.deleveryTip }" id="delevery_tip">
 	<input type="hidden" value="${store.storeInfo.storeName }" id="store_name">
+	<input type="hidden" value="${store.storeInfo.category }" id="store_category">  
+	<input type="hidden" value="${store.storeInfo.openingTime }" id="store_opening_time"> 
+	<input type="hidden" value="${store.storeInfo.closingTime }" id="store_closing_time"> 
 	
+	
+	
+	
+	
+	 
 	
     <input type="hidden" value="${storeVO.goodCheck }" class="dibs_check">
 	<input type="hidden" value="${userId  }" class="user_id">
-	<input type="hidden" value="${storeVO.cate }" class="category"> 
 	<input type="hidden" value="${storeVO.busiHours1 }" class="business_hour1"> 
 	<input type="hidden" value="${storeVO.busiHours2 }" class="business_hour2"> 
 	<input type="hidden" value="${storeVO.storeAddress2 }" class="store_address">

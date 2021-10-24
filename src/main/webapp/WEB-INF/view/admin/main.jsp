@@ -5,25 +5,13 @@
 	
     <!-- <script type="text/javascript" src="/js/imgPreview.js" ></script> -->
     
-    
-    
-    
-    <!-- <link rel="stylesheet" href="/css/storeRegiModal.css" > -->
-    <link rel="stylesheet" href="/css/admin/admin.css" >
-    <link rel="stylesheet" href="/css/modal.css" >
+<link rel="stylesheet" href="/css/admin/admin.css" >
+<link rel="stylesheet" href="/css/modal.css" >
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
 
-
-    <!-- 매장 등록 모달창 -->
-	<%-- <%@ include file="/WEB-INF/view/include/storeRegiModal.jsp" %> --%>
- 	<!-- 매장 등록 모달창 -->
-
- 	<!-- -------------------------------------------------------------------------------------------- -->
-		
 	
 
 <div class="wrap">
-<!-- ------------------------ 상단 메뉴 ------------------------->
     <section class="tab">
          <ul class="box">
 			<li class="store_management"><a href="/admin/storeManagement">매장 관리</a></li>
@@ -32,21 +20,25 @@
 		</ul>
     </section>
 
-<!-- ------------------------ 상단 메뉴 ------------------------->
 
-<!-- ------------------------ 왼쪽 메뉴 ------------------------->
     <aside>
         <ul class="aside_tab">
             <li class="active">
             	<div>접수 대기</div>
+            	<div></div>
            	</li>
-           	
-            <li>처리 중</li>
-            <li>완료</li>
+            <li>
+            	<div>처리 중</div>
+            	<div></div>
+            </li>
+            
+            <li>
+            	<div>완료</div>
+            	<div></div>
+            </li>
             <!-- <li>주문 조회</li> -->
          </ul>
     </aside>
-<!-- ------------------------ 왼쪽 메뉴 ------------------------->
 
 
 
@@ -57,8 +49,8 @@
                 <li class="order_list first">
                     <ul>
                         <!-- 주문목록 1개 -->
-                        <li class="order_box">
-						</li>
+                        <!-- <li class="order_box">
+						</li> -->
 		 						
                         <!-- 주문목록 1개 -->
                     </ul>
@@ -67,18 +59,18 @@
 
 
                     <!-- 주문접수 > 처리 중  -->
-				<li class="order_list second">
+				<!-- <li class="order_list second">
 					<ul>
                    </ul>
-                </li> 
+                </li>  -->
                
                     <!-- 주문접수 > 처리 중 -->
 
                     <!-- 주문접수 > 완료 -->
-				<li class="order_list third">
+				<!-- <li class="order_list third">
 					<ul>
 					</ul>
-				</li>
+				</li> -->
                     <!-- 주문접수 > 완료 -->
 							
 						
@@ -101,55 +93,7 @@
     </footer> 
 	<!-- 푸터 -->
 
-	<!-- ------------------------접수모달 ------------------------->
- 	<div class="accept_modal modal">
-		<div id="modal_header">
-			<h1>접수 대기</h1>    
-			<button class="closeA">×</button>
-		</div>
-             
-		<div class="accept_modal_box">
-			<section>
-				<article class="delevery_info">
-					<h2>배달 정보</h2>
-					<div class="order_cancle"><button>주문거부하기</button></div>
-	                <div class="info_area">
-	                    <div>
-	                        <span>배송지</span>
-	                        <span>천안시 서북구 두정동</span>
-	                        <span>상세주소 ...................</span>
-	                    </div>
-		                    
-	                    <div>
-	                        <span>연락처 010 2885 7684</span>
-	                    </div>
-	                </div>
-	            </article>
 	
-	            <article class="request">
-	                <h2>요청사항</h2>
-	                <div>
-	                    <textarea>수저 필요없어요</textarea>
-	                </div>    
-	            </article>
-	            <article class="menu">
-	                <h2>주문 상세</h2>
-	                <ul>
-	                    <li>
-	                    </li>
-	                    
-	                </ul>    
-	            </article>
-	        </section>
-		</div>
-	        
-	    <div class="btn_box">
-	        <button class="cancle">취소</button>
-	        <button class="accept_next">주문 접수</button>
-	    </div>
-</div>
-
-<!-- ------------------------접수모달 ------------------------->
 
 	<div class="order_cancle_modal modal">
 		<div id="modal_header">
@@ -175,45 +119,16 @@
 	    </div>
 	</div>
 
+<!-- 주문 접수 모달 -->
+<%@ include file="/WEB-INF/view/admin/orderAcceptModal.jsp" %>
+
+<!-- 주문 접수 배달시간 설정 모달 -->
+<%@ include file="/WEB-INF/view/admin/deleveryTimerModal.jsp" %>
 
 
-
-<!-- ------------------------ 배달시간 ------------------------->
-    <div class="delevery_timer modal"> 
-    	<div id="modal_header">
-	        <h1>접수 대기</h1>
-	        <button class="closeA">×</button>
-        </div>
-             
-        <section>
-            <article>
-                <h2>배달 시간을 선택해주세요</h2>
-            </article>
-
-            <article>
-                <ul>
-                    <li data-value = 20>20분</li>
-                    <li data-value = 30 id="select">30분</li>
-                    <li data-value = 40>40분</li>
-                    <li data-value = 50>50분</li>
-                    <li data-value = 60>60분</li>
-                    <li data-value = 90>90분</li>
-                </ul>
-            </article>
-
-            <article>
-                <div>
-                    <button class="cancle">취소</button>
-                    <button id="accept">접수하기</button>
-                </div>
-                
-            </article>
-        </section> 
-    </div>
-
-<!-- ------------------------ 배달시간 ------------------------->
-<script type="text/javascript" src="/js/openModal.js" ></script>
- 	<script type="text/javascript" src="/js/admin/adminMain.js" ></script>
+<script type="text/javascript" src="/js/modal2.js" ></script>
+<script type="text/javascript" src="/js/admin/adminMain.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 </body>
 </html>

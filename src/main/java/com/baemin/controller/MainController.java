@@ -4,7 +4,9 @@ package com.baemin.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -14,6 +16,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,18 +31,28 @@ public class MainController {
 	@GetMapping("/")
 	public String main(HttpServletResponse response, HttpServletRequest request, HttpSession session) throws UnsupportedEncodingException {
 		
-		LOGGER.info("main");
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		System.out.println("auth = " + auth);
 
+		List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
+
+		System.out.println("updatedAuthorities= " + updatedAuthorities.get(0));
+		
+		LOGGER.info("main");
+		LOGGER.info("id = " + request.getRemoteAddr());
 		if(session.getAttribute("BMaddress1") == null || session.getAttribute("BMaddress2") == null) {
 			
 			Cookie[] cookies = request.getCookies();
 			
+			System.out.println("쿠키 address ");
 			if(cookies == null) {
 				return "home";
 			}
 			
 			for(int i=0;i<cookies.length;i++) {
-				
+				session.setMaxInactiveInterval(60 * 60 * 3);
 				if(cookies[i].getName().equals("BMaddress1")) {
 					session.setAttribute("BMaddress1", cookies[i].getValue());
 				}
@@ -53,7 +68,7 @@ public class MainController {
 	}
 	
 	@PostMapping("/")
-	public String main(String address1, String address2, HttpServletResponse response) throws UnsupportedEncodingException {
+	public String main(String address1, String address2, HttpServletResponse response, HttpSession session) throws UnsupportedEncodingException {
 //		address1 = 우편번호
 //		address2 = 주소
 		
@@ -66,6 +81,10 @@ public class MainController {
 		
 		response.addCookie(cookie1);
 		response.addCookie(cookie2);
+		
+		session.setMaxInactiveInterval(60 * 60 * 3);
+		session.setAttribute("BMaddress1", address1);
+		session.setAttribute("BMaddress2", address2);
 		
 		return "redirect:/";
 	}

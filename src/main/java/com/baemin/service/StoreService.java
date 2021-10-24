@@ -10,13 +10,17 @@ public interface StoreService {
 
 	List<Store> storeList(int category, int address, int page);
 
-	Map storeDetail(int id);
+	Map storeDetail(long storeId, long userId);
 
 	List<String> foodOption(int foodId);
 
 	void reviewWrite(Review review);
 
 	void reviewModify(Review review);
+
+	void likes(long storeId, String likes, long userId);
+
+	List likesList(long userId);
 
 	
 }

@@ -1,6 +1,7 @@
 package com.baemin.vo;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ public class OrderList {
 	private String orderNum;
 	private long userId;
 	private String phone;
-	private Date orderDate;
+	private Timestamp orderDate;
 	private String payMethod;
 	private String deleveryStatus;
 	private int deleveryAddress1;
@@ -37,4 +38,9 @@ public class OrderList {
 	private float score;
 	private String reviewImg;
 	
+	
+	// 관리자 페이지 목록 수 추가
+	private int count1;
+	private int count2;
+	private int count3;
 }

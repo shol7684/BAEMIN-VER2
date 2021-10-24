@@ -65,7 +65,7 @@
 	                <label for="storePhoneNumber">
 	                    <h2>매장 전화번호</h2>
 	                </label>
-	                <div><input type="number" onkeypress="return lenthCheck(this, 10);" id="storePhoneNumber" name="storePhone" required></div>
+	                <div><input type="number" onkeypress="return lenthCheck(this, 11);" id="storePhoneNumber" name="storePhone" required></div>
 	            </li>
 	
 	            <li class="business_hour">

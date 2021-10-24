@@ -457,10 +457,6 @@ $(document).ready(function() {
 				$(".total").data("total", total); // 전역변수에 세팅
 				cartStoreNum = result[0]["storeNum"];
 
-
-
-
-
 			} // success
 		}); // ajax
 

@@ -20,8 +20,8 @@ public class AdminDAOImp implements AdminDAO {
 	private SqlSession sql;
 
 	@Override
-	public List<OrderList> orderList() {
-		return sql.selectList("admin.orderList");
+	public List<OrderList> orderList(String list) {
+		return sql.selectList("admin.orderList", list);
 	}
 
 	@Override
@@ -70,6 +70,19 @@ public class AdminDAOImp implements AdminDAO {
 	public void addMenuOption(Map<String, Object> map) {
 		sql.insert("admin.addMenuOption", map);
 
+	}
+
+	@Override
+	public void storeModify(Store store) {
+		sql.update("admin.storeModify" , store);
+	}
+
+	@Override
+	public void orderAccept(String orderNum, int time, long userId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("orderNum", orderNum);
+		map.put("time", time);
+		sql.update("admin.orderAccept", map);
 	}
 
 }

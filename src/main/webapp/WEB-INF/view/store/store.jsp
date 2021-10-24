@@ -47,14 +47,13 @@
 				
 				<c:if test="${empty storeList }">
 					<img alt="이미지" src="/img/temp2.png">
-					
 					<style>main .box {background: #F6F6F6; max-width: 100%; }</style>
 				</c:if>
 				
+				
+				
                 <ul class="store">
-                	
                 	<c:forEach items="${storeList }" var="storeList"  varStatus="status">
-                
                     <li >
 	                    <div>
 	                        <a href="/store/detail/${storeList.id }">   

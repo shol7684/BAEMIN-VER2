@@ -60,7 +60,7 @@
 
                     <ul>
 						<li>
-							<a href="/myPage/dibs">
+							<a href="/likes/store">
 								<span>
 									<img src="/img/icon44.png" alt="찜한가게">
 								</span>

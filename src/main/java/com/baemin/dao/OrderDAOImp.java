@@ -1,5 +1,6 @@
 package com.baemin.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,17 @@ public class OrderDAOImp implements OrderDAO {
 	@Override
 	public OrderList orderListDetail(String orderNum) {
 		return sql.selectOne("order.orderListDetail", orderNum);
+	}
+
+	@Override
+	public void updatePoint(long updatePoint, long userId) {
+		
+		Map<String, Long> map = new HashMap<>();
+		
+		map.put("updatePoint", updatePoint);
+		map.put("userId", userId);
+		
+		sql.update("order.updatePoint" , map);
 	}
 
 }

@@ -9,7 +9,7 @@ import com.baemin.vo.Store;
 
 public interface AdminService {
 
-	List<OrderList> orderList();
+	List<OrderList> orderList(String list);
 
 	List<Store> storeList();
 
@@ -20,5 +20,9 @@ public interface AdminService {
 	void menuDelete(int storeId, long[] deleteNumber);
 
 	void addMenu(Food food, String[] foodOption, Integer[] foodOptionPrice);
+
+	void storeModify(Store store);
+
+	void orderAccept(String orderNum, int time, long userId);
 
 }

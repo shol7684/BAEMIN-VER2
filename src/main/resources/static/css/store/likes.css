@@ -1,0 +1,172 @@
+
+body {
+	background: #F6F6F6;
+}
+
+.wrap {
+    margin: 0px auto;
+    min-height: calc(100vh - 210px);
+    
+}
+
+section.title {
+    box-shadow: 0px 2px 3px 0px rgb(0 0 0 / 25%);
+    
+}
+
+
+section.title h1 {
+    text-align: center;
+    margin : 30px 0 0px 0 ;
+    padding-bottom: 5%;
+}
+
+/* main */
+main {
+    width: 100%;
+}
+
+
+main .temp img {
+	margin: 20px auto;
+	display: block;
+	width: 90%;
+	max-width: 500px;
+}
+
+
+/* 가게 목록 */
+.box {
+ 	margin: 0 auto;
+    max-width: 1200px;
+}
+
+.box img { 
+	display: block;
+	margin: 0 auto;
+	width:90%;
+	max-width: 500px;
+}
+
+.box .store {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.box .store li {
+    border : 1px solid #ddd;
+    border-radius:10px;
+    width: 47%;
+    margin: 15px;
+    padding : 25px 0;
+    position: relative; 
+}
+
+.box .store li.temp {
+	border: none;
+}
+
+.box .store li > div {
+    padding:10px;
+}
+
+.box .store li img {
+    width: 170px;
+    height: 170px;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-size: cover;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.box .store li:hover img {
+    transform: scale(1.05); 
+    transition: 0.1s;
+}
+
+.box .store li .inf {
+    margin-top: -10px;
+    font-size: 18px;
+    padding-left: 185px;
+}
+
+.box .store li .inf h2 {
+	font-size: 18px;
+}
+
+.box .store li .inf div span {
+    margin-right: 5px;
+}
+
+.score_box i {
+	font-size: 15px;
+}
+.score_box i.fas {
+	color: gold;
+}
+
+@media (max-width:1150px) {
+	
+	.box .store li img {
+	    width: 150px;
+	    height: 150px;
+	}
+	.box .store li .inf {
+	    font-size: 16px;
+	    padding-left:163px;
+	    position: relative;
+    	top: -5px;
+	}
+}
+
+@media (max-width:1024px) {
+	.container {
+	    width: 100%;
+	}
+	
+	.box .store li {
+	    width: 100%;
+	    margin: 20px auto 0px;
+	    border:none;
+	    border-radius: 0;
+	    border-bottom: 2px solid #ddd;
+	}
+	.box .store li img {
+	    top: 5px;
+	    left: 5px;
+	}
+	
+	.box .store li .inf {
+	    font-size: 16px;
+	    padding-left: 154px;
+	    position: relative;
+    	top: -15px;
+	}
+	
+}
+
+
+@media (max-width:780px) {
+	
+	.box .store li {
+	 	padding: 25px 0 0px;
+	}
+
+	.box .store li img {
+	    width: 90px;
+	    height: 90px;
+	}
+	
+	.box .store li .inf {
+	    font-size: 13px;
+	    padding-left: 93px;
+	    top: -18px;
+	    margin-bottom: -10px;
+	}
+	.box .store li .inf h2 {
+		font-size: 15px;
+	}
+}
+
