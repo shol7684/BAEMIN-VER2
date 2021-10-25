@@ -29,21 +29,63 @@
 	</insert>
 	
 	<select id="login" resultType="User">
-	SELECT
-	    id,
-	    username,
-	    password,
-	    email,
-	    nickname,
-	    point,
-	    phone,
-	    rating,
-	    role
-	FROM
-	    bm_user
-	WHERE
-		USERNAME = #{username }    
-	    
+	SELECT 
+	    U.ID
+	    ,U.USERNAME
+	    ,U.PASSWORD
+	    ,U.EMAIL
+	    ,U.NICKNAME
+	    ,U.PHONE
+	    ,U.RATING
+	    ,U.ROLE
+	    ,P.POINT
+	FROM 
+	    BM_USER U 
+	LEFT JOIN 
+	    (SELECT USER_ID, SUM(POINT) POINT FROM BM_POINT GROUP BY USER_ID) P
+	ON 
+	    U.ID = P.USER_ID
+	WHERE U.USERNAME = #{username }    
 	</select>
+	
+	
+	
+	<select id="myReviewList" resultType="Review">
+		SELECT 
+		 	order_num,
+		    store_id,
+		    review_content,
+		    boss_comment,
+		    regi_date,
+		    score,
+		    review_img,
+		    user_id
+	     FROM BM_REVIEW WHERE USER_ID = #{id }
+	     ORDER BY 
+	     	regi_date desc 
+	</select>
+		
+		
+	<delete id="deleteReview">
+		DELETE BM_REVIEW WHERE ORDER_NUM = #{orderNum}
+	</delete>
+		
+	
+	
+	<select id="myPoint" resultType="Point">
+		SELECT 
+		    USER_ID
+		    ,USED_DATE
+		    ,INFO
+		    ,POINT
+		FROM
+			BM_POINT    
+	    WHERE 
+	    	USER_ID = #{id }
+	    ORDER BY
+	    	USED_DATE DESC
+	    
+	</select>	
+		
 		
 </mapper>

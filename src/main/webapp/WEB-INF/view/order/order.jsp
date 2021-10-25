@@ -22,7 +22,7 @@
 	
 	<main>
 		
-	<form action="/order" method="post" onsubmit="return orderCheck()" >
+	<form action="/order" method="post" onsubmit="return addressCheck()" >
 	<ul>
 		<li>
 			<div class="order_info">
@@ -74,8 +74,8 @@
 				<h2>배달정보 </h2>
 				<div class="address1">주소 : ${BMaddress2} <button type="button">주소 변경하기</button></div>
 				
-				<input type="hidden" value="${BMaddress1 }" name="deleveryAddress1"> 
-				<input type="hidden" value="${BMaddress2 }" name="deleveryAddress2"> 
+				<input type="hidden" id="deleveryAddress1" value="${BMaddress1 }" name="deleveryAddress1"> 
+				<input type="hidden" id="deleveryAddress2" value="${BMaddress2 }" name="deleveryAddress2"> 
 				
 				
 				<div>상세 주소</div>

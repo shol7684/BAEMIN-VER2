@@ -82,6 +82,7 @@ public class AdminDAOImp implements AdminDAO {
 		Map<String, Object> map = new HashMap<>();
 		map.put("orderNum", orderNum);
 		map.put("time", time);
+		map.put("userId", userId);
 		sql.update("admin.orderAccept", map);
 	}
 

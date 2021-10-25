@@ -170,6 +170,8 @@ $(document).on("click", ".order_accept", function(){
 			type: "POST",
 			success: function(){
 				orderList(0);
+				$(".delevery_timer_modal li").removeClass("select");
+				$(".delevery_timer_modal section li[data-time=30]").addClass("select");
 			}
 		})
 	})
@@ -180,7 +182,9 @@ $(document).on("click", ".order_accept", function(){
 	
 	
 	
-
+$(".move_top").click(function(){
+	$("html").animate({ scrollTop: 0 }, 100);
+})
 	
 	
 	

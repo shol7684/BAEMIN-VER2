@@ -132,7 +132,16 @@
 	
 	
 	<update id="updatePoint">
-		UPDATE BM_USER SET POINT = #{updatePoint } WHERE ID = #{userId }
+		INSERT INTO BM_POINT ( 
+			USER_ID
+			,INFO
+			,POINT
+		) VALUES (
+			#{userId }
+			,#{storeName }
+			,#{usedPoint }
+		)
+		
 	</update>
 	
 	
@@ -140,7 +149,6 @@
 	
 	<select id="orderList" resultType="OrderList">
        SELECT
-       
 		    o.order_num,
 		    o.user_id,
 		    o.order_date,

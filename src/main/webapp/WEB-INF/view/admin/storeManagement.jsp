@@ -34,14 +34,16 @@
 			                
 			                    <span class="inf">
 									<h2>${storeList.storeName }</h2>
-			                        <c:forEach begin="0" end="4" var="i">
-				                		<c:if test="${i <= storeList.score }">
-					                		<i class="fas far fa-star"></i>
-				                		</c:if>
-				                		<c:if test="${i > storeList.score }">
-					                		<i class="far fa-star"></i>
-				                		</c:if>
-				                	</c:forEach><br>
+										<span>평점 ${storeList.score }</span>
+				                        <c:forEach begin="0" end="4" var="i">
+					                		<c:if test="${i <= storeList.score }">
+						                		<i class="fas far fa-star"></i>
+					                		</c:if>
+					                		<c:if test="${i > storeList.score }">
+						                		<i class="far fa-star"></i>
+					                		</c:if>
+					                	</c:forEach><br>
+			                        
 			                        
 			                        <span>
 			                        	<span>리뷰 ${storeList.reviewCount }</span><span>ㅣ</span><span>사장님 댓글 ${storeList.bossCommentCount }</span>

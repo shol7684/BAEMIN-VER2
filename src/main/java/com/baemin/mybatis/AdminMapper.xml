@@ -41,7 +41,7 @@
 	SELECT * FROM 
 		BM_STORE s
 	        LEFT JOIN    
-				( SELECT r.store_id, r.score, r.review_count, r.boss_comment_count, c.order_count FROM  
+				( SELECT r.store_id, ROUND(r.score, 1) score, r.review_count, r.boss_comment_count, c.order_count FROM  
 					( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r ,
 					( SELECT store_id, SUM(order_count) order_count from (
 						SELECT store_id, count(*) order_count FROM bm_order_detail_user GROUP BY store_id

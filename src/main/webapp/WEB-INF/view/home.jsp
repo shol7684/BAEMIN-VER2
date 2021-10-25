@@ -43,7 +43,7 @@
                         <li>
                             <ul>
                                 <li>
-                                    <a href="/store/100/${BMaddress1 }">
+                                    <a href="/store/100/${BMaddress1 }" onclick="return addressCheck();">
                                         <span>
                                             <img src="/img/pizza2.png" alt="이미지">
                                         </span>
@@ -51,8 +51,9 @@
                                     </a>
                                 </li>
 
+
                                 <li>
-                                    <a href="/store/103/${BMaddress1 }">
+                                    <a href="/store/103/${BMaddress1 }" onclick="return addressCheck();">
                                         <span>
                                             <img src="/img/bunsik1.png" alt="이미지">
                                         </span>
@@ -61,7 +62,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="/store/104/${BMaddress1 }">
+                                    <a href="/store/104/${BMaddress1 }" onclick="return addressCheck();">
                                         <span>
                                             <img src="/img/dessert2.png" alt="이미지">
                                         </span>
@@ -71,7 +72,7 @@
 
 
                                 <li>
-                                    <a href="/store/105/${BMaddress1 }">
+                                    <a href="/store/105/${BMaddress1 }" onclick="return addressCheck();">
                                         <span>
                                             <img src="/img/cutlet1.png" alt="이미지">
                                         </span>
@@ -80,7 +81,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="/store/101/${BMaddress1 }">
+                                    <a href="/store/101/${BMaddress1 }" onclick="return addressCheck();">
                                         <span>
                                             <img src="/img/chicken1.png" alt="이미지">
                                         </span>
@@ -89,7 +90,7 @@
                                 </li>
                    
                                 <li>
-                                    <a href="/store/106/${BMaddress1 }">
+                                    <a href="/store/106/${BMaddress1 }" onclick="return addressCheck();">
                                         <span>
                                             <img src="/img/chinese1.png" alt="이미지">
                                         </span>
@@ -98,7 +99,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="/store/107/${BMaddress1 }">
+                                    <a href="/store/107/${BMaddress1 }" onclick="return addressCheck();">
                                         <span>
                                             <img src="/img/jockbal1.png" alt="이미지">
                                         </span>
@@ -107,7 +108,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="/store/108/${BMaddress1 }">
+                                    <a href="/store/108/${BMaddress1 }" onclick="return addressCheck();">
                                         <span>
                                             <img src="/img/jockbal2.png" alt="이미지">
                                         </span>
@@ -116,7 +117,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="/store/109/${BMaddress1 }">
+                                    <a href="/store/109/${BMaddress1 }" onclick="return addressCheck();">
                                         <span>
                                             <img src="/img/jockbal3.png" alt="이미지">
                                         </span>
@@ -125,7 +126,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="/store/102/${BMaddress1 }">
+                                    <a href="/store/102/${BMaddress1 }" onclick="return addressCheck();">
                                         <span>
                                             <img src="/img/hamburger4.png" alt="이미지">
                                         </span>
@@ -134,7 +135,7 @@
                                 </li>
 
                                 <li>
-                                    <a href="/store/102/${BMaddress1 }">
+                                    <a href="/store/102/${BMaddress1 }" onclick="return addressCheck();">
                                         <span>
                                             <img src="/img/hamburger4.png" alt="이미지">
                                         </span>
@@ -161,6 +162,19 @@
     <%@ include file="./include/footer.jsp" %>
     <!-- 푸터 -->
 
+<script>
+	function addressCheck(){
+		const address = $("#sample2_address").val(); 
+		console.log(address);
+		console.log(address  == "");
+		
+		if(address == "" || address == null) {
+			swal("배달 받으실 주소를 입력해 주세요");
+			return false;
+		}
+		return true;
+	}
+</script>
 
 
 </body>

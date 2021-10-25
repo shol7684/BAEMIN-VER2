@@ -63,12 +63,6 @@
 	                            <div class="inf">
 	                              ${storeList.openingTime } ${storeList.closingTime } ${storeList.score }
 	                                <h2>${storeList.storeName }</h2>
-	                          <%--   <c:if test="${(storeList.busiHours1 < storeList.busiHours2 && !(storeList.busiHours1 < time && time < storeList.busiHours2)) || 
-	                            			  (storeList.busiHours1 > storeList.busiHours2 && !(storeList.busiHours1 <= time && time <= 24)) }">
-	                            	<div>영업준비중</div>
-	                            </c:if> --%>
-	                            
-	                            
 	                                <div>
 	                                	<span>평점 ${storeList.score }</span>
 	                                	

@@ -1,0 +1,135 @@
+
+
+section.title {
+    width: 100%;
+}
+
+section.title h1 {
+    text-align: center;
+    margin : 30px 0 30px 0 ;
+}
+
+main {
+	width: 90%;
+	max-width: 1000px;
+	margin: 0 auto;
+	padding-bottom: 30px;
+}
+
+main div {
+	font-size: 18px;
+}
+
+main h2 {
+	margin-top: 30px;
+    padding:15px
+}
+
+.my_point  {
+    text-align: center;
+    
+}
+.my_point div {
+    font-size: 30px;
+}
+
+.my_point .point_regi {
+    margin: 0 auto;
+    margin-top: 20px;
+    border-radius: 10px;
+    border: 1px solid #999;
+    width: 40%;
+    min-width: 500px;
+    
+}
+
+.my_point .point_regi button {
+    height: 50px;
+    font-size: 20px;
+    color : #28a8a8;
+    background: none;
+    border: none;
+    width: 100%;
+}
+
+.my_point .point_regi .point_number_area {
+    width: 95%;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    border-top: 1px solid #ddd;
+    display: none;
+
+}
+.my_point .point_regi input {
+    height: 40px;
+    padding-left: 5px;
+    font-size: 18px;
+}
+
+.my_point .point_regi input[type="text"] {
+    width: 78%;
+    
+    border:none;
+}
+.my_point .point_regi input[type="submit"] {
+    width: 20%;
+    border: none;
+    border-radius: 10px;
+    background: #30DAD9;
+    color: #fff;
+    margin-right: -7px;
+}
+
+main ul li  {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+main ul li > div:last-child  {
+	text-align: right;
+}
+main ul li .plus {
+	
+	color: #FF7701;
+	
+}
+
+
+@media (max-width : 1024px) {
+    
+
+}
+
+
+@media (max-width : 767px) {
+    main {
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .my_point .point_regi {
+        width: 95%;
+        border-top : 1px solid #ddd;
+        border-bottom : 1px solid #ddd;
+        min-width: 0;
+    }
+
+    
+}
+
+
+@media (max-width : 500px) {
+
+    
+    .my_point .point_regi button {
+        /* width: 100%;
+        border:none;
+        border-top : 1px solid #ddd;
+        border-bottom : 1px solid #ddd; */
+    }
+
+    
+}
+

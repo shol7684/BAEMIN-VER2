@@ -107,14 +107,14 @@ public class OrderServiceImp implements OrderService {
 		orderDAO.orderDetail(orderDetail);
 		
 		if(info.getUsedPoint() != 0 ) {
-			long updatePoint = user.getUser().getPoint() - info.getUsedPoint();
-			orderDAO.updatePoint(updatePoint, userId);
+			String storeName =  cartMap.get("storeName").toString();
+			long usedPoint =  -info.getUsedPoint();
+			orderDAO.updatePoint(usedPoint, userId, storeName);
 			
-			LOGGER.info("포인트 차감 " + info.getUsedPoint());
-			LOGGER.info("현재 포인트 " + updatePoint);
+			LOGGER.info("사용 매장 = "+ storeName);
+			LOGGER.info("유저 아이디 = "+ userId);
+			LOGGER.info("포인트 차감 " + usedPoint);
 		}
-		
-		
 	}
 
 	@Override

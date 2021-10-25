@@ -100,19 +100,18 @@
 		 $(".point_area span").css("cursor" , "default"); 
 
 	}			
-
-	/*function check(){
-		if($(".point_input").val() == null || $(".point_input").val() == "" ) {
-			$(".point_input").val(0);
-			return true;
+	
+	
+	
+	function addressCheck(){
+		
+		const deleveryAddress1 = $("#deleveryAddress1").val();
+		const deleveryAddress2 = $("#deleveryAddress2").val();
+		
+		if(!deleveryAddress1 || !deleveryAddress2 ) {
+			swal('배달 받으실 주소를 입력해 주세요')
+			return false;
 		} 
-	};*/
-	
-	
-	function orderCheck(){
-		
-		
-		
 		return true;
 	}
 	

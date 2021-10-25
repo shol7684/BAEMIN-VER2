@@ -9,7 +9,7 @@ SELECT * FROM
 	( SELECT rownum rn, s.*,t.* FROM 
 		BM_STORE s
 	        LEFT JOIN    
-				( SELECT r.store_id, r.score, r.review_count, r.boss_comment_count FROM  
+				( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM  
 					( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
 				) t
 			ON s.id = t.store_id     
@@ -24,7 +24,7 @@ SELECT * FROM
 		SELECT * FROM 
 			BM_STORE,
 			( SELECT * FROM  
-				( SELECT AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review WHERE store_id = #{id } ),
+				( SELECT ROUND(AVG(score),1) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review WHERE store_id = #{id } ),
 				( SELECT COUNT(*) LIKES_COUNT FROM BM_LIKES WHERE STORE_ID = #{id } ),
 				( SELECT SUM(order_count) order_count from (
 					SELECT count(*) order_count FROM bm_order_detail_user WHERE store_id = #{id }

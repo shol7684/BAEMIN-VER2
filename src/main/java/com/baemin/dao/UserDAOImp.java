@@ -1,14 +1,16 @@
 package com.baemin.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.baemin.vo.Point;
+import com.baemin.vo.Review;
 import com.baemin.vo.User;
-import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
 
 @Repository
 public class UserDAOImp implements UserDAO {
@@ -29,6 +31,22 @@ public class UserDAOImp implements UserDAO {
 	@Override
 	public void join(User user) {
 		sql.insert("user.join" , user);
+	}
+
+	@Override
+	public List<Review> myReviewList(long id) {
+		return sql.selectList("user.myReviewList", id);
+	}
+
+	@Override
+	public void deleteReview(String orderNum) {
+		sql.delete("user.deleteReview" , orderNum);
+	}
+
+	@Override
+	public List<Point> myPoint(long id) {
+		return sql.selectList("user.myPoint", id);
+		
 	}
 	
 

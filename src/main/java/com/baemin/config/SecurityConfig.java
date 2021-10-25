@@ -53,11 +53,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.authorizeRequests().
 			antMatchers("/admin/**").hasRole("ADMIN")
+			.antMatchers("/user/**").hasAnyRole("ADMIN, USER")
 			.anyRequest().permitAll()
 		.and()
 			.formLogin()
 			.loginPage("/")
 			.loginProcessingUrl("/login")
+			.defaultSuccessUrl("/myPage")
 			.failureHandler(new AuthenticationFailureHandler() {
 			      @Override
 			      public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {

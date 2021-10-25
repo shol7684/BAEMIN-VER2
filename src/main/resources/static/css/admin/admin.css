@@ -1,5 +1,12 @@
 
 
+.move_top {
+	position: fixed;
+	right: 1%;
+	bottom: 1%;
+	cursor: pointer;
+}
+
 
 /* ------------------ 주문 거부 모달--------------------- */
 

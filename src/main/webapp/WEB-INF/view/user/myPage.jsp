@@ -24,14 +24,14 @@
 
                     <c:if test="${!empty SPRING_SECURITY_CONTEXT }">
                         <span class="user">
-                            <a href="/myPage/info"><span>${username }</span></a>
+                            <a href="/myPage/info"><span class="username" data-username=${username } >${username }</span></a>
                             <button type="button" class="logout">로그아웃</button>
                         </span>
                     </c:if>
 
                     <ul>
                         <li>
-                        	<a href="/myPage/point">
+                        	<a href="/user/point" onclick="return loginCheck();">
 	                        	<span>
 	                        		<img src="/img/icon11.png" alt="포인트">
 	                        	</span>
@@ -79,7 +79,7 @@
 						</li>
 						
 						<li>
-							<a href="/myPage/myReview">
+							<a href="/user/myReview" onclick="return loginCheck()" >
 							<span>
 								<img src="/img/icon66.png" alt="리뷰관리">
 							</span>
@@ -106,12 +106,23 @@
     <script type="text/javascript">
 
         $(".updating").click(function () {
-            swal("업데이트 중 입니다");
+            swal("업데이트 준비 중 입니다");
         })
 
         $(".logout").click(function () {
             location.href = "/logout";
         })
+        
+        function loginCheck(){
+        	const username = $(".username").data("username");
+        	if(!username) {
+        		swal("로그인 후 이용 가능합니다");
+	        	return false;
+        	}
+        	return true;
+        	
+        }
+        
     </script>
 
 </body>

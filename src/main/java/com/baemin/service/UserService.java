@@ -1,5 +1,9 @@
 package com.baemin.service;
 
+import java.util.List;
+
+import com.baemin.vo.Point;
+import com.baemin.vo.Review;
 import com.baemin.vo.User;
 
 public interface UserService {
@@ -8,6 +12,12 @@ public interface UserService {
 	public int overlapCheck(String value, String valueType);
 
 	public void join(User user);
+
+	public List<Review> myReviewList(long id);
+
+	public void deleteReview(String orderNum);
+
+	public List<Point> myPoint(long id);
 	
 
 }

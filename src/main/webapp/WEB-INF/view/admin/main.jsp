@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="/css/modal.css" >
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
 
-	
+	<div class="move_top">위로</div>
 
 <div class="wrap">
     <section class="tab">

@@ -5,9 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MainController {
@@ -46,25 +45,33 @@ public class MainController {
 			
 			Cookie[] cookies = request.getCookies();
 			
-			System.out.println("쿠키 address ");
 			if(cookies == null) {
 				return "home";
 			}
 			
 			for(int i=0;i<cookies.length;i++) {
-				session.setMaxInactiveInterval(60 * 60 * 3);
 				if(cookies[i].getName().equals("BMaddress1")) {
+					session.setMaxInactiveInterval(60 * 60 * 3);
 					session.setAttribute("BMaddress1", cookies[i].getValue());
 				}
 				if(cookies[i].getName().equals("BMaddress2")) {
+					session.setMaxInactiveInterval(60 * 60 * 3);
 					session.setAttribute("BMaddress2", URLDecoder.decode(cookies[i].getValue() , "UTF-8"));
 				}
 			}
+			System.out.println("쿠키 address ");
+			
 		}
 		
 		
 		
 		return "home";
+	}
+	
+	@ResponseBody
+	@GetMapping("/mm")
+	public String main() {
+		return  "123";
 	}
 	
 	@PostMapping("/")
@@ -82,13 +89,34 @@ public class MainController {
 		response.addCookie(cookie1);
 		response.addCookie(cookie2);
 		
-		session.setMaxInactiveInterval(60 * 60 * 3);
+		session.setMaxInactiveInterval(3600 * 3);
 		session.setAttribute("BMaddress1", address1);
 		session.setAttribute("BMaddress2", address2);
 		
 		return "redirect:/";
 	}
 	
+	
+	
+	//임시
+	@GetMapping("/deleteAddress")
+	public String deleteAddress(HttpSession session, HttpServletResponse response) throws Exception {
+		
+		session.removeAttribute("BMaddress1");
+		session.removeAttribute("BMaddress2");
+		
+		Cookie cookie1 = new Cookie("BMaddress1", null);
+		Cookie cookie2 = new Cookie("BMaddress2", null);
+		
+		cookie1.setMaxAge(0);
+		cookie2.setMaxAge(0);
+		
+		response.addCookie(cookie1);
+		response.addCookie(cookie2);
+		
+		
+		return "redirect:/";
+	}
 	
 
 }
