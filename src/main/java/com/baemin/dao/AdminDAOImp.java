@@ -86,4 +86,14 @@ public class AdminDAOImp implements AdminDAO {
 		sql.update("admin.orderAccept", map);
 	}
 
+	@Override
+	public int pointRegist(String giftCardNum, long id) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("giftCardNum", giftCardNum);
+		map.put("id", id);
+		
+		return sql.insert("admin.pointRegist", map);
+		
+	}
+
 }

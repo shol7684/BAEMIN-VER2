@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class MainController {
@@ -119,4 +120,26 @@ public class MainController {
 	}
 	
 
+	@ResponseBody
+	@PostMapping("/addressModify")
+	public void addressModify(String address1, String address2, HttpServletResponse response, HttpSession session ) throws UnsupportedEncodingException {
+		
+		System.out.println("address1 =" + address1);
+		System.out.println("address2 =" + address2);
+		
+		Cookie cookie1 = new Cookie("BMaddress1" , address1);
+		Cookie cookie2 = new Cookie("BMaddress2" , URLEncoder.encode(address2, "UTF-8"));
+		
+		int age = 60 * 60 * 24 * 7;
+		cookie1.setMaxAge(age);
+		cookie2.setMaxAge(age);
+		
+		response.addCookie(cookie1);
+		response.addCookie(cookie2);
+		
+		session.setMaxInactiveInterval(3600 * 3);
+		session.setAttribute("BMaddress1", address1);
+		session.setAttribute("BMaddress2", address2);
+	}
+	
 }

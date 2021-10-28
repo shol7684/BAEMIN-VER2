@@ -4,7 +4,7 @@
 	
 	
     <!-- <script type="text/javascript" src="/js/imgPreview.js" ></script> -->
-    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <link rel="stylesheet" href="/css/admin/admin.css" >
 <link rel="stylesheet" href="/css/modal.css" >
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
@@ -79,18 +79,11 @@
                     <!-- 주문접수 > 주문조회 -->
             </ul>
         </div>
-        </main>
-<!-- ------------------------ 매장관리 눌렀을대 ------------------------->
-        
-        
-<!-- ------------------------ 매장관리 눌렀을대 ------------------------->
-    
+	</main>
 </div>
 
    	<!-- 푸터 -->
-     <footer>
-		<%@ include file="/WEB-INF/view/include/footer.jsp" %>
-    </footer> 
+	<%@ include file="/WEB-INF/view/include/footer.jsp" %>
 	<!-- 푸터 -->
 
 	
@@ -126,9 +119,9 @@
 <%@ include file="/WEB-INF/view/admin/deleveryTimerModal.jsp" %>
 
 
-<script type="text/javascript" src="/js/modal2.js" ></script>
+<script type="text/javascript" src="/js/modal/modal.js" ></script>
 <script type="text/javascript" src="/js/admin/adminMain.js" ></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
 </body>
 </html>

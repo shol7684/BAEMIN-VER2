@@ -24,7 +24,7 @@
 
                     <c:if test="${!empty SPRING_SECURITY_CONTEXT }">
                         <span class="user">
-                            <a href="/myPage/info"><span class="username" data-username=${username } >${username }</span></a>
+                            <a href="/user/myInfo"><span class="nickname" data-nickname=${nickname } >${nickname }</span></a>
                             <button type="button" class="logout">로그아웃</button>
                         </span>
                     </c:if>
@@ -114,8 +114,8 @@
         })
         
         function loginCheck(){
-        	const username = $(".username").data("username");
-        	if(!username) {
+        	const nickname = $(".nickname").data("nickname");
+        	if(!nickname) {
         		swal("로그인 후 이용 가능합니다");
 	        	return false;
         	}

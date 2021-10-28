@@ -86,6 +86,13 @@
 	    	USED_DATE DESC
 	    
 	</select>	
+	
+	
+	
+	<update id="infoModify">
+		UPDATE BM_USER SET
+		${valueType } = #{value } WHERE ID = #{id }
+	</update>
 		
 		
 </mapper>

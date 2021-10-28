@@ -172,4 +172,17 @@ SELECT * FROM
 	</select>
 	
 	
+	<select id="storeSearch" resultType="Store" >
+	SELECT rownum rn, s.*,t.* FROM 
+		BM_STORE s
+	        LEFT JOIN    
+				( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM  
+					( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
+				) t
+			ON s.id = t.store_id     
+			WHERE STORE_ADDRESS1 LIKE '${address1}%' AND STORE_NAME LIKE '%${keyword}%' 
+	
+	</select>
+	
+	
 </mapper>

@@ -107,6 +107,11 @@
 		
 		const deleveryAddress1 = $("#deleveryAddress1").val();
 		const deleveryAddress2 = $("#deleveryAddress2").val();
+		const deleveryAddress3 = $("#deleveryAddress3").val();
+		console.log(deleveryAddress1);
+		console.log(deleveryAddress2);
+		console.log(deleveryAddress3);
+		
 		
 		if(!deleveryAddress1 || !deleveryAddress2 ) {
 			swal('배달 받으실 주소를 입력해 주세요')
@@ -122,3 +127,4 @@
 	
 
 	
+;

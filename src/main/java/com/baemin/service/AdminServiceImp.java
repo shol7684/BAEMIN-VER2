@@ -80,5 +80,11 @@ public class AdminServiceImp implements AdminService {
 		
 	}
 
+	@Override
+	public int pointRegist(String giftCardNum, long id) {
+		return adminDAO.pointRegist(giftCardNum, id);
+		
+	}
+
 
 }

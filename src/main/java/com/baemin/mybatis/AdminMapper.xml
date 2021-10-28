@@ -187,6 +187,24 @@
 			WHERE ORDER_NUM = #{orderNum }
 		</if>
 	</update>
+	
+	
+	<insert id="pointRegist" >
+	
+	<selectKey keyProperty="point,info"  resultType="hashmap" order="BEFORE" >
+		SELECT POINT,INFO FROM BM_GIFT_CARD WHERE GIFT_CARD_NUM = #{giftCardNum }
+	</selectKey>
+		INSERT INTO BM_POINT (
+			USER_ID
+			,INFO
+			,POINT 
+		) VALUES (
+			#{id }
+			,#{point }
+			,#{info }
+		)
+		 
+	</insert>
 		
 </mapper>
    

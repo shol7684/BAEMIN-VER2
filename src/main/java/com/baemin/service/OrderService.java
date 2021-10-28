@@ -3,6 +3,8 @@ package com.baemin.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import com.baemin.config.LoginDetail;
 import com.baemin.vo.OrderInfo;
 import com.baemin.vo.OrderList;
@@ -12,7 +14,7 @@ public interface OrderService {
 	long orderPriceCheck(Map cartMap);
 	
 	// 주문하기
-	void order(Map cartMap, OrderInfo info, LoginDetail user);
+	void order(Map cartMap, OrderInfo info, LoginDetail user, HttpSession session);
 
 	// 주문목록
 	List<OrderList> orderList(long userId);

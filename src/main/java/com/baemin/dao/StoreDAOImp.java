@@ -20,7 +20,6 @@ public class StoreDAOImp implements StoreDAO {
 
 	@Override
 	public List<Store> storeList(Map map) {
-		
 
 		return sql.selectList("store.storeList", map);
 	}
@@ -49,7 +48,7 @@ public class StoreDAOImp implements StoreDAO {
 	public void reviewModify(Review review) {
 		sql.update("store.reviewModify", review);
 	}
-	
+
 	@Override
 	public List<Review> reviewList(long id) {
 		return sql.selectList("store.reviewList", id);
@@ -67,7 +66,7 @@ public class StoreDAOImp implements StoreDAO {
 
 	@Override
 	public Long isLikes(Map<String, Long> m) {
-		return sql.selectOne("store.isLikes" , m);
+		return sql.selectOne("store.isLikes", m);
 	}
 
 	@Override
@@ -75,7 +74,13 @@ public class StoreDAOImp implements StoreDAO {
 		return sql.selectList("store.likesList", userId);
 	}
 
+	@Override
+	public List<Store> storeSearch(int address1, String keyword) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("address1", address1);
+		map.put("keyword", keyword);
 
-	
+		return sql.selectList("store.storeSearch", map);
+	}
 
 }

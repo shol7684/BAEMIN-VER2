@@ -181,9 +181,8 @@
 	
 	
 	
-	<script type="text/javascript" src="/js/orderList.js" ></script>
-	<script type="text/javascript" src="/js/modal.js" ></script>
-	<script type="text/javascript" src="/js/openModal.js" ></script>
+	<script type="text/javascript" src="/js/order/orderList.js" ></script>
+	<script type="text/javascript" src="/js/modal/modal.js" ></script>
 	
 	
 </body>

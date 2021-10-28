@@ -7,6 +7,13 @@
 <%@ include file="./include/header.jsp" %>
     
     <!-- 콘텐츠 -->
+    <script>
+    	if("${orderMessage }" != "") {
+	    	swal("${orderMessage }");
+    	} 
+    </script>
+    
+    
 
     <div class="wrap">
         <main>

@@ -83,6 +83,6 @@
 
     </main>
     
-	<script type="text/javascript" src="/js/join.js"></script>
+	<script type="text/javascript" src="/js/user/join.js"></script>
 </body>
 </html>

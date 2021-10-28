@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/view/include/link.jsp"%>
 <link rel="stylesheet" href="/css/order/orderDetail.css">
+<!-- <link rel="stylesheet" href="/css/layout/nav.css"> -->
 <%@ include file="/WEB-INF/view/include/header.jsp"%>
 
 
@@ -119,15 +120,11 @@
 
 
 <!-- 하단 메뉴 -->
-<nav>
-	<%@ include file="/WEB-INF/view/include/nav.jsp"%>
-</nav>
+	<%-- <%@ include file="/WEB-INF/view/include/nav.jsp"%> --%>
 <!-- 하단 메뉴 -->
 
 <!-- 푸터 -->
-<footer>
 	<%@ include file="/WEB-INF/view/include/footer.jsp"%>
-</footer>
 <!-- 푸터 -->
 
 

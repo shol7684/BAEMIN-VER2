@@ -102,6 +102,11 @@ public class StoreServiceImp implements StoreService {
 	public List likesList(long userId) {
 		return storeDAO.likesList(userId);
 	}
+
+	@Override
+	public List<Store> storeSearch(int address1, String keyword) {
+		return storeDAO.storeSearch(address1, keyword);
+	}
 	
 	
 

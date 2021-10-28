@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="point_number_area">
-                	<form action="/pointRegister" method="post">
+                	<form action="/admin/pointRegist" method="post">
 	                    <input type="text" class="point_number" name="giftCardNum" placeholder="상품권 번호를 입력해주세요">
 	                    <input type="submit" value="등록">
                     </form>
@@ -63,13 +63,9 @@
 	</main>
 	
 	
-	<nav>
-		<%@ include file="/WEB-INF/view//include/nav.jsp" %>
-	</nav>
-	
-	<footer>
-		<%@ include file="/WEB-INF/view//include/footer.jsp" %>
-	</footer>
+<%@ include file="/WEB-INF/view//include/nav.jsp" %>
+
+<%@ include file="/WEB-INF/view//include/footer.jsp" %>
 	
 	
 	

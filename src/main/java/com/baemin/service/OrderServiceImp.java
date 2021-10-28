@@ -1,9 +1,10 @@
 package com.baemin.service;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,8 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baemin.config.LoginDetail;
-import com.baemin.controller.StoreController;
 import com.baemin.dao.OrderDAO;
+import com.baemin.util.CreateOrderNum;
+import com.baemin.util.UserInfoSessionUpdate;
 import com.baemin.vo.Cart;
 import com.baemin.vo.OrderInfo;
 import com.baemin.vo.OrderList;
@@ -58,22 +60,11 @@ public class OrderServiceImp implements OrderService {
 
 	@Transactional
 	@Override
-	public void order(Map cartMap, OrderInfo info, LoginDetail user) {
-		Calendar cal = Calendar.getInstance();
-
-		int y = cal.get(Calendar.YEAR);
-		int m = cal.get(Calendar.MONTH) + 1;
-		int d = cal.get(Calendar.DATE);
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(y).append(m).append(d);
-
-		for (int i = 0; i < 10; i++) {
-			int random = (int) (Math.random() * 10);
-			sb.append(random);
-		}
+	public void order(Map cartMap, OrderInfo info, LoginDetail user, HttpSession session) {
 		
-		info.setOrderNum(sb.toString());
+		String orderNum = CreateOrderNum.createOrderNum();
+		
+		info.setOrderNum(orderNum);
 		long userId = 0;
 		if (user != null) {
 			userId = user.getUser().getId();
@@ -91,7 +82,7 @@ public class OrderServiceImp implements OrderService {
 		String totalPrice = cartMap.get("menuTotalPrice").toString();
 		String storeId = cartMap.get("storeId").toString();
 		
-		orderDetail.put("orderNum", sb.toString());
+		orderDetail.put("orderNum", orderNum);
 		orderDetail.put("amount", amount);
 		orderDetail.put("foodPrice", foodPrice);
 		orderDetail.put("totalPrice", totalPrice);
@@ -106,6 +97,8 @@ public class OrderServiceImp implements OrderService {
 		orderDAO.order(info);
 		orderDAO.orderDetail(orderDetail);
 		
+		
+		// 로그인 사용자가 포인트 사용했을때
 		if(info.getUsedPoint() != 0 ) {
 			String storeName =  cartMap.get("storeName").toString();
 			long usedPoint =  -info.getUsedPoint();
@@ -114,6 +107,8 @@ public class OrderServiceImp implements OrderService {
 			LOGGER.info("사용 매장 = "+ storeName);
 			LOGGER.info("유저 아이디 = "+ userId);
 			LOGGER.info("포인트 차감 " + usedPoint);
+			
+			UserInfoSessionUpdate.sessionUpdate(usedPoint+"", "point", user, session);
 		}
 	}
 

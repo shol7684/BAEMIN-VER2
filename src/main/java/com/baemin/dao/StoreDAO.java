@@ -31,5 +31,7 @@ public interface StoreDAO {
 
 	List likesList(long userId);
 
+	List<Store> storeSearch(int address1, String address2);
+
 
 }

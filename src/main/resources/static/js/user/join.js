@@ -49,18 +49,9 @@ $(".email").focusout(function() {
 	emailCheckMsg.html("");
 	emailCheck = 1;
 	inputCheck();
-	/*
-	let data = {
-		value: $(".email").val(),
-		valueType : "email" 
-	};
-	const impossibilityMsg = "이미 사용중인 이메일입니다";
-	const possibilityMsg = "사용 가능합니다";
-	overlapCheck(data, emailCheckMsg, impossibilityMsg, possibilityMsg);
-	*/
-
 
 }); // function
+
 
 $(".nickname").focusout(function() {
 

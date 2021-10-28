@@ -30,6 +30,7 @@
 				<h2>주문정보</h2>
 				
 				<ul>
+					<c:if test="${fn:length(cartMap.cartList) > 0 }">
 					<c:forEach begin="0" end="${fn:length(cartMap.cartList) -1 }" var="j"  >
 					
 						<li>
@@ -63,7 +64,7 @@
 						</li><hr>
 						
 					</c:forEach>
-					
+					</c:if>
 				</ul>
 			</div>
 		</li>
@@ -72,14 +73,19 @@
 		
 			<div class="delevery_info">
 				<h2>배달정보 </h2>
-				<div class="address1">주소 : ${BMaddress2} <button type="button">주소 변경하기</button></div>
+				<div>
+					<span>주소 :</span> 
+					<span class="address1">${BMaddress2}</span> 
+					<button type="button" onclick="sample2_execDaumPostcode()" id="sample2_btn" >주소 변경하기</button>
+	             <%@ include file="/WEB-INF/view/include/modifyAddress.jsp" %>
+				</div>
 				
 				<input type="hidden" id="deleveryAddress1" value="${BMaddress1 }" name="deleveryAddress1"> 
 				<input type="hidden" id="deleveryAddress2" value="${BMaddress2 }" name="deleveryAddress2"> 
 				
 				
 				<div>상세 주소</div>
-				<div class="input_area"><input type="text" value="${BMaddress3 }"  name="deleveryAddress3"> </div>
+				<div class="input_area"><input type="text" id="deleveryAddress3" value="${BMaddress3 }"  name="deleveryAddress3"> </div>
 				 
 				<div>전화번호</div>
 				<c:if test="${!empty user  }">
@@ -172,7 +178,7 @@
 	<!-- 푸터 -->
 	<%@ include file="/WEB-INF/view/include/footer.jsp" %>
 	<!-- 푸터 -->
-	<script type="text/javascript" src="/js/order.js" ></script>
+	<script type="text/javascript" src="/js/order/order.js" ></script>
 </body>
 </html>
 

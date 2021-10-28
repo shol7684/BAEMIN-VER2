@@ -383,14 +383,6 @@
 	<input type="hidden" value="${storeVO.busiHours2 }" class="business_hour2"> 
 	<input type="hidden" value="${storeVO.storeAddress2 }" class="store_address">
 	<input type="hidden" value="${address.address2 }" class="user_address">
-	
-	<input type="hidden" value="${storeVO.reviewCount }" id="review_count">
-	<input type="hidden" value="${storeVO.fiveScore }" id="five_score">
-	<input type="hidden" value="${storeVO.fourScore }" id="four_score">
-	<input type="hidden" value="${storeVO.threeScore }" id="three_score">
-	<input type="hidden" value="${storeVO.twoScore }" id="two_score">
-	<input type="hidden" value="${storeVO.oneScore }" id="one_score">
-	<input type="hidden" value="${storeVO.score }" id="score">
 
 	
  

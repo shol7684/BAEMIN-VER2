@@ -27,4 +27,6 @@ public interface AdminDAO {
 
 	void orderAccept(String orderNum, int time, long userId);
 
+	int pointRegist(String giftCardNum, long id);
+
 }

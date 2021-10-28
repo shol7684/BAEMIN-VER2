@@ -42,6 +42,12 @@ public class UserServiceImp implements UserService {
 		return userDAO.myPoint(id);
 		
 	}
+
+	@Override
+	public void infoModify(String value, String valueType, long id) {
+		userDAO.infoModify(value, valueType, id);
+		
+	}
 	
 
 }

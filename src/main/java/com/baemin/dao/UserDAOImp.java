@@ -48,6 +48,15 @@ public class UserDAOImp implements UserDAO {
 		return sql.selectList("user.myPoint", id);
 		
 	}
+
+	@Override
+	public void infoModify(String value, String valueType, long id) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("value", value);
+		map.put("valueType", valueType);
+		map.put("id", id);
+		sql.update("user.infoModify" , map);
+	}
 	
 
 }

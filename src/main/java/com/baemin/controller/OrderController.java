@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.baemin.config.LoginDetail;
 import com.baemin.service.OrderService;
@@ -51,7 +52,7 @@ public class OrderController {
 	}
 	
 	@PostMapping("/order")
-	public String orderProc(HttpSession session, long total, OrderInfo info, @AuthenticationPrincipal LoginDetail user ) {
+	public String orderProc(HttpSession session, long total, OrderInfo info, @AuthenticationPrincipal LoginDetail user, RedirectAttributes rttr) {
 		
 		Map cartMap = (Map) session.getAttribute("cartMap");
 		long orderPriceCheck = orderService.orderPriceCheck(cartMap);
@@ -68,11 +69,13 @@ public class OrderController {
 			long point = user.getUser().getPoint();
 			if(point < info.getUsedPoint()) {
 				LOGGER.info("유저 포인트 오류");
+				rttr.addFlashAttribute("orderMessage", "포인트 사용 오류");
 				return "redirect:/";
 			}
 		} else {
 			if(info.getUsedPoint() != 0) {
 				LOGGER.info("비회원 포인트사용 오류");
+				rttr.addFlashAttribute("orderMessage", "포인트 사용 오류");
 				return "redirect:/";
 			}
 		}
@@ -81,8 +84,8 @@ public class OrderController {
 //		orderService.payment();
 		
 		
-		orderService.order(cartMap,info, user);
-		
+		orderService.order(cartMap,info, user, session);
+		rttr.addFlashAttribute("orderMessage", "주문이 완료되었습니다");
 		session.removeAttribute("cartMap");
 		
 		return "redirect:/";

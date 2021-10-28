@@ -1,11 +1,16 @@
 package com.baemin.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,11 +29,11 @@ import com.baemin.config.LoginDetail;
 import com.baemin.service.AdminService;
 import com.baemin.service.StoreService;
 import com.baemin.util.FoodInfoFromJson;
-import com.baemin.vo.Cart;
+import com.baemin.util.UserInfoSessionUpdate;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
 import com.baemin.vo.Store;
-import com.google.gson.Gson;
+import com.nimbusds.oauth2.sdk.Request;
 
 @Controller
 public class AdminController {
@@ -193,6 +198,16 @@ public class AdminController {
 	}
 	
 	
+	@PostMapping("/admin/pointRegist")
+	public void pointRegist(String giftCardNum, @AuthenticationPrincipal LoginDetail user, HttpSession session, HttpServletRequest reqeust, HttpServletResponse response) throws ServletException, IOException {
+		int count = adminService.pointRegist(giftCardNum, user.getUser().getId());
+//		UserInfoSessionUpdate.sessionUpdate(1, "point", user, session);
+		
+		System.out.println("count = " + count );
+		reqeust.getRequestDispatcher("/user/point").forward(reqeust, response);
+		
+//		return "redirect:/user/point";
+	}
 	
 
 }

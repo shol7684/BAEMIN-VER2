@@ -1,17 +1,28 @@
 package com.baemin.controller;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 
-import javax.mail.Multipart;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.tomcat.jni.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -158,20 +169,126 @@ public class StoreController {
 	// 찜한 가게 목록
 	@GetMapping("/likes/store")
 	public String likes(Model model, @AuthenticationPrincipal LoginDetail user) {
-		
+
 		long userId = 0;
-		
-		if(user == null) {
-			
+
+		if (user == null) {
+
 		} else {
 			userId = user.getUser().getId();
-			
+
 			List likesList = storeService.likesList(userId);
-			model.addAttribute("likesList" , likesList);
+			model.addAttribute("likesList", likesList);
 		}
-		
-		
+
 		return "/store/likes";
 	}
+
+	@GetMapping("/store/search")
+	public String search(String address1, String keyword, Model model, HttpServletResponse response,
+			HttpServletRequest request) throws UnsupportedEncodingException {
+
+		System.out.println("keyword = " + keyword);
+		System.out.println("address1 = " + address1);
+
+		Cookie[] cookies = request.getCookies();
+
+		String cookieKeyword = "";
+
+		for (int i = 0; i < cookies.length; i++) {
+			if (cookies[i].getName().equals("keyword")) {
+				cookieKeyword = URLDecoder.decode(cookies[i].getValue(), "UTF-8");
+				break;
+			}
+		}
+
+		LinkedHashSet<String> set = new LinkedHashSet<>();
+		StringTokenizer st = new StringTokenizer(cookieKeyword, ", ");
+
+		if(keyword != null ) {
+			set.add(keyword);
+		}
+		
+		while (st.hasMoreTokens()) {
+			set.add(st.nextToken());
+			
+			if(set.size() > 7) {
+				break;
+			}
+		}
+
+		model.addAttribute("searchKeyword", set);
+			
+			
+		// 쿠키 저장
+		String s = set.toString();
+		s = s.substring(1, s.length() - 1); // 괄호 제거
+
+		Cookie cookie = new Cookie("keyword", URLEncoder.encode(s, "UTF-8"));
+		response.addCookie(cookie);
+
+
+		if (address1 != null && !address1.equals("")) {
+
+			List<Store> store = storeService.storeSearch(Integer.parseInt(address1) / 100, keyword);
+			model.addAttribute("store", store);
+
+			System.out.println(store);
+
+		}
+		
+		model.addAttribute("keyword", keyword);
+
+		return "store/search";
+	}
+	
+	@ResponseBody
+	@DeleteMapping("/store/keyword-all")
+	public void keywordDelete(HttpServletResponse response) {
+		Cookie cookie = new Cookie("keyword", null);
+		cookie.setMaxAge(0);
+		response.addCookie(cookie);
+	}
+	
+	
+	@ResponseBody
+	@DeleteMapping("/store/keyword-one")
+	public void keywordDelete(String keyword, HttpServletResponse response, HttpServletRequest request ) throws UnsupportedEncodingException {
+		
+		Cookie[] cookies = request.getCookies();
+
+		String cookieKeyword = "";
+
+		for (int i = 0; i < cookies.length; i++) {
+			if (cookies[i].getName().equals("keyword")) {
+				cookieKeyword = URLDecoder.decode(cookies[i].getValue(), "UTF-8");
+				break;
+			}
+		}
+
+		LinkedHashSet<String> set = new LinkedHashSet<>();
+		StringTokenizer st = new StringTokenizer(cookieKeyword, ", ");
+
+		
+		while (st.hasMoreTokens()) {
+			set.add(st.nextToken());
+			
+			if(set.size() > 7) {
+				break;
+			}
+		}
+
+		set.remove(keyword);
+		
+		String s = set.toString();
+		s = s.substring(1, s.length() - 1); // 괄호 제거
+
+		Cookie cookie = new Cookie("keyword", URLEncoder.encode(s, "UTF-8"));
+		response.addCookie(cookie);
+		
+		
+	}
+	
+	
 
 }

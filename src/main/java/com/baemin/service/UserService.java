@@ -18,6 +18,8 @@ public interface UserService {
 	public void deleteReview(String orderNum);
 
 	public List<Point> myPoint(long id);
+
+	public void infoModify(String value, String valueType, long id);
 	
 
 }
