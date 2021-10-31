@@ -94,6 +94,7 @@
     </main>
     <!-- 콘텐츠 -->
 
+	<a href="/chating2">채팅방</a>
 
     <!-- 하단 메뉴 -->
 	<%@ include file="../include/nav.jsp" %>

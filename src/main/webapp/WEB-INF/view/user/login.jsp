@@ -35,7 +35,7 @@
 					</div>
 					
 		            <div>
-		            	<span class="id_search"><a href="">아이디</a></span>
+		            	<span class="id_search"><a href="/findId">아이디</a></span>
 			            <span> ㅣ </span>
 			            <span><a href="">비밀번호 찾기</a></span>
 			            
@@ -45,7 +45,7 @@
             
 			<div id="oauth_login">
 				<div>
-					<a href="/kakkoLogin">
+					<a href="/oauth2/authorization/google">	
 						<img src="/img/kakao_login_btn.png">
 					</a>
 				</div>
@@ -57,7 +57,7 @@
 				</div>
 				
 				<div>
-					<a href="/kakkoLogin">
+					<a href="/oauth2/authorization/google">
 						<img src="/img/google_login_btn.png">
 					</a>
 				</div>

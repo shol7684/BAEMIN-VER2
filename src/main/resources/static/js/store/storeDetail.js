@@ -1,12 +1,14 @@
 
 
 $(document).ready(function() {
-
+const minDelevery = Number($("#min_delevery").data("min_delevery"));
+		
 	let size = $(window).width();
 
 	$(window).resize(function() {
 		size = $(window).width();
 	})
+
 
 	// 다른가게에서 담은 상품인지 확인
 	let cartStoreId = null;
@@ -193,10 +195,24 @@ $(document).ready(function() {
 				if (value == true) {
 					deleteCartAll();
 					addCart($(this));
+					
+					$(".add_cart_alarm").show();
+					setTimeout(function(){
+						$(".add_cart_alarm").hide();
+					},1000);
+					
+					closeModal();
 				}
 			});			
 		} else {
 			addCart($(this));
+			
+			$(".add_cart_alarm").show();
+			setTimeout(function(){
+				$(".add_cart_alarm").hide();
+			},1000);
+			
+			closeModal();
 		
 		}
 	}) // 장바구니 담기
@@ -407,7 +423,9 @@ $(document).ready(function() {
 	// 주문금액이 최소주문금액 이상이어야 주문가능
 	function minDeleveryCheck(menuTotalPrice) {
 		
-		const minDelevery = Number($("#min_delevery").val());
+		const minDelevery = Number($("#min_delevery").data("min_delevery"));
+		
+		console.log("min_delevery = "  +minDelevery );
 		
 		if(minDelevery <= menuTotalPrice) {
 			$(".order_btn").attr("disabled", false); 
@@ -425,8 +443,8 @@ $(document).ready(function() {
 	}
 
 
-
-
+	// css로 display none시 카카오 맵 깨짐
+	$("main ul.info").hide();
 	// 탭 눌렀을때 색변경 콘텐츠 변경
 	$("ul.tab > li").click(function() {
 
@@ -473,7 +491,7 @@ $(document).ready(function() {
 		location.href = "/order";
 	});
 	// 모바일 주문하기
-	$(".cart_img_box").click(function() {
+	$(".m_cart_img_box").click(function() {
 		location.href = "/order";
 	});
 	

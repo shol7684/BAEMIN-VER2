@@ -1,5 +1,4 @@
 
-
 .container {
     width: 100%;
    
@@ -104,6 +103,7 @@ main {
     margin: 15px;
     padding : 25px 0;
     position: relative; 
+    
 }
 
 .box .store li.temp {
@@ -138,6 +138,9 @@ main {
 
 .box .store li .inf h2 {
 	font-size: 18px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .box .store li .inf div span {

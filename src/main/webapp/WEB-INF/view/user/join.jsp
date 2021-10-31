@@ -40,45 +40,6 @@
 		
 	            	</form>
             
-      	
-      	
-      	<!-- 카카오 아이디로 처음 가입할때 -->
-            <!-- <c:if test="${kakkoIdCheck == 0 }">
-            
-	            <form action="/kakkoJoin" method="post">
-		            
-					<div><input type="hidden" name="userId" class="user_id"  value="${userEmail }" required placeholder="이메일을 입력해 주세요" ></div>
-					
-					<div>휴대폰번호를 입력해주세요</div>
-	                <div class="input_aera"><input type="text" name="userPhone" value="" class="phone"  
-	                    required placeholder="'-' 없이 입력해 주세요" maxlength="13" ></div>
-	            
-	            	<div><input type="hidden" class="nickname" name="nickname"  value="${nickname }"  required placeholder="사용하실 닉네임을 입력해 주세요"></div>
-			
-					<input type="submit" value="회원가입" id="login_btn"  >
-				</form>
-            </c:if> -->
-            
-            
-            <!-- 카카오 이메일과 동일한 계정이 있을때 -->
-            <!-- <c:if test="${kakkoIdCheck == 1}"> 
-            
-	            <form action="/kakkoConnetion" method="post">
-		            
-	            	<div>
-	            		동일한 메일 주소로 가입된 계정이 있어요<br>
-	            		휴대폰 인증 생략
-	            	 </div>
-	            	 <input type="hidden" name="userPhone" value="${userCheck.userPhone }">
-	            	 <input type="hidden" name="userId" value="${userCheck.userId }">
-	            	 <input type="hidden" name="nickname" value="${nickname }">
-		
-			
-					<input type="submit" value="연결" id="kako_connetion" >
-				</form>
-           </c:if>  -->
-            
-
         </div>
 
     </main>

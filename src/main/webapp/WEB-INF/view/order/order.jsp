@@ -89,10 +89,10 @@
 				 
 				<div>전화번호</div>
 				<c:if test="${!empty user  }">
-					<div class="input_area"> <input type="number" value="${user.phone }" name="phone" required readonly> </div>
+					<div class="input_area"> <input type="number" value="${user.phone }" name="phone" readonly required onkeypress="return lenthCheck(this, 11)"> </div>
 				</c:if>
 				<c:if test="${empty user  }">
-					<div class="input_area"> <input type="number" value="01028857684" name="phone" required> </div>
+					<div class="input_area"> <input type="number" name="phone" required> </div>
 				</c:if>
 			</div>
 		<hr>

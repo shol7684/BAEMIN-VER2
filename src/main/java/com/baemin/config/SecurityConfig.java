@@ -32,6 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
+	@Autowired
+	private LoginFail loginFail;
+	
+	@Autowired
+	private OauthUserService oauthUserService;
+	
 	
 	@Bean
 	public BCryptPasswordEncoder encodePwd() {
@@ -57,80 +63,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.anyRequest().permitAll()
 		.and()
 			.formLogin()
-			.loginPage("/")
+			.loginPage("/login")
 			.loginProcessingUrl("/login")
 			.defaultSuccessUrl("/myPage")
-			.failureHandler(new AuthenticationFailureHandler() {
-			      @Override
-			      public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-			          System.out.println("AuthenticationFailureHandler");
-//			          response.sendRedirect("/myPage");
-			          String username = request.getParameter("username");
-			          String password = request.getParameter("password");
-			          
-			          
-			          System.out.println(username);
-			          System.out.println(password);
-			          System.out.println(exception);
-			          
-			          System.out.println(exception instanceof BadCredentialsException);
-			          System.out.println(exception instanceof InternalAuthenticationServiceException);
-			          
-			           if(exception instanceof BadCredentialsException ||
-			              exception instanceof InternalAuthenticationServiceException ) {
-			        	   
-			        	   request.setAttribute("msg" , "아이디와 비밀번호를 확인해 주세요");
-			           }
-
-			          request.getRequestDispatcher("/WEB-INF/view/user/login.jsp").forward(request, response);
-			      }
-			 })
+			.failureHandler(loginFail)
 			.and()
 			.logout()
 			.logoutSuccessUrl("/myPage")
+		.and()
+			.oauth2Login()
+			.loginPage("/login")
+			.userInfoEndpoint()
+			.userService(oauthUserService)
+			
+			
+			
 		
 		;
+		
+		
+		
+		
+		
 		http.rememberMe()
-			.key("uniqueAndSecret")
+			.key("remember")
 			.rememberMeParameter("remember-me")
 			.tokenValiditySeconds(60 * 60 * 24 * 7)
 			.userDetailsService(userDetailsService)
 			;
-		
-//		http.authorizeRequests().
-//		anyRequest().
-//		permitAll()
-//		;
-		
-//		http.cors().disable()
-//        .csrf().disable()
-//        .formLogin().disable()
-//        .headers().frameOptions().disable();
-		
-		
-		
-//		super.configure(http);
-//		
-//		http.authorizeRequests()
-//		.antMatchers("/user/**").authenticated() // 로그인만 하면 들어갈수 있는 주소
-//		.antMatchers("/manager/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
-//		.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-//		.anyRequest().permitAll()  // 위 등록된 주소가 아니면 다 허용
-//		.and()
-//			.formLogin()
-//			.loginPage("/auth/login") //권한 없는 사람이 요청했을땐 로그인페이지로 이동
-//			.loginProcessingUrl("/auth/loginProc") // login 주소가 호출이 되면 시큐리티가 낚아채서 대신 로그인을 해줌
-//			.defaultSuccessUrl("/") // 성공시 / 페이지로 이동
-//		.and()
-//			.oauth2Login()
-//			.loginPage("/auth/loginProc")
-//			.defaultSuccessUrl("/home") // 성공시 / 페이지로 이동
-//			.userInfoEndpoint()
-//			.userService(oauth2UserService)
-//			
-//			;
-	
-		
 	}
 
 	

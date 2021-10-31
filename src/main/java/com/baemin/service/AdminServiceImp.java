@@ -82,8 +82,23 @@ public class AdminServiceImp implements AdminService {
 
 	@Override
 	public int pointRegist(String giftCardNum, long id) {
-		return adminDAO.pointRegist(giftCardNum, id);
 		
+		Map giftCard = adminDAO.selectCard(giftCardNum);
+		
+		if(giftCard != null) {
+			String info = giftCard.get("info").toString();
+			int point = Integer.parseInt(giftCard.get("point").toString());
+			
+			adminDAO.pointUpdate(id, info, point );
+			return point;
+		}
+		
+ 		return 0;
+	}
+
+	@Override
+	public OrderList getOrderOne(String orderNum) {
+		return adminDAO.getOrderOne(orderNum);
 	}
 
 

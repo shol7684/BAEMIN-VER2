@@ -29,8 +29,6 @@ public interface OrderDAO {
 	// 주문목록 상세보기 페이지
 	OrderList orderListDetail(String orderNum);
 
-	void updatePoint(long usedPoint, long userId, String storeName);
-
 
 
 

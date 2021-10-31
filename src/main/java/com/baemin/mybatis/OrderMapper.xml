@@ -131,21 +131,6 @@
 	</insert>
 	
 	
-	<update id="updatePoint">
-		INSERT INTO BM_POINT ( 
-			USER_ID
-			,INFO
-			,POINT
-		) VALUES (
-			#{userId }
-			,#{storeName }
-			,#{usedPoint }
-		)
-		
-	</update>
-	
-	
-	
 	
 	<select id="orderList" resultType="OrderList">
        SELECT

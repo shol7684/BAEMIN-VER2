@@ -59,7 +59,8 @@ main .temp img {
     width: 47%;
     margin: 15px;
     padding : 25px 0;
-    position: relative; 
+    position: relative;
+    overflow: hidden; 
 }
 
 .box .store li.temp {
@@ -94,6 +95,9 @@ main .temp img {
 
 .box .store li .inf h2 {
 	font-size: 18px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .box .store li .inf div span {

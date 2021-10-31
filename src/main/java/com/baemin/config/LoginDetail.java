@@ -3,9 +3,11 @@ package com.baemin.config;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.baemin.vo.User;
 
@@ -16,14 +18,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class LoginDetail implements UserDetails {
+public class LoginDetail implements UserDetails, OAuth2User {
 
 	private User user;
+	private Map<String, Object> oauth2User;
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		
-		System.out.println("getAuthorities");
 		
 		List<GrantedAuthority> roles = new ArrayList<>();
 		
@@ -31,12 +32,9 @@ public class LoginDetail implements UserDetails {
 			
 			@Override
 			public String getAuthority() {
-				System.out.println();
 				return user.getRole();
 			}
 		});
-//		System.out.println(roles.get(0).getAuthority());
-		
 		return roles;
 	}
 
@@ -68,6 +66,18 @@ public class LoginDetail implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	
+	// oauth
+	@Override
+	public Map<String, Object> getAttributes() {
+		return null;
+	}
+
+	@Override
+	public String getName() {
+		return null;
 	}
 
 }

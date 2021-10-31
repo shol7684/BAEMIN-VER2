@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baemin.config.LoginDetail;
+import com.baemin.dao.AdminDAO;
 import com.baemin.dao.OrderDAO;
 import com.baemin.util.CreateOrderNum;
 import com.baemin.util.UserInfoSessionUpdate;
@@ -21,12 +22,17 @@ import com.baemin.vo.OrderInfo;
 import com.baemin.vo.OrderList;
 import com.google.gson.Gson;
 
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
+
 @Service
 public class OrderServiceImp implements OrderService {
 
 	@Autowired
 	private OrderDAO orderDAO;
 
+	@Autowired
+	private AdminDAO adminDAO;
+	
 	private static final Logger LOGGER = LogManager.getLogger(OrderServiceImp.class);
 	
 	@Transactional
@@ -60,7 +66,7 @@ public class OrderServiceImp implements OrderService {
 
 	@Transactional
 	@Override
-	public void order(Map cartMap, OrderInfo info, LoginDetail user, HttpSession session) {
+	public String order(Map cartMap, OrderInfo info, LoginDetail user, HttpSession session) {
 		
 		String orderNum = CreateOrderNum.createOrderNum();
 		
@@ -101,15 +107,34 @@ public class OrderServiceImp implements OrderService {
 		// 로그인 사용자가 포인트 사용했을때
 		if(info.getUsedPoint() != 0 ) {
 			String storeName =  cartMap.get("storeName").toString();
-			long usedPoint =  -info.getUsedPoint();
-			orderDAO.updatePoint(usedPoint, userId, storeName);
+			int usedPoint =  -info.getUsedPoint();
+			int result = adminDAO.pointUpdate(userId, storeName, usedPoint);
 			
 			LOGGER.info("사용 매장 = "+ storeName);
 			LOGGER.info("유저 아이디 = "+ userId);
 			LOGGER.info("포인트 차감 " + usedPoint);
 			
-			UserInfoSessionUpdate.sessionUpdate(usedPoint+"", "point", user, session);
+			if(result == 1) {
+				UserInfoSessionUpdate.sessionUpdate(usedPoint+"", "point", user, session);
+			}
 		}
+		
+		
+		// 회원 포인트 적립
+		if (user != null) {
+			String storeName =  cartMap.get("storeName").toString();
+			int point = Integer.parseInt(totalPrice);
+				point = (int) (point * 0.01);
+			
+			int result = adminDAO.pointUpdate(userId, storeName, point);
+			
+			if(result == 1) {
+				UserInfoSessionUpdate.sessionUpdate(point+"", "point", user, session);
+			}
+		}
+		
+		
+		return orderNum;
 	}
 
 	@Override

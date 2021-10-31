@@ -8,8 +8,10 @@ import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,11 +21,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.baemin.config.LoginDetail;
+import com.baemin.service.MailService;
 import com.baemin.service.UserService;
 import com.baemin.util.UserInfoSessionUpdate;
 import com.baemin.vo.Point;
 import com.baemin.vo.Review;
 import com.baemin.vo.User;
+
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 
 @Controller
 public class UserController {
@@ -39,16 +44,22 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder pwdEncoder;
 
+	@Autowired
+	private MailService mailService;
+	
 	@GetMapping("/myPage")
-	public String myPage(@AuthenticationPrincipal LoginDetail user, Model model, HttpSession session) {
+	public String myPage(@AuthenticationPrincipal LoginDetail user, Model model, HttpSession session, @AuthenticationPrincipal OAuth2User oauth) {
 
 		
 //		System.out.println(SecurityContextHolder.getContext());
 //		System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());;
 		
-		
+		System.out.println("myPage user = " + user);
+		System.out.println("myPage oauth = " + oauth);
 		
 		if (user != null) {
+			
+			System.out.println("user.getUser().getNickname() = " + user.getUser().getNickname());
 			model.addAttribute("nickname", user.getUser().getNickname());
 		}
 
@@ -158,5 +169,30 @@ public class UserController {
 		return "변경되었습니다";
 	}
 	
+	
+	
+	@ResponseBody
+	@GetMapping("/oauth")
+	public String oauthLogin(@AuthenticationPrincipal LoginDetail user) {
+		
+		System.out.println(user);
+		
+		
+		return"";
+	}
+	
+	@GetMapping("/findId")
+	public String findId(String email) {
+		
+		if(email != null) {
+			List<String> usernames = userService.findId(email);
+			System.out.println(usernames);
+			
+			mailService.sendMail(usernames);
+			return "redirect:/login";
+		}
+		
+		return "user/findId";
+	}
 
 }

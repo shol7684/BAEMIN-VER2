@@ -11,6 +11,10 @@
 	</select>
 	
 	<insert id="join">
+	
+	<selectKey keyProperty="id" resultType="long" order="BEFORE">
+		SELECT USER_ID_SEQ.NEXTVAL FROM DUAL
+	</selectKey>
 		INSERT INTO BM_USER (
 			ID,
 			USERNAME,
@@ -19,7 +23,7 @@
 			NICKNAME,
 			PHONE
 		) VALUES (
-			USER_ID_SEQ.NEXTVAL,
+			#{id },
 			#{username },
 			#{password },
 			#{email },
@@ -93,6 +97,12 @@
 		UPDATE BM_USER SET
 		${valueType } = #{value } WHERE ID = #{id }
 	</update>
+	
+	
+	
+	<select id="findId" resultType="String">
+		SELECT USERNAME FROM BM_USER WHERE EMAIL = #{email }
+	</select>
 		
 		
 </mapper>

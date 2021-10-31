@@ -33,4 +33,6 @@ public interface AdminService {
 	// 상품권 등록
 	int pointRegist(String giftCardNum, long id);
 
+	OrderList getOrderOne(String orderNum);
+
 }

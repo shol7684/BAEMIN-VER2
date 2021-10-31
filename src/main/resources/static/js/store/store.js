@@ -10,7 +10,7 @@ $(document).ready(function() {
 	
 	let winHeight = 0;
 	let docHeight = 0;
-	let page = 1;
+	let page = 2;
 	let run = false;
 
 	$(window).scroll(function(){

@@ -53,16 +53,5 @@ public class OrderDAOImp implements OrderDAO {
 		return sql.selectOne("order.orderListDetail", orderNum);
 	}
 
-	@Override
-	public void updatePoint(long usedPoint, long userId, String storeName) {
-		
-		Map<String, Object> map = new HashMap<>();
-		
-		map.put("usedPoint", usedPoint);
-		map.put("userId", userId);
-		map.put("storeName", storeName);
-		
-		sql.update("order.updatePoint" , map);
-	}
 
 }

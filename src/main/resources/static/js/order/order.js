@@ -102,6 +102,10 @@
 	}			
 	
 	
+	if(!$("input[name='phone']").val()) {
+		$("input[name='phone']").attr("readonly", false);
+	}
+	
 	
 	function addressCheck(){
 		
@@ -117,9 +121,26 @@
 			swal('배달 받으실 주소를 입력해 주세요')
 			return false;
 		} 
+		
+		
 		return true;
 	}
 	
+	/*폰번호 길이제한 11자*/
+	function lenthCheck(e, length) {
+		
+		if(e.value.length >= length) {
+			return false;
+		}
+		
+		$(this).off().focusout(function(){
+			if(e.value.length > length) {
+				e.value = "";
+			}
+		})
+		
+		return true;
+	}
 	
 
 		
@@ -127,4 +148,3 @@
 	
 
 	
-;

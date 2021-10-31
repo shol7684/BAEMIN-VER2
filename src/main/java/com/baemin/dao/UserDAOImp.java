@@ -57,6 +57,14 @@ public class UserDAOImp implements UserDAO {
 		map.put("id", id);
 		sql.update("user.infoModify" , map);
 	}
+
+	@Override
+	public List<String> findId(String email) {
+		
+		System.out.println("userDAO email = "  + email);
+		
+		return sql.selectList("user.findId", email);
+	}
 	
 
 }

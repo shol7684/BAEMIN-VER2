@@ -5,6 +5,7 @@
 	
     <!-- <script type="text/javascript" src="/js/imgPreview.js" ></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="/js/admin/orderSelect.js" ></script>
 <link rel="stylesheet" href="/css/admin/admin.css" >
 <link rel="stylesheet" href="/css/modal.css" >
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
@@ -85,6 +86,14 @@
    	<!-- 푸터 -->
 	<%@ include file="/WEB-INF/view/include/footer.jsp" %>
 	<!-- 푸터 -->
+
+
+	
+	
+
+
+
+
 
 	
 

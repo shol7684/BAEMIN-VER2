@@ -2,6 +2,7 @@ package com.baemin.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.baemin.config.LoginDetail;
 import com.baemin.service.AdminService;
@@ -93,14 +95,7 @@ public class AdminController {
 			
 		}
 		
-		for(int i=0;i<30;i++) {
-			String s = store.getStoreName() + i;
-			store.setStoreName(s);
-			
-			adminService.storeRegist(store);
-		}
-		
-		
+		adminService.storeRegist(store);
 		
 		return "redirect:/admin/storeManagement";
 	}
@@ -199,14 +194,30 @@ public class AdminController {
 	
 	
 	@PostMapping("/admin/pointRegist")
-	public void pointRegist(String giftCardNum, @AuthenticationPrincipal LoginDetail user, HttpSession session, HttpServletRequest reqeust, HttpServletResponse response) throws ServletException, IOException {
-		int count = adminService.pointRegist(giftCardNum, user.getUser().getId());
-//		UserInfoSessionUpdate.sessionUpdate(1, "point", user, session);
+	public String pointRegist(String giftCardNum, @AuthenticationPrincipal LoginDetail user, HttpSession session,  RedirectAttributes rttr) throws ServletException, IOException {
+		int point = adminService.pointRegist(giftCardNum, user.getUser().getId());
 		
-		System.out.println("count = " + count );
-		reqeust.getRequestDispatcher("/user/point").forward(reqeust, response);
+		if(point != 0) {
+			UserInfoSessionUpdate.sessionUpdate(point+"", "point", user, session);
+			DecimalFormat fm = new DecimalFormat();
+			rttr.addFlashAttribute("pointRegistMessage", fm.format(point) +"원 충전되었습니다");
+		} else {
+			rttr.addFlashAttribute("pointRegistMessage", "잘못된 번호입니다");
+		}
+		return "redirect:/user/point";
+	}
+	
+	
+	
+	// 주문 1개 가져오기
+	@ResponseBody
+	@GetMapping("/admin/order-one")
+	public Map getOrderone(String orderNum) {
 		
-//		return "redirect:/user/point";
+		OrderList order = adminService.getOrderOne(orderNum);
+		
+		Map map = FoodInfoFromJson.foodInfoFromJson(order);
+		return map;
 	}
 	
 

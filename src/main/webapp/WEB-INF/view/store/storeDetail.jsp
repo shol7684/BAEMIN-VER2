@@ -5,7 +5,7 @@
 
  <div id="wrap">
 
-
+	
 	    <nav>
 	<%-- <img alt="" src="${store.storeInfo.storeImg }"> --%>
 	        <h1>${store.storeInfo.storeName }</h1>
@@ -36,7 +36,7 @@
                    </div>
                    <div><span> 리뷰 ${store.storeInfo.reviewCount } ㅣ </span><span>사장님 댓글 ${store.storeInfo.bossCommentCount }</span></div>
                    
-                   <div>최소주문금액 <fm:formatNumber value="${store.storeInfo.minDelevery }" pattern="###,###" />원</div>
+                   <div id="min_delevery" data-min_delevery="${store.storeInfo.minDelevery }">최소주문금액 <fm:formatNumber value="${store.storeInfo.minDelevery }" pattern="###,###" />원</div>
                    <div>예상 배달시간 ${store.storeInfo.deleveryTime  }분</div>
                    <div>배달팁 <fm:formatNumber value="${store.storeInfo.deleveryTip }" pattern="###,###" />원</div>
                    
@@ -89,6 +89,8 @@
 	        </div>
 	        
 	    </aside>
+	    
+	    <div class="add_cart_alarm">장바구니에 담았습니다</div>
 	<!---------------------------------------- 장바구니 -------------------------------------- -->    
 	   
 
@@ -144,7 +146,7 @@
 						</div>
 						
 						<h2>위치안내</h2>
-						<div>${store.storeInfo.storeAddress2 }  ${store.storeInfo.storeAddress3 }</div>
+						<div id="store_address" data-address="${store.storeInfo.storeAddress2 }">${store.storeInfo.storeAddress2 }  ${store.storeInfo.storeAddress3 }</div>
 					</div>
 				</li>
 				
@@ -296,8 +298,7 @@
 				                </div>
 		                	</div>
 		                	
-		                	
-		                	 <c:if test="${role == 'ROLE_ADMIN' }">
+		                	<c:if test="${adminPage && role == 'ROLE_ADMIN'  }">
 			                 <div>
 			                
 			                	<c:if test="${!empty reviewList.bossComment}">
@@ -364,34 +365,107 @@
 
 	
 	<input type="hidden" value="${store.storeInfo.id }" id="store_id">
-	<input type="hidden" value="${store.storeInfo.minDelevery }" id="min_delevery">
 	<input type="hidden" value="${store.storeInfo.deleveryTip }" id="delevery_tip">
 	<input type="hidden" value="${store.storeInfo.storeName }" id="store_name">
 	<input type="hidden" value="${store.storeInfo.category }" id="store_category">  
 	<input type="hidden" value="${store.storeInfo.openingTime }" id="store_opening_time"> 
 	<input type="hidden" value="${store.storeInfo.closingTime }" id="store_closing_time"> 
 	
+	<input type="hidden" value="${BMaddress2 }" id="delevery_address">
 	
 	
 	
 	
-	 
 	
-    <input type="hidden" value="${storeVO.goodCheck }" class="dibs_check">
-	<input type="hidden" value="${userId  }" class="user_id">
-	<input type="hidden" value="${storeVO.busiHours1 }" class="business_hour1"> 
-	<input type="hidden" value="${storeVO.busiHours2 }" class="business_hour2"> 
-	<input type="hidden" value="${storeVO.storeAddress2 }" class="store_address">
-	<input type="hidden" value="${address.address2 }" class="user_address">
-
 	
- 
-
-
-     <script>
-      
-
-    </script>
- 
+	<script>
+    $(document).ready(function(){
+    	
+		var storeAddress = $("#store_address").data("address");
+        
+    	var storeName = $("#store_name").val();
+    	
+    	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    	
+    	mapOption = {
+    	    center: new kakao.maps.LatLng(33.25110701, 126.570667), // 지도의 중심좌표
+    	    level: 3 // 지도의 확대 레벨
+    	};  
+    	
+    	// 지도를 생성합니다    
+    	var map = new kakao.maps.Map(mapContainer, mapOption); 
+    	
+    	// 주소-좌표 변환 객체를 생성합니다	
+    	var geocoder = new kakao.maps.services.Geocoder();
+    	
+    	// 주소로 좌표를 검색합니다
+    	geocoder.addressSearch(storeAddress, function(result, status) {
+    		
+    	    // 정상적으로 검색이 완료됐으면 
+    	     if (status === kakao.maps.services.Status.OK) {
+    	
+    	        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+    	        
+    	        // 결과값으로 받은 위치를 마커로 표시합니다
+    	        var marker = new kakao.maps.Marker({
+    	            map: map,
+    	            position: coords
+    	        });
+    	
+    	        // 인포윈도우로 장소에 대한 설명을 표시합니다
+    	        var infowindow = new kakao.maps.InfoWindow({
+    	            content: '<div style="width:150px;text-align:center;padding:3px 0;">' + storeName + '</div>'
+    	        });
+    	        infowindow.open(map, marker);
+    	
+    	        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+    	        map.setCenter(coords);
+    	        
+    	        
+    	        $(".storePosition").click(function(){
+    	        	map.panTo(coords);  
+    	        })
+    	        
+    	        
+    	    } 
+    			 
+    	});    
+    	
+    	
+    	var userAddress = $("#delevery_address").val();
+    	
+    	if(userAddress != "" ) {
+    		$(".userPosition").css("display" , "inline");
+    		
+    	  // 주소로 좌표를 검색합니다
+    	 	geocoder.addressSearch(userAddress, function(result, status) {
+    	 		
+    	 	    // 정상적으로 검색이 완료됐으면 
+    	 	     if (status === kakao.maps.services.Status.OK) {
+    	 	
+    	 	        coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+    	 	        
+    	 	        // 결과값으로 받은 위치를 마커로 표시합니다
+    	 	        var marker = new kakao.maps.Marker({
+    	 	            map: map,
+    	 	            position: coords
+    	 	        });
+    	 	        
+    	 	        // 인포윈도우로 장소에 대한 설명을 표시합니다
+    	 	        var infowindow = new kakao.maps.InfoWindow({
+    	 	            content: '<div style="width:150px;text-align:center;padding:3px 0;">' + "배달받을위치" + '</div>'
+    	 	        });
+    	 	        infowindow.open(map, marker);
+    	 	        
+    	 	      	$(".userPosition").click(function(){
+    		        	map.panTo(coords);  
+    		        })
+    	 	    } 
+    	 	}); 
+    		 
+    	}
+    	
+        })
+	</script>
 
  

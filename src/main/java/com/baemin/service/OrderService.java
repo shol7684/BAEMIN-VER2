@@ -14,7 +14,7 @@ public interface OrderService {
 	long orderPriceCheck(Map cartMap);
 	
 	// 주문하기
-	void order(Map cartMap, OrderInfo info, LoginDetail user, HttpSession session);
+	String order(Map cartMap, OrderInfo info, LoginDetail user, HttpSession session);
 
 	// 주문목록
 	List<OrderList> orderList(long userId);

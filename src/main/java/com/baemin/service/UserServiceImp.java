@@ -48,6 +48,11 @@ public class UserServiceImp implements UserService {
 		userDAO.infoModify(value, valueType, id);
 		
 	}
+
+	@Override
+	public List<String> findId(String email) {
+		return userDAO.findId(email);
+	}
 	
 
 }

@@ -20,6 +20,8 @@ public interface UserService {
 	public List<Point> myPoint(long id);
 
 	public void infoModify(String value, String valueType, long id);
+
+	public List<String> findId(String email);
 	
 
 }

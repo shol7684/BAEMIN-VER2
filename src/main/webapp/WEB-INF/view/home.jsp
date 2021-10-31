@@ -6,15 +6,36 @@
 
 <%@ include file="./include/header.jsp" %>
     
-    <!-- 콘텐츠 -->
+    <!-- 주문 완료시 알림창, 관리자 페이지로 주문번호 보내기 -->
     <script>
     	if("${orderMessage }" != "") {
 	    	swal("${orderMessage }");
     	} 
+    		
+    	if("${orderNum}" != "") {
+			const orderNum = "${orderNum}";
+    		
+	    	/* let ws = new WebSocket("ws://localhost:8080/chating"); */
+			ws = new WebSocket("ws://211.247.99.55:8080/chating");
+			
+			ws.onopen = function(data){
+				//소켓이 열리면 동작
+				console.log("소켯 오픈");
+				ws.send(orderNum);
+			}
+			ws.onclose = function(event) {
+				console.log("클로즈");
+			}
+			
+			ws.onerror = function(event) {
+				console.log("에러");
+			}
+    	}
     </script>
     
     
-
+    
+ 	<!-- 콘텐츠 -->
     <div class="wrap">
         <main>
             <section class="address_search">

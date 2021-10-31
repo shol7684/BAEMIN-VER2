@@ -66,7 +66,7 @@ function lenthCheck(e, length) {
 	
 	<link rel="stylesheet" href="/css/admin/addMenuModal.css" >
 	<link rel="stylesheet" href="/css/admin/storeRegiModal.css" >
- 	<script type="text/javascript" src="/js/storeDetail2.js" ></script>
+ 	<script type="text/javascript" src="/js/store/storeDetail.js" ></script>
  	<script type="text/javascript" src="/js/admin/adminDetail.js" ></script>
     <script type="text/javascript" src="/js/openModal.js" ></script> 
     <script type="text/javascript" src="/js/modal.js" ></script> 

@@ -4,10 +4,19 @@
 <link rel="stylesheet" href="/css/user/point.css" >
 <%@ include file="/WEB-INF/view//include/header.jsp" %>
 	
+	<script>
+		if("${pointRegistMessage}" != "") {
+			swal("${pointRegistMessage}");
+		}
+	
+	</script>
+	
+	
+	
+	
     <section class="title">
         <h1>포인트</h1>
     </section>
-
 	
 	<main>
 		<div class="my_point">

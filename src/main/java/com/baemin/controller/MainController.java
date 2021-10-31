@@ -31,15 +31,6 @@ public class MainController {
 	@GetMapping("/")
 	public String main(HttpServletResponse response, HttpServletRequest request, HttpSession session) throws UnsupportedEncodingException {
 		
-		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		
-		System.out.println("auth = " + auth);
-
-		List<GrantedAuthority> updatedAuthorities = new ArrayList<>(auth.getAuthorities());
-
-		System.out.println("updatedAuthorities= " + updatedAuthorities.get(0));
-		
 		LOGGER.info("main");
 		LOGGER.info("id = " + request.getRemoteAddr());
 		if(session.getAttribute("BMaddress1") == null || session.getAttribute("BMaddress2") == null) {
@@ -69,11 +60,6 @@ public class MainController {
 		return "home";
 	}
 	
-	@ResponseBody
-	@GetMapping("/mm")
-	public String main() {
-		return  "123";
-	}
 	
 	@PostMapping("/")
 	public String main(String address1, String address2, HttpServletResponse response, HttpSession session) throws UnsupportedEncodingException {
@@ -141,5 +127,17 @@ public class MainController {
 		session.setAttribute("BMaddress1", address1);
 		session.setAttribute("BMaddress2", address2);
 	}
+	
+	
+	
+	@GetMapping("/chating2")
+	public String chatTest() {
+		
+		
+		return "chating2";
+	}
+	
+	
+	
 	
 }

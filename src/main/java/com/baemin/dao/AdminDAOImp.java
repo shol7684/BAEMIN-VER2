@@ -1,6 +1,5 @@
 package com.baemin.dao;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,13 +86,22 @@ public class AdminDAOImp implements AdminDAO {
 	}
 
 	@Override
-	public int pointRegist(String giftCardNum, long id) {
-		Map<String, Object> map = new HashMap<>();
-		map.put("giftCardNum", giftCardNum);
-		map.put("id", id);
-		
-		return sql.insert("admin.pointRegist", map);
-		
+	public Map selectCard(String giftCardNum) {
+		return sql.selectOne("admin.selectCard", giftCardNum);
 	}
 
+	@Override
+	public int pointUpdate(long userId, String info, int point) {
+		Map map = new HashMap();
+		map.put("userId", userId);
+		map.put("info", info);
+		map.put("point", point);
+		
+		return sql.insert("admin.pointUpdate", map); 
+	}
+
+	@Override
+	public OrderList getOrderOne(String orderNum) {
+		return sql.selectOne("admin.getOrderOne", orderNum);
+	}
 }

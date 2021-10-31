@@ -225,6 +225,7 @@ public class StoreController {
 		s = s.substring(1, s.length() - 1); // 괄호 제거
 
 		Cookie cookie = new Cookie("keyword", URLEncoder.encode(s, "UTF-8"));
+		cookie.setMaxAge(60*60*24*30);
 		response.addCookie(cookie);
 
 
@@ -284,6 +285,7 @@ public class StoreController {
 		s = s.substring(1, s.length() - 1); // 괄호 제거
 
 		Cookie cookie = new Cookie("keyword", URLEncoder.encode(s, "UTF-8"));
+		cookie.setMaxAge(60*60*24*30);
 		response.addCookie(cookie);
 		
 		

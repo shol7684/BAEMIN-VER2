@@ -84,8 +84,9 @@ public class OrderController {
 //		orderService.payment();
 		
 		
-		orderService.order(cartMap,info, user, session);
+		String orderNum = orderService.order(cartMap,info, user, session);
 		rttr.addFlashAttribute("orderMessage", "주문이 완료되었습니다");
+		rttr.addFlashAttribute("orderNum", orderNum);
 		session.removeAttribute("cartMap");
 		
 		return "redirect:/";

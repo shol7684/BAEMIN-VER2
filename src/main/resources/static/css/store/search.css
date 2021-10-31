@@ -180,6 +180,9 @@ main form input[type=submit] {
 
 .box .store li .inf h2 {
 	font-size: 18px;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .box .store li .inf div span {
