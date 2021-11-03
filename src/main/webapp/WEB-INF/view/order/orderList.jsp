@@ -8,9 +8,10 @@
     
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
     
+    
 	<div class="wrap">
     
-		<c:if test="${!empty orderList }">
+		<c:if test="${!empty deleveryInfo }">
 		    <section class="title">
 		        <h1>주문 내역</h1>
 		    </section>
@@ -18,58 +19,80 @@
 	
 	    <main>
 	        <div class="order_list">
-	         	<c:if test="${empty orderList }" >
+	         	<c:if test="${empty deleveryInfo }" >
 	        		<img alt="이미지" src="/img/temp.png" class="temp_img"> 
 	        	</c:if> 
-	         	<c:if test="${!empty orderList }" >
+	         	<c:if test="${!empty deleveryInfo }" >
 	        		<style>body {background: #fff; } </style> 
 	        	</c:if> 
 	        	
-	        	
-	        	<ul id="order_list">
-	                <c:forEach items="${orderList }" var="orderList" >
+	        	<c:forEach items="${deleveryInfo }" var="deleveryInfo" varStatus="i">
+	        		<ul id="order_list">
 	                    <li>
 	                    	<div class="delevery_state">
-	                    		<span><fm:formatDate value="${orderList.orderDate }" pattern="M월d일" /> </span>
+	                    		<span><fm:formatDate value="${deleveryInfo.orderListDetail.orderDate }" pattern="M월d일" /> </span>
 	                    		
-	                    			<span>${orderList.deleveryStatus }</span> 
-	                    		<c:if test="${orderList.deleveryStatus == '처리 중' }"> 
-	                    		</c:if>
+                    			<span>${deleveryInfo.orderListDetail.deleveryStatus}</span> 
 	                    	</div>
 	                    	
-	                        <a href="/store/detail/${orderList.storeId }" class="store_move">
-	                        	<span><img src="${orderList.storeImg }" alt="이미지"></span>
+	                        <a href="/store/detail/${deleveryInfo.orderListDetail.storeId }" class="store_move">
+	                        	<span><img src="${deleveryInfo.orderListDetail.storeImg }" alt="이미지"></span>
 	                            <span class="inf">
-	                            	<h2> ${orderList.storeName }</h2><br>
-	                                <span><fm:formatNumber value="${orderList.totalPrice + orderList.deleveryTip - orderList.usedPoint }" pattern="###,###" /> 원</span>
+	                            	<h2> ${deleveryInfo.orderListDetail.storeName }</h2><br> 
+	                           		<c:set value="${fn:length(deleveryInfo.cart)}" var="cart" />
+	                           		<c:if test="${cart > 1 }">
+	                           			<span>${deleveryInfo.cart[0].foodName } 외 ${cart -1 }개</span>
+	                           		</c:if>
+	                           		<c:if test="${cart <= 1 }">
+		                                <span>${deleveryInfo.cart[0].foodName } ${deleveryInfo.amount[0] }개 </span>
+	                           		</c:if>     
+	                                <span><fm:formatNumber value="${deleveryInfo.orderListDetail.totalPrice + deleveryInfo.orderListDetail.deleveryTip - deleveryInfo.orderListDetail.usedPoint }" pattern="###,###" /> 원</span>
 	                             </span>
 	                        </a>
 	                        
 	                        <div class="review_btn_box">
-	                        	<%-- <input type="hidden" value="${orderList1.storeNum }" class="detail_store_num"> --%>
 		                        <button class="order_detail">상세보기</button>
 		                        <c:if test="${!empty user }">
 		                        
-	                    			<input type="hidden" class="order_num" value="${orderList.orderNum }">
-		                        	<input type="hidden" class="store_id" value="${orderList.storeId }">
+	                    			<input type="hidden" class="order_num" value="${deleveryInfo.orderListDetail.orderNum }">
+		                        	<input type="hidden" class="store_id" value="${deleveryInfo.orderListDetail.storeId }">
 		                        	
-		                        	<c:if test="${empty orderList.reviewContent }">
+		                        	<c:if test="${empty deleveryInfo.orderListDetail.reviewContent }">
 			                        	<button class="review regi">리뷰쓰기</button>
 		                        	</c:if>
-		                        	<c:if test="${!empty orderList.reviewContent }">
+		                        	<c:if test="${!empty deleveryInfo.orderListDetail.reviewContent }">
 			                        	<button class="review modify">리뷰 수정하기</button>
-			                        	<input type="hidden" value="${orderList.reviewContent }" class="review_content" >
-			                        	<input type="hidden" value="${orderList.score }" class="review_score" >
+			                        	<input type="hidden" value="${deleveryInfo.orderListDetail.reviewContent }" class="review_content" >
+			                        	<input type="hidden" value="${deleveryInfo.orderListDetail.score }" class="review_score" >
 		                        	</c:if>
 			                        	
-	                    			<%-- <input type="hidden" class="store_img" value="${orderList1.storeImg }"> --%>
 		                        </c:if>
 	                        </div>
 						</li>
-					</c:forEach>
 	            </ul>
-	
+	        	</c:forEach>
 	        </div>
+	        <ul class="page_box">
+	        	<c:if test="${page.nowPage > page.pageCount}">
+	        		<li><a href="/orderList/${page.prevPage }">이전</a></li>
+	        	</c:if> 
+	        	<c:forEach begin="${page.pageNum }" end="${page.pageNum + page.pageCount-1 }" var="i">
+	        		<c:if test="${i <= lastPage}">
+	        			
+	        			<c:if test="${i != page.nowPage }">
+		        			<li><a href="/orderList/${i }">${i }</a></li>
+	        			</c:if>
+	        			<c:if test="${i == page.nowPage }">
+	        				<li><a class="now_page" href="/orderList/${i }">${i }</a></li>
+	        			</c:if>
+	        			
+	        		</c:if>
+	        	</c:forEach>
+	        	
+        		<c:if test="${page.pageNum + page.pageCount < lastPage }">
+		        	<li><a href="/orderList/${page.nextPage }">다음</a></li>
+        		</c:if>
+	        </ul>
 	           
 	    </main>
 </div>
@@ -89,7 +112,7 @@
 
     <div class="review_modal modal resister">
     	<div id="modal_header">
-			<button class="closeA">×</button>
+			<button class="closeA"><i class="fas fa-times"></i></button>
 			<h1>리뷰 쓰기</h1>
     	</div>
     	
@@ -137,7 +160,7 @@
 	<!-- 리뷰 수정하기 모달 -->
     <div class="review_modify_modal modal">
     	<div id="modal_header">
-		    <span class="closeA">×</span>
+		    <button class="closeA"><i class="fas fa-times"></i></button>
 	    	<h1>리뷰 수정하기</h1>
     	</div>
 

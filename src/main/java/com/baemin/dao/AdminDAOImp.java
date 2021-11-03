@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.baemin.util.Page;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
 import com.baemin.vo.Store;
@@ -24,8 +25,8 @@ public class AdminDAOImp implements AdminDAO {
 	}
 
 	@Override
-	public List<Store> storeList() {
-		return sql.selectList("admin.storeList");
+	public List<Store> storeList(Page p) {
+		return sql.selectList("admin.storeList", p);
 	}
 
 	@Override
@@ -77,12 +78,24 @@ public class AdminDAOImp implements AdminDAO {
 	}
 
 	@Override
-	public void orderAccept(String orderNum, int time, long userId) {
+	public int orderAccept(String orderNum, int time, long userId) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("orderNum", orderNum);
 		map.put("time", time);
 		map.put("userId", userId);
-		sql.update("admin.orderAccept", map);
+		
+		System.out.println("map = " + map);
+		return sql.update("admin.orderAccept", map);
+	}
+	
+	@Override
+	public int orderCancle(String orderNum, String cancleReason, long userId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("orderNum", orderNum);
+		map.put("cancleReason", "주문거부("+ cancleReason +")");
+		map.put("userId", userId);
+		
+		return sql.update("admin.orderCancle", map);
 	}
 
 	@Override
@@ -92,7 +105,7 @@ public class AdminDAOImp implements AdminDAO {
 
 	@Override
 	public int pointUpdate(long userId, String info, int point) {
-		Map map = new HashMap();
+		Map<String, Object> map = new HashMap<>();
 		map.put("userId", userId);
 		map.put("info", info);
 		map.put("point", point);
@@ -104,4 +117,6 @@ public class AdminDAOImp implements AdminDAO {
 	public OrderList getOrderOne(String orderNum) {
 		return sql.selectOne("admin.getOrderOne", orderNum);
 	}
+
+	
 }

@@ -1,8 +1,8 @@
 
 $(document).ready(function() {
-
-	const category = $(".cate").val();
-	const address1 = $(".address1").val();
+	const category = $(".category").data("category");
+	let sort = "기본순";
+	nowOption();
 
 	$("li[data-category = '" + category + "'] > span").css("border-bottom", "3px solid #333333");
 	$("li[data-category = '" + category + "'] > span").css("color", "#333333");
@@ -24,163 +24,131 @@ $(document).ready(function() {
 				return;
 			}
 			console.log("페이지 추가");
+			console.log("sort= " + sort);
 			
 			run = true;
 			
 			const data = {
-				category : category,
-				address1 : address1,
 				page : page
 			}
 			
 			$.ajax({
 				url: "/storeNextPage",
 				type: "GET",
-				data : data,
-				success: function(storeList){
-					page++;
-					
-					let html = "";
-					for(var i=0;i<storeList.length;i++) {
-						
-						let scoreHtml = "";
-						for(var j=0;j<5;j++) {
-							if(storeList[i].score >= j) {
-								scoreHtml += `<i class="fas fa-star"></i> `;
-							}
-							if(storeList[i].score < j) {
-								scoreHtml += `<i class="far fa-star"></i> `;
-							}
-						}
-						
-						html += `<li >
-		                    <div>
-		                        <a href="/store/detail/${storeList[i].id }">   
-		                            <img src="${storeList[i].storeImg }" alt="이미지">
-		                            <div class="inf">
-		                              ${storeList[i].openingTime } ${storeList[i].closingTime } ${storeList[i].score }
-		                                <h2>${storeList[i].storeName }</h2>
-		                                <div>
-		                                	<span>평점 ${storeList[i].score }</span>
-		                                	<span class="score_box">
-		                                	${scoreHtml}
-					               			</span>
-		                                </div>
-	                                    <div><span>리뷰 ${storeList[i].reviewCount }</span><span>ㅣ</span><span>사장님 댓글 ${storeList[i].bossCommentCount }</span></div>
-		                                <div><span>배달시간 ${storeList[i].deleveryTime }분</span><span>최소주문금액 ${storeList[i].minDelevery.toLocaleString() }원</span></div>
-		                                <div>배달팁 ${storeList[i].deleveryTip.toLocaleString()}원</div>
-		                                 
-		                            </div>
-		                        </a>
-	                        </div>
-	                    </li>`;
-						
-					}
-					
-					$(".store").append(html);
-					
-					if(storeList != "") {
-						run = false;
-					}
+				data : data
+			})
+			.done(function(result){
+				const storeHtml = storeList(result);
+				page++;
+				
+				$(".store").append(storeHtml);
+				
+				if(storeHtml != "") {
+					run = false;
 				}
-			}) // ajax
+			})
+			.fail(function(data, textStatus, errorThrown){
+				swal("다시 시도해주세요");
+			})	
+			
 		} // if
 	}) // scroll
 	
 	
+
+// 가게 정렬 
+$(".option li").click(function() {
 	
+	sort = $(this).data("sort");
+	nowOption();
 	
-	
-	function cs(value){
-		console.log(value);
+	const data = {
+		sort : sort
 	}
-	
-	
-	
+	$.ajax({
+		url: "/store/sortStore",
+		type: "get",
+		data: data
+	})
+	.done(function(result, textStatus, xhr){
+		// 페이지 초기화
+		run = false;
+		page = 2;
+		
+		const storeHtml = storeList(result);
+		$(".box ul.store").html(storeHtml);
+		
+	})
+	.fail(function(data, textStatus, errorThrown){
+		swal("다시 시도해주세요");
+	})
+}); // function
 
 
-	/* ------------------------------ 가게 정렬 ------------------------------ */
-	$(".option li").click(function() {
-		const index = $(this).index();
-		const address = $(".address").val();
 
-
-		let data = {
-			index: index,
-			address: address,
-			category: category
+function nowOption(){
+	$(".option li").removeClass("active")
+	for(var i=0;i<$(".option li").length;i++ ) {
+		if($(".option li").eq(i).data("sort") == sort ) {
+			$(".option li").eq(i).addClass("active");
 		}
+	}
+}
 
 
-		$.ajax({
-			url: "/sortStoreList",
-			type: "post",
-			data: data,
-			success: function(result) {
 
-				let ht = "";
-
-				console.log("길이 = " + result.length);
-				console.log(result);
-				console.log(result[0]["storeNum"]);
-
-
-				for (var i = 0; i < result.length; i++) {
-
-					const storeNum = result[i]["storeNum"];
-					const storeThumb = result[i]["storeThumb"];
-					const storeName = result[i]["storeName"];
-					const deleveryTime = result[i]["deleveryTime"];
-					const minDelevery = result[i]["minDelevery"];
-					const deleveryTip = result[i]["deleveryTip"];
-					const score = result[i]["score"].toFixed(1);
-					const reviewCount = result[i]["reviewCount"];
-					const bossComment = result[i]["bossComment"];
-
-					let scoreHt = "<i class='fas far fa-star'></i> ";
-
-					for (var j = 0; j < 4; j++) {
-
-						if (Math.round(score) - 1 > j) {
-							scoreHt += "<i class='fas far fa-star'></i> ";
-						} else {
-							scoreHt += "<i class='far fa-star'></i> ";
-						}
-
-					}
-					console.log(result);
-					console.log(`score = ${score}`);
-
-					ht += `<li>
-		              <div>
-		                  <a href="/store/detail/${storeNum}">           
-		                      <img src="${storeThumb}" alt="이미지">
-		                      <div class="inf">
-		                          <h2>${storeName}</h2>
-		                          <div>
-		                          	<span>평점 ${score}</span>
-		                          	<span class="score_box">
-		                          		${scoreHt}
-			               			</span>
-		                          </div>
-		                          
-		                          <div><span>리뷰 ${reviewCount}</span><span>ㅣ</span><span>사장님 댓글 ${bossComment}</span></div>
-		                          <div><span>배달시간 ${deleveryTime}분</span><span>최소주문금액 ${minDelevery.toLocaleString()}원</span></div>
-		                          <div>배달팁 ${deleveryTip.toLocaleString()}원</div>
-		                      </div>
-		                  </a>
-		              </div>
-		          </li>`;
-
+function storeList(result){
+	let html = "";
+		for(var i=0;i<result.length;i++) {
+			const id = result[i]["id"];
+			
+			const storeImg = result[i]["storeImg"];
+			const storeThumb = result[i]["storeThumb"];
+			const storeName = result[i]["storeName"];
+			const deleveryTime = result[i]["deleveryTime"];
+			const minDelevery = result[i]["minDelevery"].toLocaleString();
+			const deleveryTip = result[i]["deleveryTip"].toLocaleString();
+			const score = result[i]["score"].toFixed(1);
+			const reviewCount = result[i]["reviewCount"];
+			const bossCommentCount = result[i]["bossCommentCount"];
+			const openingTime = result[i]["openingTime"];
+			const closingTime = result[i]["closingTime"];
+			
+			let scoreHtml = "";
+			for(var j=0;j<5;j++) {
+				if(Math.round(score)  >= j) {
+					scoreHtml += "<i class='fas fa-star'></i> ";
+				} else {
+					scoreHtml += "<i class='far fa-star'></i> ";
 				}
+			}
+			
+			html += `<li >
+                     <div>
+                        <a href="/store/detail/${id }">   
+                            <img src="${storeImg }" alt="이미지">
+                            <div class="inf">
+                              ${openingTime } ${closingTime } ${score }
+                                <h2>${storeName }</h2>
+                                <div>
+                                	<span>평점 ${score }</span>
+                                	<span class="score_box">
+                                		${scoreHtml}
+			               			</span>
+                                </div>
+                                <div><span>리뷰 ${reviewCount }</span><span>ㅣ</span><span>사장님 댓글 ${bossCommentCount }</span></div>
+                                <div><span>배달시간 ${deleveryTime }분</span><span>최소주문금액 ${minDelevery }원</span></div>
+                                <div>배달팁 ${deleveryTip }원</div>
+                            </div>
+                        </a>
+                    </div>
+                </li>`;
+		}
+	return html;	
+}
 
-				$(".box ul.store").html(ht);
 
 
-			} // success
-		}); // ajax
-	}); // function
-	/* ------------------------------ 가게 정렬 ------------------------------ */
 
 
 

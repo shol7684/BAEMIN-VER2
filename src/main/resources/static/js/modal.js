@@ -1,4 +1,4 @@
-
+/*
 $(document).ready(function(){
                 	 
 	 var modal = $(".modal");
@@ -44,11 +44,11 @@ $(document).ready(function(){
 		modal.scrollTop(0);
 		modal2.scrollTop(0);
         modalBg.hide();
-        /*modal.hide();*/
+        modal.hide();
         modal.css("top" , "100%");
-        /*$(".modal .btn_box").css("position" , "static");*/
+        $(".modal .btn_box").css("position" , "static");
         
-        /* timer.hide(); */
+         timer.hide(); 
         
         $(".modal_box").scrollTop(0);
 
@@ -58,4 +58,4 @@ $(document).ready(function(){
         
         $(".plusOption").remove();
     };
- });
+ });*/

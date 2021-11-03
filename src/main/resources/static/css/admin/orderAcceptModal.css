@@ -1,3 +1,6 @@
+.order_accept_modal {
+	z-index: 201;
+}
 
 .order_accept_modal section {
 	width: 95%;

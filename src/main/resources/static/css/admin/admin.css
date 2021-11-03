@@ -1,17 +1,11 @@
-
-
-.move_top {
-	position: fixed;
-	right: 1%;
-	bottom: 1%;
-	cursor: pointer;
+/* ------------------ 주문 거부 모달--------------------- */
+.order_cancle_modal {
+	z-index: 202 !important;
 }
 
-
-/* ------------------ 주문 거부 모달--------------------- */
-
 .order_cancle_modal .modal_box {
-	 background: #F0F0F0; 
+	background: #F0F0F0;
+	height: 100%;
 }
 
 .order_cancle_modal h2 {
@@ -19,41 +13,34 @@
 	padding: 5% 0;
 }
 
-.order_cancle_modal .modal_box {
-	height: 100%;
-}
-	
 .order_cancle_modal li {
-	background: #fff;	
+	background: #fff;
 }
 
 .order_cancle_modal li {
-    border: 1px solid #DBDBDB;
-    width: 80%;
-    height: 50px;
-    text-align: center;
-    line-height: 50px;
-    margin: 0 auto;
+	border: 1px solid #DBDBDB;
+	width: 80%;
+	height: 50px;
+	text-align: center;
+	line-height: 50px;
+	margin: 0 auto;
 }
 
-.order_cancle_modal button.order_cancle_btn {
+.order_cancle_modal button.order_cancle {
 	background: #30DAD9;
 }
 
-.order_cancle_modal button.cancle {
-	background: #808080;
-}
-	
-
-
-
-
 /* ------------------ 주문 거부 모달--------------------- */
-
-
+.move_top {
+	position: fixed;
+	right: 1%;
+	bottom: 1%;
+	cursor: pointer;
+	font-size: 40px;
+}
 
 .wrap {
-	width: 90%;
+	width: 95%;
 	max-width: 1200px;
 	margin: 0 auto 30px;
 	display: flex;
@@ -80,8 +67,8 @@ section.tab ul li {
 	line-height: 30px;
 	cursor: pointer;
 	height: 60px;
-    display: flex;
-    justify-content: center;
+	display: flex;
+	justify-content: center;
 }
 
 section.tab ul li a {
@@ -139,6 +126,7 @@ main {
 
 #cont_box>ul>li {
 	/* display: none; */
+	
 }
 
 main .order_list {
@@ -161,7 +149,7 @@ main ul .order_box .info {
 	width: 65%;
 }
 
-main ul .order_box .info > div {
+main ul .order_box .info>div {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -232,7 +220,6 @@ main ul .order_box .end {
 	.wrap {
 		width: 100%;
 	}
-
 	aside {
 		width: 100%;
 	}
@@ -249,23 +236,18 @@ main ul .order_box .end {
 	}
 }
 
-
-
 @media ( max-width :767px) {
 	section.tab {
 		width: 100%;
 		margin-top: 20px;
 	}
-
 	section.tab ul li {
 		font-size: 16px;
 		height: 50px;
 	}
-	
 	section.tab ul li a {
 		line-height: 50px;
 	}
-	
 	aside ul li {
 		height: 50px;
 		font-size: 16px;
@@ -288,7 +270,6 @@ main ul .order_box .end {
 		font-size: 10px;
 		padding: 3px;
 	}
-
 }
 
 @media ( max-width :600px) {

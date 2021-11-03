@@ -1,4 +1,4 @@
-
+/*
 
     function openModal(modal,size) {
 		
@@ -14,3 +14,4 @@
 		$("body").css("overflow-y","hidden");
 	}
 
+*/

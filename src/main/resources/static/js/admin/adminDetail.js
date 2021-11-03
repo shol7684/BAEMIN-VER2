@@ -12,7 +12,7 @@ $(document).ready(function() {
 	
 	
 	
-	/*답장하기 버튼*/
+	// 답장하기 버튼
 	$(".review_btn").click(function() {
 		cs($(this).siblings(".order_num").val());
 
@@ -25,7 +25,7 @@ $(document).ready(function() {
 	})
 
 
-	/*답장 등록하기*/
+	// 답장 등록하기
 	$(".boss_comment_btn").off().click(function(){
 		const bossComment = $(this).parent().siblings().find(".comment_area").val();
 		const orderNum = $(this).siblings(".order_num").val();
@@ -127,13 +127,17 @@ $(document).ready(function() {
 
 	// 메뉴 삭제
 	$(".delete_menu").click(function(){
-		const deleteNumber = [];
+		const deleteNumber = []; // 삭제할 메뉴 번호
+		const deleteIndex = []; // 삭제후 remove()할 인덱스
+		
 		
 		$("input[name='deleteNumber']:checked").each(function(){
-			deleteNumber.push($(this).val());	
+			deleteNumber.push($(this).val());
+			deleteIndex.push($(this).parent("li").index());	
 		})
 		
-		console.log(deleteNumber);
+		console.log("삭제 메뉴 = " + deleteNumber);
+		console.log("삭제 인덱스 = " +  deleteIndex);
 		
 		if(deleteNumber == "" ) {
 			swal("삭제 할 메뉴를 선택해주세요");
@@ -151,13 +155,17 @@ $(document).ready(function() {
 		 	    	   	traditional : true,  
 		 	    	    data: {deleteNumber : deleteNumber , storeId : storeId },
 		 	    	    success : function(){
-		 	    	    	location.href = storeId; 
+		 	    	    	for(var i=deleteIndex.length-1;i>=0;i--) {
+								$(".menu li").eq(deleteIndex[i]).remove();		
+							}	
 		 	    	    	
 		 	    		}, // success
 		 	    		fail : function(){
 							swal("다시 시도해 주세요");
 						}
 			    	}); // ajax
+			    	
+			    	
 				}
 			});
 		}

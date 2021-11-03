@@ -12,7 +12,7 @@
     <!-- 콘텐츠 -->
     <main>
         <div class="container">
-            <div class="category">
+            <div class="category" data-category="${category }">
                 <ul>
                     <li data-category ='100' onclick="location.href='/store/100/${address1 }'"><span>피자</span></li>
                     <li data-category ='103' onclick="location.href='/store/103/${address1 }'"><span>분식</span></li>
@@ -27,17 +27,18 @@
                 </ul>
             </div>
 
-			<input type="hidden" value="${category }" class="cate">
 			<input type="hidden" value="${address1 }" class="address1">
 
 
 
            <div class="option">
                 <ul>    
-                	<li>기본순</li>
-                    <li>배달 빠른 순</li>
-                    <li>배달팁 낮은 순</li>
-                    <li>별점 높은 순</li>
+                	<li data-sort="기본순">기본순</li>
+                    <li data-sort="배달 빠른 순">배달 빠른 순</li>
+                    <li data-sort="배달팁 낮은 순">배달팁 낮은 순</li>
+                    <li data-sort="별점 높은 순">별점 높은 순</li>
+                    <li data-sort="리뷰 많은 순">리뷰 많은 순</li>
+                    <li data-sort="최소 주문 금액 순">최소 주문 금액 순</li>
                 </ul> 
            </div>
            
@@ -107,11 +108,6 @@
     <%@ include file="../include/footer.jsp" %>
     <!-- 푸터 -->
 
-
-<%-- 	
-	<input type="hidden" value="${address.address1 }" class="address">
-	<input type="hidden" value="${storeList[0].storeName }" class="store_list" >
- --%>
 
 	<script type="text/javascript" src="/js/store/store.js" ></script>
     

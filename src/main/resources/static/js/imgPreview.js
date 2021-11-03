@@ -1,4 +1,4 @@
-
+/*
 
 	function imgPreview(img) {
 		var i = img;
@@ -30,3 +30,4 @@
 	
 	
 
+*/

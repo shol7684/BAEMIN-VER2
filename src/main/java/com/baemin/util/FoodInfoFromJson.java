@@ -9,9 +9,9 @@ import com.google.gson.Gson;
 
 public class FoodInfoFromJson {
 
-	public static Map foodInfoFromJson(OrderList orderListDetail) {
+	public static Map<String, Object> foodInfoFromJson(OrderList orderListDetail) {
 		
-		Map map = new HashMap();
+		Map<String, Object>  map = new HashMap<>();
 		
 		String foodInfo = orderListDetail.getFoodInfo();
 		

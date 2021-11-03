@@ -37,6 +37,25 @@ public class StoreServiceImp implements StoreService {
 		
 		return storeDAO.storeList(map);
 	}
+	
+	@Override
+	public List<Store> storeList(int category, int address1, String sort, int page) {
+		int view = 10;
+			
+		int startPage = (page * view - view) + 1;
+		int endPage = page * view;
+		
+		Map map = new HashMap<>();
+
+		map.put("category", category);
+		map.put("address1", address1);
+		map.put("startPage", startPage);
+		map.put("endPage", endPage);
+		map.put("sort", sort);
+		
+		return storeDAO.storeList(map);
+	}
+	
 
 	@Transactional
 	@Override
@@ -107,6 +126,8 @@ public class StoreServiceImp implements StoreService {
 	public List<Store> storeSearch(int address1, String keyword) {
 		return storeDAO.storeSearch(address1, keyword);
 	}
+
+
 	
 	
 

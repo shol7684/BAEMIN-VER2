@@ -1,4 +1,4 @@
-$(document).ready(function(){
+/*$(document).ready(function(){
    	 
 	$(".home").click(function(){
 		location.href = "/";
@@ -195,7 +195,6 @@ $(document).ready(function(){
     	
 				    	
    	
-   	/* ---------------------- 왼쪽 탭 클릭 ----------------------- */
    	const contBox = $("#cont_box > ul > li ");
    	const store = $(".store");
    	const manage = $(".manage");
@@ -222,9 +221,6 @@ $(document).ready(function(){
        	} 
     });
      
-       /* ---------------------- 왼쪽 탭 클릭 ----------------------- */
-			            
-       /* ---------------------- 상단 탭 클릭 ----------------------- */
           
 		const tab = $("ul.box > li");  // 상단 탭 쿠키로 현재 탭 기억
 
@@ -303,17 +299,7 @@ $(document).ready(function(){
 		$(".sales_check").click(function(){
 			location.href = "/admin/sales"
 		})
-	/* ----------------------------- 상단 탭 클릭 ---------------------------- */
-				    	
-	
-	/* -------------------------- 매장 등록 이미지 미리보기---------------------- */		
-         
-    	/*imgPreview(document.querySelector("#img"));*/
     	
-	/* -------------------------- 매장 등록 이미지 미리보기---------------------- */ 
-         
-         
-	/* -------------------------------- 함수 -------------------------------- */
            	
    	function orderList(url,data,index) {
    		const targetArr = [".order_list.first ul" , ".order_list.second ul" , ".order_list.third ul"];	 
@@ -405,11 +391,6 @@ $(document).ready(function(){
 							
 						}
 					 }   
-				/* 	console.log(typeof(optionName) );
-					 if(optionName.endsWith(",")) {
-						 console.log(3323323);
-						 
-					 } */
 					  
 					
 					let menu = [];
@@ -527,3 +508,4 @@ $(document).ready(function(){
                     	
 	}); // document.ready
 		
+*/

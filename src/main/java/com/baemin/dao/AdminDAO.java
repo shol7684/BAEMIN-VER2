@@ -3,6 +3,7 @@ package com.baemin.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.baemin.util.Page;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
 import com.baemin.vo.Store;
@@ -11,7 +12,7 @@ public interface AdminDAO {
 
 	List<OrderList> orderList(String list);
 
-	List<Store> storeList();
+	List<Store> storeList(Page p);
 
 	void storeRegist(Store store);
 
@@ -25,13 +26,16 @@ public interface AdminDAO {
 
 	void storeModify(Store store);
 
-	void orderAccept(String orderNum, int time, long userId);
+	int orderAccept(String orderNum, int time, long userId);
+	
+	int orderCancle(String orderNum, String cancleReason, long userId);
 
 	Map selectCard(String giftCardNum);
 
 	int pointUpdate(long userId, String info, int point);
 
 	OrderList getOrderOne(String orderNum);
+
 
 
 }

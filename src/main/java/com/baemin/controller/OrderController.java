@@ -1,9 +1,9 @@
 package com.baemin.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -16,10 +16,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMethodMappingNamingStrategy;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.baemin.config.LoginDetail;
 import com.baemin.service.OrderService;
+import com.baemin.util.FoodInfoFromJson;
+import com.baemin.util.Page;
 import com.baemin.vo.Cart;
 import com.baemin.vo.OrderInfo;
 import com.baemin.vo.OrderList;
@@ -57,11 +61,8 @@ public class OrderController {
 		Map cartMap = (Map) session.getAttribute("cartMap");
 		long orderPriceCheck = orderService.orderPriceCheck(cartMap);
 		
-		System.out.println("total = " + total);
-		System.out.println("orderPriceCheck = " + orderPriceCheck);
-		
 		if(total != orderPriceCheck) {
-			System.out.println("주문금액 오류");
+			LOGGER.info("주문금액 오류");
 			return "redirect:/";
 		}  
 		
@@ -93,23 +94,35 @@ public class OrderController {
 	}
 	
 	
-	@GetMapping("/orderList")
-	public String orderList(@AuthenticationPrincipal LoginDetail user, Model model ) {
+	@GetMapping({"/orderList", "/orderList/{movePage}"})
+	public String orderList(@AuthenticationPrincipal LoginDetail user, Model model, @PathVariable Optional<Integer> movePage ) {
 		if(user == null) {
 			System.out.println("비로그인");
 		} else {
 			System.out.println("로그인");
 			
+			Page p = new Page(movePage);
+			
+			model.addAttribute("page", p);
+			
 			long userId = user.getUser().getId();
 			
-			List<OrderList> orderList = orderService.orderList(userId);
-			
-			System.out.println(orderList);
-			
-			
-			model.addAttribute("orderList", orderList);
 			model.addAttribute("user", user.getUser());
+			
+			List<OrderList> orderList = orderService.orderList(userId, p.getPageStart(), p.getPageEnd());
+			
+			List<Map<String, Object>> deleveryInfo = new ArrayList<>();
+			
+			for(int i=0;i<orderList.size();i++) {
+				deleveryInfo.add(FoodInfoFromJson.foodInfoFromJson(orderList.get(i)));
+			}
+			model.addAttribute("lastPage", p.lastPage(orderList.get(0).getListCount()));
+			model.addAttribute("deleveryInfo", deleveryInfo);
+			
+			
+			
 		}
+		
 		
 		return "order/orderList";
 	}
@@ -128,26 +141,11 @@ public class OrderController {
 			return "redirect:/";
 		}
 		
-		String foodInfo = orderListDetail.getFoodInfo();
+		Map<String, Object> detail = FoodInfoFromJson.foodInfoFromJson(orderListDetail);
 		
-		String[] foodArr = foodInfo.split("},");
-		Cart[] cart = new Cart[foodArr.length];
-		
-		Gson gson = new Gson();
-		
-		for(int i=0;i<foodArr.length;i++) {
-			if(!foodArr[i].endsWith("}")) {
-				cart[i] = gson.fromJson(foodArr[i] + "}" , Cart.class);
-			} else {
-				cart[i] = gson.fromJson(foodArr[i], Cart.class);
-			}
-		}
-		
-		int[] amount = gson.fromJson(orderListDetail.getAmount(), int[].class);
-		
-		model.addAttribute("orderListDetail" , orderListDetail);
-		model.addAttribute("cart" , cart);
-		model.addAttribute("amount" , amount);
+		model.addAttribute("orderListDetail" , detail.get("orderListDetail"));
+		model.addAttribute("cart" , detail.get("cart"));
+		model.addAttribute("amount" , detail.get("amount"));
 		
 		return "order/orderListDetail";
 	}

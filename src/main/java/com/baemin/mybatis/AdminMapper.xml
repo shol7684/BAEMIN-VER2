@@ -38,18 +38,19 @@
 	
 	
 	<select id="storeList" resultType="Store">
-	SELECT * FROM 
-		BM_STORE S
-    LEFT JOIN
-        ( SELECT store_id, ROUND(AVG(score),1) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r 
-    ON S.ID = R.STORE_ID
-    LEFT JOIN
-        ( SELECT store_id, SUM(order_count) order_count from (
-			SELECT store_id, count(*) order_count FROM bm_order_detail_user GROUP BY store_id
-				UNION ALL
-			SELECT store_id, count(*) order_count FROM bm_order_detail_non_user GROUP BY store_id ) GROUP BY store_id ) C 
-    ON
-        S.ID = C.STORE_ID    
+	SELECT * FROM (
+	    SELECT ROWNUM RN,COUNT(*)OVER() LIST_COUNT , S.*, C.* FROM 
+	            BM_STORE S
+	        LEFT JOIN
+	            ( SELECT store_id, ROUND(AVG(score),1) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r 
+	        ON S.ID = R.STORE_ID
+	        LEFT JOIN
+	            ( SELECT store_id, SUM(order_count) order_count from (
+	                SELECT store_id, count(*) order_count FROM bm_order_detail_user GROUP BY store_id
+	                    UNION ALL
+	                SELECT store_id, count(*) order_count FROM bm_order_detail_non_user GROUP BY store_id ) GROUP BY store_id ) C 
+	        ON S.ID = C.STORE_ID
+    ) WHERE RN BETWEEN #{pageStart } AND #{pageEnd }   
 	
 	</select>
 	
@@ -190,6 +191,22 @@
 	</update>
 	
 	
+	<update id="orderCancle">
+		<if test="userId == 0">
+			UPDATE BM_ORDER_NON_USER SET 
+			DELEVERY_STATUS = #{cancleReason }
+			WHERE ORDER_NUM = #{orderNum }
+		</if>
+		
+		<if test="userId != 0">
+			UPDATE BM_ORDER_USER SET
+			DELEVERY_STATUS = #{cancleReason }
+			WHERE ORDER_NUM = #{orderNum }
+		</if>
+	
+	</update>
+	
+	
 	
 	
 	<select id="selectCard" resultType="map">
@@ -242,6 +259,8 @@
 		ORDER_NUM = #{orderNum }
 	
 	</select>
+	
+	
 	
 		
 </mapper>

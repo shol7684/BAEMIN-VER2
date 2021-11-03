@@ -1,4 +1,4 @@
-
+/*
 
 
 
@@ -62,11 +62,7 @@ function closeModal() {
 	modal.scrollTop(0);
 	modal2.scrollTop(0);
 	modalBg.hide();
-	/*modal.hide();*/
 	modal.css("top", "100%");
-	/*$(".modal .btn_box").css("position" , "static");*/
-
-	/* timer.hide(); */
 
 	$(".modal_box").scrollTop(0);
 
@@ -79,3 +75,4 @@ function closeModal() {
 
 
 
+*/

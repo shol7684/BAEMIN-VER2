@@ -1,14 +1,16 @@
 package com.baemin.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.baemin.config.LoginDetail;
 import com.baemin.service.MailService;
@@ -27,8 +30,7 @@ import com.baemin.util.UserInfoSessionUpdate;
 import com.baemin.vo.Point;
 import com.baemin.vo.Review;
 import com.baemin.vo.User;
-
-import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
+import com.nimbusds.oauth2.sdk.Request;
 
 @Controller
 public class UserController {
@@ -182,17 +184,24 @@ public class UserController {
 	}
 	
 	@GetMapping("/findId")
-	public String findId(String email) {
-		
-		if(email != null) {
-			List<String> usernames = userService.findId(email);
-			System.out.println(usernames);
-			
-			mailService.sendMail(usernames);
-			return "redirect:/login";
-		}
-		
+	public String findId() throws ServletException, IOException {
 		return "user/findId";
 	}
+	
+	@PostMapping("/findId")
+	public String findId(String email, RedirectAttributes rttr) throws ServletException, IOException {
+		
+		List<String> usernames = userService.findId(email);
+		
+		System.out.println(email);
+		
+		if(usernames.size() != 0) {
+			mailService.sendMail(email, usernames);
+		}
+		rttr.addFlashAttribute("sendEmailMessage", email);
+			
+		return "redirect:/findId";
+	}
+	
 
 }

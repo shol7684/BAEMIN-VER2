@@ -1,5 +1,7 @@
 package com.baemin.vo;
 
+import org.springframework.stereotype.Repository;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,6 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Repository
 public class Store {
 	
 	private long id;
@@ -31,6 +34,8 @@ public class Store {
 	private int bossCommentCount;
 	private int likesCount;
 	
+	// 매장 총 수
+	private int listCount;
 	
 	
 }

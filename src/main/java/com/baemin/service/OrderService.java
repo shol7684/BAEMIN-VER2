@@ -17,7 +17,7 @@ public interface OrderService {
 	String order(Map cartMap, OrderInfo info, LoginDetail user, HttpSession session);
 
 	// 주문목록
-	List<OrderList> orderList(long userId);
+	List<OrderList> orderList(long userId, int startPage, int endPage);
 
 	// 주문목록 상세보기
 	OrderList orderListDetail(String orderNum);

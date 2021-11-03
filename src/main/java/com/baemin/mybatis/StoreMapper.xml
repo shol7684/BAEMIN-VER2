@@ -5,16 +5,38 @@
 <mapper namespace="store">
 
 	<select id="storeList" resultType="store">
-SELECT * FROM     
-	( SELECT rownum rn, s.*,t.* FROM 
-		BM_STORE s
-	        LEFT JOIN    
-				( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM  
-					( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
-				) t
-			ON s.id = t.store_id     
-			WHERE CATEGORY = #{category} AND STORE_ADDRESS1 LIKE '${address1}%' )
-	WHERE rn BETWEEN ${startPage } AND ${endPage }		
+	SELECT * FROM     
+		( SELECT rownum rn, s.*,t.* FROM 
+			BM_STORE s
+		        LEFT JOIN    
+					( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM  
+						( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
+					) t
+				ON s.id = t.store_id     
+				WHERE CATEGORY = #{category} AND STORE_ADDRESS1 LIKE '${address1}%' )
+		WHERE rn BETWEEN ${startPage } AND ${endPage }	
+		
+		<if test="sort == '배달 빠른 순'">
+			ORDER BY DELEVERY_TIME
+		</if>
+		
+		<if test="sort == '배달팁 낮은 순'">
+			ORDER BY DELEVERY_TIP
+		</if>
+		
+		<if test="sort == '별점 높은 순'">
+			ORDER BY SCORE
+		</if>
+		
+		<if test="sort == '리뷰 많은 순'">
+			ORDER BY REVIEW_COUNT
+		</if>
+		
+		<if test="sort == '최소 주문 금액 순'">
+			ORDER BY MIN_DELEVERY
+		</if>
+	
+		
 	</select>
 
 

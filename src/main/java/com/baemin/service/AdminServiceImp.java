@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baemin.dao.AdminDAO;
+import com.baemin.util.Page;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
-import com.baemin.vo.Review;
 import com.baemin.vo.Store;
 
 @Service
@@ -26,8 +26,8 @@ public class AdminServiceImp implements AdminService {
 	}
 
 	@Override
-	public List<Store> storeList() {
-		return adminDAO.storeList();
+	public List<Store> storeList(Page p) {
+		return adminDAO.storeList(p);
 	}
 
 	@Override
@@ -75,9 +75,13 @@ public class AdminServiceImp implements AdminService {
 	}
 
 	@Override
-	public void orderAccept(String orderNum, int time,long userId) {
-		adminDAO.orderAccept(orderNum, time,userId);
-		
+	public int orderAccept(String orderNum, int time,long userId) {
+		return adminDAO.orderAccept(orderNum, time,userId);
+	}
+	
+	@Override
+	public int orderCancle(String orderNum, String cancleReason, long userId) {
+		return adminDAO.orderCancle(orderNum, cancleReason, userId);
 	}
 
 	@Override
@@ -100,6 +104,8 @@ public class AdminServiceImp implements AdminService {
 	public OrderList getOrderOne(String orderNum) {
 		return adminDAO.getOrderOne(orderNum);
 	}
+
+	
 
 
 }

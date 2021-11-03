@@ -24,7 +24,7 @@ public interface OrderDAO {
 	void orderDetail(Map<String, String> orderDetail);
 	
 	// 주문목록 페이지
-	List<OrderList> orderList(long userId);
+	List<OrderList> orderList(long userId, int startPage, int endPage);
 	
 	// 주문목록 상세보기 페이지
 	OrderList orderListDetail(String orderNum);

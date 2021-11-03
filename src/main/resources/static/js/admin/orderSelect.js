@@ -17,6 +17,10 @@ function connect() {
 		//메시지를 받으면 동작
 		console.log("메시지 도착");
 		console.log(data.data);
+		
+		// 현재 주문수가 20이하일때 추가하기
+		const orderCount = $(".order_list li").length; 
+		console.log("orderCount = " + orderCount);
 
 		const orderNum = data.data;
 
@@ -30,8 +34,8 @@ function connect() {
 				const count1 = result["orderListDetail"]["count1"];
 				const count2 = result["orderListDetail"]["count2"];
 				const count3 = result["orderListDetail"]["count3"];
-				$(".aside_tab li").eq(0).find("div").eq(1).text(count1);
-				$(".aside_tab li").eq(1).find("div").eq(1).text(count2);
+				$(".wait_count").text(count1);
+				$(".processing_count").text(count2);
 				$(".aside_tab li").eq(2).find("div").eq(1).text(count3);
 
 				let html = "";

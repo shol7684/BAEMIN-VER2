@@ -19,6 +19,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.jni.Address;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +36,9 @@ import com.baemin.service.StoreService;
 import com.baemin.vo.Review;
 import com.baemin.vo.Store;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Controller
 public class StoreController {
 
@@ -42,32 +47,44 @@ public class StoreController {
 
 	private static final Logger LOGGER = LogManager.getLogger(StoreController.class);
 
+	private int category = 0;
+	private int address1 = 0;
+	
+	@Autowired
+	private Store store;
+	
 	@GetMapping("/store/{category}/{address1}")
 	public String store(@PathVariable int category, @PathVariable int address1, Model model) {
-
-		System.out.println(category);
-		System.out.println(address1);
+		this.category = category;
+		this.address1 = address1;
+		
+		LOGGER.info("가게 카테고리 : " + category + " 우편번호 : " + address1 );
+		
 		int page = 1;
-
 		List<Store> storeList = storeService.storeList(category, address1 / 100, page);
 
 		model.addAttribute("storeList", storeList);
 
 		return "store/store";
 	}
+	
+	@ResponseBody
+	@GetMapping("/store/sortStore")
+	public ResponseEntity<List<Store>> sortStore(String sort, Model model){
+		List<Store> storeList = storeService.storeList(category, address1 / 100, sort, 1);
+		return new ResponseEntity<>(storeList,HttpStatus.CREATED);
+	}
 
 	@ResponseBody
 	@GetMapping("/storeNextPage")
-	public List<Store> storeNextPage(int category, int address1, int page) {
-
+	public ResponseEntity<List<Store>> storeNextPage(int page) {
 		List<Store> storeList = storeService.storeList(category, address1 / 100, page);
-
-		return storeList;
+		return new ResponseEntity<>(storeList,HttpStatus.CREATED);
 	}
 
 	@GetMapping("/store/detail/{id}")
 	public String storeDetail(@PathVariable long id, Model model, @AuthenticationPrincipal LoginDetail user) {
-
+	
 		long userId = 0;
 		String role = "";
 		if (user != null) {
@@ -81,7 +98,9 @@ public class StoreController {
 
 		model.addAttribute("store", store);
 		model.addAttribute("role", role);
-
+		
+		this.store.setDeleveryTip(10000000);
+		
 		return "store/detail";
 	}
 

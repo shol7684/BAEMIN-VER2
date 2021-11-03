@@ -8,7 +8,7 @@
 	<div class="food_modal modal">
 	
     	<div id="modal_header">
-			<button class="closeA">×</button>
+			<button class="closeA"><i class="fas fa-times"></i></button>
 			<h1>메뉴 상세</h1>
     	</div>
 	            

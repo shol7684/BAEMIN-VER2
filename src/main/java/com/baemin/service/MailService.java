@@ -13,17 +13,27 @@ public class MailService {
 	@Autowired
 	private JavaMailSender mailSender;
 	
-	public void sendMail(List<String> usernames) {
+	public void sendMail(String eamil, List<String> usernames) {
 		
-		String to = "shol7684@naver.com";
 		
 		SimpleMailMessage simpleMailMessage = new  SimpleMailMessage();
 		
-		simpleMailMessage.setTo(to);
+		simpleMailMessage.setTo(eamil);
 		
 		simpleMailMessage.setSubject("아이디 찾기");
 		
-		simpleMailMessage.setText("가입하신 아이디는 " + usernames + "입니디");
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("가입하신 아이디는");
+		sb.append(System.lineSeparator());
+		
+		for(int i=0;i<usernames.size()-1;i++) {
+			sb.append(usernames.get(i));
+			sb.append(System.lineSeparator());
+		}
+		sb.append(usernames.get(usernames.size()-1)).append("입니다");
+		
+		simpleMailMessage.setText(sb.toString());
 		
 		mailSender.send(simpleMailMessage);
 		

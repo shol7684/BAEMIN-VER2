@@ -61,10 +61,14 @@ public class MainController {
 	}
 	
 	
-	@PostMapping("/")
-	public String main(String address1, String address2, HttpServletResponse response, HttpSession session) throws UnsupportedEncodingException {
+	@ResponseBody
+	@PostMapping("/addressModify")
+	public void addressModify(String address1, String address2, HttpServletResponse response, HttpSession session ) throws UnsupportedEncodingException {
 //		address1 = 우편번호
 //		address2 = 주소
+		
+		System.out.println("address1 =" + address1);
+		System.out.println("address2 =" + address2);
 		
 		Cookie cookie1 = new Cookie("BMaddress1" , address1);
 		Cookie cookie2 = new Cookie("BMaddress2" , URLEncoder.encode(address2, "UTF-8"));
@@ -79,8 +83,6 @@ public class MainController {
 		session.setMaxInactiveInterval(3600 * 3);
 		session.setAttribute("BMaddress1", address1);
 		session.setAttribute("BMaddress2", address2);
-		
-		return "redirect:/";
 	}
 	
 	
@@ -106,27 +108,7 @@ public class MainController {
 	}
 	
 
-	@ResponseBody
-	@PostMapping("/addressModify")
-	public void addressModify(String address1, String address2, HttpServletResponse response, HttpSession session ) throws UnsupportedEncodingException {
-		
-		System.out.println("address1 =" + address1);
-		System.out.println("address2 =" + address2);
-		
-		Cookie cookie1 = new Cookie("BMaddress1" , address1);
-		Cookie cookie2 = new Cookie("BMaddress2" , URLEncoder.encode(address2, "UTF-8"));
-		
-		int age = 60 * 60 * 24 * 7;
-		cookie1.setMaxAge(age);
-		cookie2.setMaxAge(age);
-		
-		response.addCookie(cookie1);
-		response.addCookie(cookie2);
-		
-		session.setMaxInactiveInterval(3600 * 3);
-		session.setAttribute("BMaddress1", address1);
-		session.setAttribute("BMaddress2", address2);
-	}
+	
 	
 	
 	

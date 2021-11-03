@@ -6,7 +6,7 @@
 <div class="delevery_timer_modal modal">
 	<div id="modal_header">
 		<h1>접수 대기</h1>
-		<button class="closeA">×</button>
+		<button class="closeA"><i class="fas fa-times"></i></button>
 	</div>
 
 	<div class="modal_box">

@@ -11,6 +11,9 @@ section.title h1 {
 
 /* 콘텐츠 */
 
+main {
+	min-height: 390px;
+}
 
 main .container {
     max-width: 1200px;

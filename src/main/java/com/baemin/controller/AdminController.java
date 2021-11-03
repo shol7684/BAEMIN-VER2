@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,11 +32,11 @@ import com.baemin.config.LoginDetail;
 import com.baemin.service.AdminService;
 import com.baemin.service.StoreService;
 import com.baemin.util.FoodInfoFromJson;
+import com.baemin.util.Page;
 import com.baemin.util.UserInfoSessionUpdate;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
 import com.baemin.vo.Store;
-import com.nimbusds.oauth2.sdk.Request;
 
 @Controller
 public class AdminController {
@@ -71,11 +72,18 @@ public class AdminController {
 		return deleveryInfo;
 	}
 
-	@GetMapping("/admin/storeManagement")
-	public String storeManagement(Model model) {
+	@GetMapping({"/admin/storeManagement", "/admin/storeManagement/{movePage}"})
+	public String storeManagement(Model model, @PathVariable Optional<Integer> movePage) {
 
-		List<Store> storeList = adminService.storeList();
-
+		Page p = new Page(movePage);
+		
+		System.out.println(p);
+		
+		List<Store> storeList = adminService.storeList(p);
+		
+			
+		model.addAttribute("lastPage", p.lastPage(storeList.get(0).getListCount()));
+		model.addAttribute("page", p);
 		model.addAttribute("storeList", storeList);
 
 		return "admin/storeManagement";
@@ -182,15 +190,31 @@ public class AdminController {
 	
 	@ResponseBody
 	@PostMapping("/admin/orderAccept")
-	public String orderAccept(String orderNum, int time, long userId) {
-		System.out.println(orderNum);
-		System.out.println(time);
-		System.out.println(userId);
-		
-		adminService.orderAccept(orderNum, time, userId);
-		
-		return "";
+	public ResponseEntity<String> orderAccept(String orderNum, int time, long userId) {
+//		userId == 0 비회원
+		int result = adminService.orderAccept(orderNum, time, userId);
+		if(result == 1) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
 	}
+	
+	@ResponseBody
+	@PostMapping("/admin/orderCancle")
+	public ResponseEntity<String> orderCancle(String orderNum, String cancleReason, long userId) {
+//		userId == 0 비회원
+		int result = adminService.orderCancle(orderNum, cancleReason, userId);
+		
+		if(result == 1) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+				
+	}
+	
+	
 	
 	
 	@PostMapping("/admin/pointRegist")
@@ -209,7 +233,7 @@ public class AdminController {
 	
 	
 	
-	// 주문 1개 가져오기
+	// 사용자가 주문시 실시간 주문요청 받기 웹소켓
 	@ResponseBody
 	@GetMapping("/admin/order-one")
 	public Map getOrderone(String orderNum) {

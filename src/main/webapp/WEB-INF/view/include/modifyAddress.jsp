@@ -98,6 +98,7 @@
 							type: "post",
 							success: function(){
 								$(".address1").text(addr);
+								address1 = data.zonecode;
 							},
 							fail: function(){
 								alert("실패");

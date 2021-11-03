@@ -7,7 +7,7 @@
 <%@ include file="../include/header.jsp" %>
 
     <section class="title">
-        <h1>my 배민</h1>
+        <h1>my 배민</h1> 
     </section>
 
 

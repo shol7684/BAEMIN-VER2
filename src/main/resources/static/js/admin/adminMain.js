@@ -18,6 +18,7 @@ $(".aside_tab li").click(function(){
 
 
 
+
 orderList(0);
 
 function orderList(index){
@@ -33,8 +34,8 @@ function orderList(index){
 				const count1 = result[0]["orderListDetail"]["count1"];
 				const count2 = result[0]["orderListDetail"]["count2"];
 				const count3 = result[0]["orderListDetail"]["count3"];
-				$(".aside_tab li").eq(0).find("div").eq(1).text(count1);
-				$(".aside_tab li").eq(1).find("div").eq(1).text(count2);
+				$(".wait_count").text(count1);
+				$(".processing_count").text(count2);
 				$(".aside_tab li").eq(2).find("div").eq(1).text(count3);
 			}
 			
@@ -61,38 +62,39 @@ function orderList(index){
 				html += `<li class="order_box">
 						<div class="time">
 			    			<div>${moment(orderListDetail["orderDate"]).format("MM월 DD일")}</div>
-			    			<div>${moment(orderListDetail["orderDate"]).format("hh시 mm분")}</div>
+			    			<div>${moment(orderListDetail["orderDate"]).format("HH시 mm분")}</div>
 			    		</div>
 		   	
 			    		<div class="info">
                       		<div style="font-weight: bold;">
-                   			<span>
-                  				<span>[메뉴  ${amount.length}개] ${orderListDetail["totalPrice"]}원</span> 
-                  				<span class="payMethod"> ${orderListDetail["payMethod"] }</span>
-                			</span>
-                   		</div>
+	                   			<span>
+	                  				<span>[메뉴  ${amount.length}개] ${orderListDetail["totalPrice"]}원</span> 
+	                  				<span class="payMethod"> ${orderListDetail["payMethod"] }</span>
+	                			</span>
+                   			</div>
 		                        		
-                   		<div style="font-weight: bold;">${foodInfo } </div>
-                   		<div style="font-weight: bold;">${orderListDetail["deleveryAddress2"] }</div>
-                   		
-                   		<div>${orderListDetail["storeName"] }</div> 
-		                 			
-		                <div class="button_box">
-                      		<input type="hidden" value="${orderListDetail["orderNum"] }" class="order_num" >
-                      		<input type="hidden" value="${orderListDetail["deleveryAddress2"] }" class="delevery_address2" >
-                      		<input type="hidden" value="${orderListDetail["deleveryAddress3"] }" class="delevery_address3" >
-                      		<input type="hidden" value="${orderListDetail["phone"] }" class="phone" >
-                      		<input type="hidden" value="${orderListDetail["request"] }" class="request" >
-                      		<input type="hidden" value="${amount }" class="amount" >
-                      		<input type="hidden" value="${foodInfo}" class="food_info" >
-                      		<input type="hidden" value="${orderListDetail["userId"] }" class="user_id" >
-		                 	<input type="button" value="${"주문 접수"}" class="order_accept btn">
-		                 </div>
+	                   		<div style="font-weight: bold;">${foodInfo } </div>
+	                   		<div style="font-weight: bold;">${orderListDetail["deleveryAddress2"] }</div>
+	                   		
+	                   		<div>${orderListDetail["storeName"] }</div> 
+			                 			
+			                <div class="button_box">
+	                      		<input type="hidden" value="${orderListDetail["orderNum"] }" class="order_num" >
+	                      		<input type="hidden" value="${orderListDetail["deleveryAddress2"] }" class="delevery_address2" >
+	                      		<input type="hidden" value="${orderListDetail["deleveryAddress3"] }" class="delevery_address3" >
+	                      		<input type="hidden" value="${orderListDetail["phone"] }" class="phone" >
+	                      		<input type="hidden" value="${orderListDetail["request"] }" class="request" >
+	                      		<input type="hidden" value="${amount }" class="amount" >
+	                      		<input type="hidden" value="${foodInfo}" class="food_info" >
+	                      		<input type="hidden" value="${orderListDetail["userId"] }" class="user_id" >
+			                 	<input type="button" value="${"주문 접수"}" class="order_accept btn">
+			                 </div>
+			            </div>     
 					</li>`;
 			}
-			$(".order_list > ul").html(html);
+			$(".order_list").html(html);
 		},
-		fail: function() {
+		error: function() {
 			alert("에러가 발생했습니다");
 		}
 	}) // ajax
@@ -105,6 +107,7 @@ let userId = 0;
 	
 $(document).on("click", ".order_accept", function(){
 	const modal = $(".order_accept_modal");
+	const orderIndex = $(this).parent().parent().parent("li").index();
 	
 	orderNum = $(this).siblings(".order_num").val();
 	userId =  $(this).siblings(".user_id").val();
@@ -137,6 +140,7 @@ $(document).on("click", ".order_accept", function(){
 	
 	openModal(modal, size);
 	
+	console.log(orderIndex);
 	
 	
 	
@@ -148,16 +152,25 @@ $(document).on("click", ".order_accept", function(){
 		console.log("orderNum = " + orderNum);
 	})
  		
-		
+	// 시간 설정	
 	$(".delevery_timer_modal li").off().click(function(){
 		$(".delevery_timer_modal li").removeClass("select");
 		$(this).addClass("select");
+		
+		console.log($(".select").data("time"));
+		console.log($(".select").data());
 	})
 		
-		
+	// 주문수락 완료	
 	$(".accept").off().click(function(){
 		cs(userId);
-		const time = $(".select").data("time");
+		const time = $(".delevery_timer_modal .select").data("time");
+		
+		if(!time) {
+			swal("시간을설정해주세요");
+			return;
+		}
+		
 		const data = {
 			orderNum : orderNum,
 			time : time,
@@ -169,15 +182,88 @@ $(document).on("click", ".order_accept", function(){
 			data: data,
 			type: "POST",
 			success: function(){
-				orderList(0);
 				$(".delevery_timer_modal li").removeClass("select");
 				$(".delevery_timer_modal section li[data-time=30]").addClass("select");
+				
+				const waitCount = Number($(".wait_count").text());
+				const procCount = Number($(".processing_count").text());
+				$(".wait_count").text(waitCount - 1 );
+				$(".processing_count").text(procCount + 1 );
+				
+				swal("주문접수완료");
+				closeModal();
+			},
+			error: function() {
+					swal("실패");
+				},
+			complete: function(result){
+				if(result.status != 200) {
+					swal("해당 주문번호가 없습니다");
+				} else {
+					$(".order_list > li").eq(orderIndex).remove();
+				}
 			}
 		})
 	})
 	
 	
-	
+	// 주문 거부하기
+	$(".order_cancle_btn").off().click(function(){
+		const modal = $(".order_cancle_modal");
+		
+		openModal(modal, size);
+		
+		let cancleReason = "";
+		
+		// 거부사유 선택
+		$(".order_cancle_modal li").off().click(function(){
+			$(".order_cancle_modal li").removeClass("select");	
+			$(this).addClass("select");
+			cancleReason = $(this).data("reason");
+		})
+		
+		// 거부하기
+		$(".order_cancle").off().click(function(){
+			if(!cancleReason) {
+				swal('주문거부 사유를 선택해주세요');
+				return;
+			}
+			
+			const data = {
+				orderNum : orderNum,
+				cancleReason : cancleReason,
+				userId : userId
+			}
+			
+			$.ajax({
+				url: "/admin/orderCancle",
+				type: "POST",
+				data: data,
+				success: function(result){
+					$(".order_cancle_modal li").removeClass("select");
+					
+					const waitCount = Number($(".wait_count").text());
+					const procCount = Number($(".processing_count").text());
+					$(".wait_count").text(waitCount - 1 );
+					$(".processing_count").text(procCount + 1 );
+					swal("취소완료");
+					closeModal();
+				},
+				error: function() {
+					swal("실패");
+				},
+				complete: function(result){
+					if(result.status != 200) {
+						swal("해당 주문번호가 없습니다");
+					} else {
+						$(".order_list > li").eq(orderIndex).remove();
+					}
+				}
+			})
+			
+			
+		})
+	})
 })
 	
 	
@@ -186,7 +272,7 @@ $(".move_top").click(function(){
 	$("html").animate({ scrollTop: 0 }, 100);
 })
 	
-	
+
 	
 
 

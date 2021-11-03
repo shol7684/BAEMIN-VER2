@@ -16,13 +16,12 @@ import com.baemin.config.LoginDetail;
 import com.baemin.dao.AdminDAO;
 import com.baemin.dao.OrderDAO;
 import com.baemin.util.CreateOrderNum;
+import com.baemin.util.Page;
 import com.baemin.util.UserInfoSessionUpdate;
 import com.baemin.vo.Cart;
 import com.baemin.vo.OrderInfo;
 import com.baemin.vo.OrderList;
 import com.google.gson.Gson;
-
-import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 
 @Service
 public class OrderServiceImp implements OrderService {
@@ -138,8 +137,8 @@ public class OrderServiceImp implements OrderService {
 	}
 
 	@Override
-	public List<OrderList> orderList(long userId) {
-		return orderDAO.orderList(userId);
+	public List<OrderList> orderList(long userId, int startPage,int endPage) {
+		return orderDAO.orderList(userId, startPage, endPage);
 	}
 
 	

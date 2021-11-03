@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="/css/modal.css" >
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
 
-	<div class="move_top">위로</div>
+<div class="move_top"><i class="fas fa-arrow-alt-circle-up"></i></div>
 
 <div class="wrap">
     <section class="tab">
@@ -26,11 +26,11 @@
         <ul class="aside_tab">
             <li class="active">
             	<div>접수 대기</div>
-            	<div></div>
+            	<div class="wait_count"></div>
            	</li>
             <li>
             	<div>처리 중</div>
-            	<div></div>
+            	<div class="processing_count"></div>
             </li>
             
             <li>
@@ -45,39 +45,17 @@
 
     <main>
         <div id="cont_box">
-            <ul>
+            <ul class="order_list first">
                 <!-- 주문접수 > 접수 대기 -->
-                <li class="order_list first">
-                    <ul>
+                <!-- <li> -->
+                    <!-- <ul> -->
                         <!-- 주문목록 1개 -->
                         <!-- <li class="order_box">
 						</li> -->
 		 						
                         <!-- 주문목록 1개 -->
-                    </ul>
-                </li>
-                   <!-- 주문접수 > 접수 대기 -->
-
-
-                    <!-- 주문접수 > 처리 중  -->
-				<!-- <li class="order_list second">
-					<ul>
-                   </ul>
-                </li>  -->
-               
-                    <!-- 주문접수 > 처리 중 -->
-
-                    <!-- 주문접수 > 완료 -->
-				<!-- <li class="order_list third">
-					<ul>
-					</ul>
-				</li> -->
-                    <!-- 주문접수 > 완료 -->
-							
-						
-                    <!-- 주문접수 > 주문조회 -->
-   
-                    <!-- 주문접수 > 주문조회 -->
+                    <!-- </ul> -->
+                <!-- </li> -->
             </ul>
         </div>
 	</main>
@@ -97,32 +75,33 @@
 
 	
 
-	<div class="order_cancle_modal modal">
+	
+
+<!-- 주문 접수 모달 -->
+<%@ include file="/WEB-INF/view/admin/orderAcceptModal.jsp" %>
+
+<div class="order_cancle_modal modal">
 		<div id="modal_header">
 			<h1>주문거부</h1>
-			<button class="closeA">×</button>
+			<button class="closeA"><i class="fas fa-times"></i></button>
 		</div>
 		
 		<div class="modal_box">
 			<h2>주문거부 사유를 선택해주세요</h2>
 			<ul>
-				<li data-value = "배달불가지역" >배달불가지역</li>
-				<li data-value = "재료소진" >재료소진</li>
-			</ul>
-			<ul>
-				<li data-value = "배달지연" >배달지연</li>
-				<li data-value = "기타" >기타</li>
+				<li data-reason="배달불가지역" >배달불가지역</li>
+				<li data-reason="재료소진" >재료소진</li>
+				<li data-reason="배달지연" >배달지연</li>
+				<li data-reason="기타" >기타</li>
 			</ul>
 		</div>
 		
-		<div class="btn_box">
-	        <button class="cancle">취소</button>
-	        <button class="order_cancle_btn">거부하기</button>
+		<div id="btn_box">
+	        <button class="closeB">취소</button>
+	        <button class="order_cancle">거부하기</button>
 	    </div>
 	</div>
-
-<!-- 주문 접수 모달 -->
-<%@ include file="/WEB-INF/view/admin/orderAcceptModal.jsp" %>
+	
 
 <!-- 주문 접수 배달시간 설정 모달 -->
 <%@ include file="/WEB-INF/view/admin/deleveryTimerModal.jsp" %>

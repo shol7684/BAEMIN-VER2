@@ -50,7 +50,7 @@ main {
 	color: #999999;
 }
 
- .address_search #sample2_address {
+ .address_search #deleveryAddress2 {
     height: 100%;
     width: 100%;
     padding-left: 10px;
@@ -164,8 +164,8 @@ main {
 	.address_search #search_box {
 	    width: 73%;
 	}
-	 .address_search #sample2_address {
-	 	width: 80%
+	 .address_search #deleveryAddress2 {
+	 	/* width: 80% */
 	 }
 	 
 	 

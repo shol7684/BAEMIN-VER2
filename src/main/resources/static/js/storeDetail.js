@@ -1,4 +1,4 @@
-
+/*
 $(document).ready(function() {
 
 	console.log(window.location.pathname.indexOf("admin"));
@@ -169,7 +169,7 @@ $(document).ready(function() {
 			data: data,
 			success: function(result) {
 
-				/*$(".menu_name").html(menuName);
+				$(".menu_name").html(menuName);
 
 				$(".menu_dec").html(menuDec);
 
@@ -206,15 +206,13 @@ $(document).ready(function() {
 
 				} else {
 					$("#option").css("display", "none");
-				}*/
+				}
 
 			}
 		}); // ajax
 	}); // 메뉴 클릭 메서드
 
 
-
-	/* ---------------------- 옵션 선택 --------------------- */
 	let optionPrice = 0;
 
 	$(document).on("change", "input[name='option']", function() {
@@ -233,11 +231,6 @@ $(document).ready(function() {
 
 	});
 
-	/* ---------------------- 옵션 선택 --------------------- */
-
-
-
-	/* ---------------------수량 증가 감소--------------------- */
 	const amountBox = $("#amount");
 
 	let amount = 1;
@@ -263,10 +256,6 @@ $(document).ready(function() {
 
 
 
-	/* ----------------------수량 증가 감소--------------------- */
-
-
-	/* ---------------------- 장바구니에 담기 --------------------- */
 
 	var cartCount = 0; // 모바일 카트
 
@@ -298,12 +287,6 @@ $(document).ready(function() {
 
 	}); // 장바구니에 담기 버튼 클릭
 
-	/* ---------------------- 장바구니에 담기 --------------------- */
-
-
-
-	/* ---------------------- 장바구니 1개 삭제 --------------------- */
-
 	$(document).on("click", ".cancle_btn", function() { // .html로 생성된 부분은 on 메서드를 사용해야된다
 		const index = $(this).parent().index();
 
@@ -320,18 +303,12 @@ $(document).ready(function() {
 
 	}); // 삭제 버튼 클릭
 
-	/* ---------------------- 장바구니 1개 삭제 --------------------- */
-
-
-
-	/* ---------------------- 장바구니 전체 삭제 --------------------- */
 
 	$(".deleteAll").click(function() {
 
 		deleteCartAll();
 
 	}); // 전체 삭제
-	/* ---------------------- 장바구니 전체 삭제 --------------------- */
 
 
 
@@ -443,14 +420,12 @@ $(document).ready(function() {
 
 				cartEmpryCheck(total);
 
-				/* 모바일 카트 */
 				if (result.length > 0) {
 					$(".cart_count").html(result.length);
 					$(".cart_count").css("display", "block");
 
 					cartCount = result.length;
 				}
-				/* 모바일 카트 */
 
 
 
@@ -577,7 +552,7 @@ $(document).ready(function() {
 		$("#amount").val(1);
 		optionPrice = 0;
 
-		/* $("input[type='checkBox']").prop("checked", false); */
+		 // $("input[type='checkBox']").prop("checked", false); 
 
 		$(".plusOption").remove();
 	};
@@ -589,8 +564,8 @@ $(document).ready(function() {
 
 	//탭 눌렀을때 색변경 콘텐츠 변경
 
-	/*$("main  ul").eq(2).hide();
-	$("main  ul").eq(3).hide();*/
+	// $("main  ul").eq(2).hide();
+	// $("main  ul").eq(3).hide();
 
 	const tab = $("ul.tab > li");
 	const menu = $(".menu > li");
@@ -620,7 +595,6 @@ $(document).ready(function() {
 	});
 
 	//탭 눌렀을때 색변경 콘텐츠 변경
-	/* ---------------------------- 이미지 확대 ---------------------------- */
 	let zoom = false;
 	$(".review_img").click(function() {
 
@@ -632,7 +606,6 @@ $(document).ready(function() {
 			zoom = false;
 		}
 	});
-	/* ---------------------------- 이미지 확대 ---------------------------- */
 
 
 
@@ -642,4 +615,4 @@ $(document).ready(function() {
 
 
 
-});
+});*/

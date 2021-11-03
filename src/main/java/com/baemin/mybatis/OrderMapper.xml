@@ -133,46 +133,54 @@
 	
 	
 	<select id="orderList" resultType="OrderList">
-       SELECT
-		    o.order_num,
-		    o.user_id,
-		    o.order_date,
-		    o.pay_method,
-		    o.delevery_status,
-		    o.delevery_address1,
-		    o.delevery_address2,
-		    o.delevery_address3,
-		    d.store_id,
-		    d.amount,
-		    d.food_price,
-		    d.total_price,
-		    d.food_info,
-		    d.used_point,
-		    s.store_name,
-		    s.store_img,
-		    s.store_thumb,
-		    s.delevery_tip,
-            r.review_content,
-            r.score,
-            r.review_img
-		FROM
-		    bm_order_user o
-		LEFT JOIN
-		    bm_order_detail_user d
-		ON
-		    o.order_num = d.order_num
-		LEFT JOIN
-		    bm_store s
-		ON
-		    d.store_id = s.id 
-        LEFT JOIN
-            bm_review r
-        ON
-            o.order_num = r.order_num
-		 WHERE 
-		    o.user_id = #{userId }
-		 ORDER BY
-		 	o.order_date desc  
+	SELECT * FROM (
+    	SELECT ROWNUM R, O.* FROM (
+        	SELECT
+        	 count(*) over() list_count,
+			    o.order_num,
+			    o.user_id,
+			    o.order_date,
+			    o.pay_method,
+			    o.delevery_status,
+			    o.delevery_address1,
+			    o.delevery_address2,
+			    o.delevery_address3,
+			    d.store_id,
+			    d.amount,
+			    d.food_price,
+			    d.total_price,
+			    d.food_info,
+			    d.used_point,
+			    s.store_name,
+			    s.store_img,
+			    s.store_thumb,
+			    s.delevery_tip,
+	            r.review_content,
+	            r.score,
+	            r.review_img
+			FROM
+			    bm_order_user o
+			LEFT JOIN
+			    bm_order_detail_user d
+			ON
+			    o.order_num = d.order_num
+			LEFT JOIN
+			    bm_store s
+			ON
+			    d.store_id = s.id 
+	        LEFT JOIN
+	            bm_review r
+	        ON
+	            o.order_num = r.order_num
+			 WHERE 
+			    o.user_id = #{userId }
+			 ORDER BY
+			 	o.order_date desc  
+	        ) O
+		) WHERE R BETWEEN #{startPage } AND #{endPage }
+
+
+  
              
 	</select>
 	

@@ -6,7 +6,7 @@
 	<form action="/admin/menu" method="post" enctype="multipart/form-data" onsubmit="return submitCheck();">
 
 		<div id="modal_header">
-			<button class="closeA">×</button>
+			<button class="closeA"><i class="fas fa-times"></i></button>
 			<h1>메뉴 추가</h1>
 		</div>
 
@@ -86,7 +86,7 @@
 		</div>
 	</form>
 </div>
-<<%-- div class="add_menu_modal modify modal"> <form
+<%-- div class="add_menu_modal modify modal"> <form
 action="/modifyMenu" method="post" enctype="multipart/form-data"> <div
 id="modal_header"> <h1>메뉴 수정</h1> <button class="closeA"
 type="button">×</button> </div> <div class="modal_box modal2"> <input

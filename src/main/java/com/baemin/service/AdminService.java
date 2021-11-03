@@ -3,6 +3,7 @@ package com.baemin.service;
 import java.util.List;
 import java.util.Map;
 
+import com.baemin.util.Page;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
 import com.baemin.vo.Store;
@@ -13,7 +14,7 @@ public interface AdminService {
 	List<OrderList> orderList(String list);
 
 	// 매장관리 탭 가게 목록
-	List<Store> storeList();
+	List<Store> storeList(Page p);
 
 	// 매장관리 탭 가게 등록하기
 	void storeRegist(Store store);
@@ -28,11 +29,14 @@ public interface AdminService {
 	void storeModify(Store store);
 
 	// 주문목록에서 주문수락하기
-	void orderAccept(String orderNum, int time, long userId);
+	int orderAccept(String orderNum, int time, long userId);
 
 	// 상품권 등록
 	int pointRegist(String giftCardNum, long id);
 
+	// 사용자가 주문시 실시간 주문요청 받기 웹소켓
 	OrderList getOrderOne(String orderNum);
+
+	int orderCancle(String orderNum, String cancleReason, long userId);
 
 }

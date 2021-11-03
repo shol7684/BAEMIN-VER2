@@ -7,7 +7,7 @@
 
 <div class="store_reg_modal modal" >
 	<div id="modal_header">
-	 	<button class="closeA">×</button>
+	 	<button class="closeA"><i class="fas fa-times"></i></button>
 		<h1>가게정보 수정</h1>
 	 </div>
 
