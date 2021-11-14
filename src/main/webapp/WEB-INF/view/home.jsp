@@ -6,34 +6,6 @@
 
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
     
-    <!-- 주문 완료시 알림창, 관리자 페이지로 주문번호 보내기 -->
-    <script>
-    	if("${orderMessage }" != "") {
-	    	swal("${orderMessage }");
-    	} 
-    		
-    	if("${orderNum}" != "") {
-			const orderNum = "${orderNum}";
-    		
-	    	/* let ws = new WebSocket("ws://localhost:8080/chating"); */
-			ws = new WebSocket("ws://211.247.99.55:8080/chating");
-			
-			ws.onopen = function(data){
-				//소켓이 열리면 동작
-				console.log("소켯 오픈");
-				ws.send(orderNum);
-			}
-			ws.onclose = function(event) {
-				console.log("클로즈");
-			}
-			
-			ws.onerror = function(event) {
-				console.log("에러");
-			}
-    	}
-    </script>
-    
-    
     
  	<!-- 콘텐츠 -->
     <div class="wrap">
@@ -60,99 +32,102 @@
                  </div>
             </section>
             <section class="category_box">
-
                 <div class="box">
                     <ul class="category">
-
-                        <li>
-                            <ul>
+                    
                                 <li>
-									<span>
+									<div>
+										<div class="img_box">
                                            <img src="/img/pizza2.png" alt="이미지">
-                                       </span>
-                                       <span>피자</span>
+										</div>
+                                    </div>
+                                    <div class="name">피자</div>
                                 </li>
-
-
-								<li>
-                                        <span>
-                                            <img src="/img/chicken1.png" alt="이미지">
-                                        </span>
-                                        <span>치킨</span>
+                    
+                                <li>
+									<div>
+										<div class="img_box">
+                                           <img src="/img/chicken1.png" alt="이미지">
+										</div>
+                                    </div>
+                                    <div class="name">치킨</div>
+                                </li>
+                    
+                                <li>
+									<div>
+										<div class="img_box">
+                                           <img src="/img/hamburger4.png" alt="이미지">
+										</div>
+                                    </div>
+                                    <div class="name">패스트푸드</div>
+                                </li>
+                    
+                                <li>
+									<div>
+										<div class="img_box">
+                                           <img src="/img/bunsik1.png" alt="이미지">
+										</div>
+                                    </div>
+                                    <div class="name">분식</div>
+                                </li>
+                                
+                    
+                                <li>
+									<div>
+										<div class="img_box">
+                                           <img src="/img/dessert2.png" alt="이미지">
+										</div>
+                                    </div>
+                                    <div class="name">카페/디저트</div>
                                 </li>
                                 
                                 <li>
-                                        <span>
-                                            <img src="/img/hamburger4.png" alt="이미지">
-                                        </span>
-                                        <span>패스트푸드</span>
+									<div>
+										<div class="img_box">
+                                           <img src="/img/cutlet1.png" alt="이미지">
+										</div>
+                                    </div>
+                                    <div class="name">돈까스/일식</div>
+                                </li>
+                    
+                                <li>
+									<div>
+										<div class="img_box">
+                                           <img src="/img/chinese1.png" alt="이미지">
+										</div>
+                                    </div>
+                                    <div class="name">중국집</div>
                                 </li>
                                 
+                    
                                 <li>
-                                        <span>
-                                            <img src="/img/bunsik1.png" alt="이미지">
-                                        </span>
-                                        <span>분식</span>
+									<div>
+										<div class="img_box">
+                                           <img src="/img/jockbal1.png" alt="이미지">
+										</div>
+                                    </div>
+                                    <div class="name">족발/보쌈</div>
                                 </li>
-
+                    
                                 <li>
-                                        <span>
-                                            <img src="/img/dessert2.png" alt="이미지">
-                                        </span>
-                                        <span>카페/디저트</span>
+									<div>
+										<div class="img_box">
+                                           <img src="/img/jockbal2.png" alt="이미지">
+										</div>
+                                    </div>
+                                    <div class="name">야식</div>
                                 </li>
-
-
+                    
                                 <li>
-                                        <span>
-                                            <img src="/img/cutlet1.png" alt="이미지">
-                                        </span>
-                                        <span>돈까스/일식</span>
+									<div>
+										<div class="img_box">
+                                           <img src="/img/jockbal3.png" alt="이미지">
+										</div>
+                                    </div>
+                                    <div class="name">한식</div>
                                 </li>
-
-                                
-                   
-                                <li>
-                                        <span>
-                                            <img src="/img/chinese1.png" alt="이미지">
-                                        </span>
-                                        <span>중국집</span>
-                                </li>
-
-                                <li>
-                                        <span>
-                                            <img src="/img/jockbal1.png" alt="이미지">
-                                        </span>
-                                        <span>족발/보쌈</span>
-                                </li>
-
-                                <li>
-                                        <span>
-                                            <img src="/img/jockbal2.png" alt="이미지">
-                                        </span>
-                                        <span>야식</span>
-                                </li>
-
-                                <li>
-                                        <span>
-                                            <img src="/img/jockbal3.png" alt="이미지">
-                                        </span>
-                                        <span>한식</span>
-                                </li>
-
-
-                                <li>
-                                        <span>
-                                            <img src="/img/hamburger4.png" alt="이미지">
-                                        </span>
-                                        <span>패스트푸드</span>
-                                </li>
-
                             </ul>
-                        </li>
-                    </ul>
-                </div>
-
+                	</div>
             </section>
         </main>
     </div>
@@ -170,7 +145,7 @@
 <script>
 	let address1 = $("#deleveryAddress1").val();
 
-	$(".category > li > ul li").click(function(){
+	$(".category li").click(function(){
 		if(!address1) {
 			swal("배달 받으실 주소를 입력해 주세요");
 			return false;

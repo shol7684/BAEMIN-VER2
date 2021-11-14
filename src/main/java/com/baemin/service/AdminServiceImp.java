@@ -12,6 +12,7 @@ import com.baemin.dao.AdminDAO;
 import com.baemin.util.Page;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
+import com.baemin.vo.Sales;
 import com.baemin.vo.Store;
 
 @Service
@@ -22,13 +23,28 @@ public class AdminServiceImp implements AdminService {
 	
 	@Override
 	public List<OrderList> orderList(String list) {
-		return adminDAO.orderList(list);
+		
+		return orderList(list, 1);
 	}
+	
+	@Override
+	public List<OrderList> orderList(String list, int page) {
+		Page p = new Page(page, 20);
+		
+		return adminDAO.orderList(list,p);
+	}
+	
 
 	@Override
 	public List<Store> storeList(Page p) {
-		return adminDAO.storeList(p);
+		return adminDAO.storeList(p, null);
 	}
+	
+	@Override
+	public List<Store> storeList(Page p, String keyword) {
+		return  adminDAO.storeList(p, keyword);
+	}
+	
 
 	@Override
 	public void storeRegist(Store store) {
@@ -83,6 +99,12 @@ public class AdminServiceImp implements AdminService {
 	public int orderCancle(String orderNum, String cancleReason, long userId) {
 		return adminDAO.orderCancle(orderNum, cancleReason, userId);
 	}
+	
+	@Override
+	public int orderComplete(String orderNum, long userId) {
+		return adminDAO.orderComplete(orderNum, userId);
+	}
+	
 
 	@Override
 	public int pointRegist(String giftCardNum, long id) {
@@ -101,9 +123,33 @@ public class AdminServiceImp implements AdminService {
 	}
 
 	@Override
-	public OrderList getOrderOne(String orderNum) {
-		return adminDAO.getOrderOne(orderNum);
+	public List<Sales> sales(String time,String month) {
+		
+		if(time.equals("year")) {
+			List<Sales> year = adminDAO.salesYear();
+			
+			return year;
+			
+			
+//			Map<String, Long>  year = adminDAO.salesYear();
+//			List<Sales> list = new ArrayList<>();
+//			String[] yearArr = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOB", "DEC"};
+//			
+//			for(int i=0;i<12;i++) {
+//				list.add(new Sales(null, Long.parseLong(String.valueOf(year.get(yearArr[i])))));
+//			}
+//			list.add(new Sales(null, Long.parseLong(String.valueOf(year.get("TOTAL")))));
+//			return list;
+		}
+		
+		return adminDAO.sales(time,month);
 	}
+
+
+
+
+
+
 
 	
 

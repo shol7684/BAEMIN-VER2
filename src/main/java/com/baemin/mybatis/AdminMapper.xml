@@ -5,44 +5,59 @@
 <mapper namespace="admin">
 
 	<select id="orderList" resultType="OrderList">
-	SELECT O.*,S.STORE_NAME,C.* FROM 
-	   ( SELECT * FROM 
-		  ( SELECT COUNT(*) COUNT1 FROM ( SELECT  * FROM bm_order_non_user  UNION ALL SELECT * FROM bm_order_user ) WHERE delevery_status = '주문접수 대기 중' ),
-          ( SELECT COUNT(*) COUNT2 FROM ( SELECT  * FROM bm_order_non_user  UNION ALL SELECT * FROM bm_order_user ) WHERE delevery_status = '처리 중' ),
-          ( SELECT COUNT(*) COUNT3 FROM ( SELECT  * FROM bm_order_non_user  UNION ALL SELECT * FROM bm_order_user ) WHERE delevery_status = '완료' )) C,	
-	   ( SELECT
-		    U.order_num, U.user_id, U.order_date, U.pay_method, U.delevery_status, U.phone, U.delevery_address1,
-		    U.delevery_address2, U.delevery_address3, UD.store_id, UD.amount, UD.used_point, UD.food_price,
-		    UD.total_price, UD.food_info, UD.request
-		FROM bm_order_user U LEFT JOIN     
-		    bm_order_detail_user UD ON  U.ORDER_NUM = UD.ORDER_NUM
-		    
-		  UNION ALL 
-		 
-		SELECT
-		    NU.order_num, NU.user_id, NU.order_date, NU.pay_method, NU.delevery_status, NU.phone, NU.delevery_address1,
-		    NU.delevery_address2, NU.delevery_address3, NUD.store_id, NUD.amount, NUD.used_point, NUD.food_price,
-		    NUD.total_price, NUD.food_info, NUD.request
-		FROM bm_order_non_user NU LEFT JOIN 
-		    bm_order_detail_non_user NUD ON  NU.ORDER_NUM = NUD.ORDER_NUM  
-	) O
-	LEFT JOIN
-	    BM_STORE S
-	ON 
-		O.STORE_ID = S.ID
-	WHERE 
-		DELEVERY_STATUS = #{list }
-	ORDER BY ORDER_DATE
+	SELECT RESULT.* FROM (
+	    SELECT ROWNUM RN, T.* FROM (
+	        SELECT O.*,S.STORE_NAME,C.* FROM 
+	           ( SELECT * FROM 
+	              ( SELECT COUNT(*) COUNT1 FROM ( SELECT  delevery_status FROM bm_order_non_user  UNION ALL SELECT delevery_status FROM bm_order_user ) WHERE delevery_status = '주문접수 대기 중' ),
+	              ( SELECT COUNT(*) COUNT2 FROM ( SELECT  delevery_status FROM bm_order_non_user  UNION ALL SELECT delevery_status FROM bm_order_user ) WHERE delevery_status = '처리 중' )
+               ) C	
+	           ,( SELECT
+	                U.order_num, U.user_id, U.order_date, U.pay_method, U.delevery_status, U.phone, U.delevery_address1,
+	                U.delevery_address2, U.delevery_address3, UD.store_id, UD.amount, UD.used_point, UD.food_price,
+	                UD.total_price, UD.food_info, UD.request
+	            FROM bm_order_user U LEFT JOIN     
+	                bm_order_detail_user UD ON  U.ORDER_NUM = UD.ORDER_NUM
+	                
+	              UNION ALL 
+	             
+	            SELECT
+	                NU.order_num, NU.user_id, NU.order_date, NU.pay_method, NU.delevery_status, NU.phone, NU.delevery_address1,
+	                NU.delevery_address2, NU.delevery_address3, NUD.store_id, NUD.amount, NUD.used_point, NUD.food_price,
+	                NUD.total_price, NUD.food_info, NUD.request
+	            FROM bm_order_non_user NU LEFT JOIN 
+	                bm_order_detail_non_user NUD ON  NU.ORDER_NUM = NUD.ORDER_NUM  
+	        ) O
+	        LEFT JOIN
+	            BM_STORE S
+	        ON 
+	            O.STORE_ID = S.ID
+	        WHERE 
+	            DELEVERY_STATUS = #{list }
+	        ORDER BY ORDER_DATE 
+	    ) T
+	) RESULT WHERE RN BETWEEN #{pageStart } AND #{pageEnd }
+	    
+    
+    
+   
+        
+    
 	</select>
 	
 	
 	
 	<select id="storeList" resultType="Store">
-	SELECT * FROM (
-	    SELECT ROWNUM RN,COUNT(*)OVER() LIST_COUNT , S.*, C.* FROM 
+	SELECT RESULT.* FROM (	
+		SELECT ROWNUM RN, COUNT(*)OVER() LIST_COUNT, T.* FROM (
+		    SELECT 
+		        S.ID, S.CATEGORY, S.STORE_NAME, S.STORE_ADDRESS1, S.STORE_ADDRESS2, S.STORE_ADDRESS3
+		        ,S.STORE_PHONE, S.STORE_IMG, S.STORE_THUMB, S.OPENING_TIME, S.CLOSING_TIME, S.MIN_DELEVERY, S.DELEVERY_TIME, S.DELEVERY_TIP, S.STORE_DES
+		        ,C.ORDER_COUNT, R.SCORE, R.REVIEW_COUNT, R.BOSS_COMMENT_COUNT 
+		    FROM 
 	            BM_STORE S
 	        LEFT JOIN
-	            ( SELECT store_id, ROUND(AVG(score),1) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r 
+	            ( SELECT store_id, ROUND(AVG(score),1) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) R
 	        ON S.ID = R.STORE_ID
 	        LEFT JOIN
 	            ( SELECT store_id, SUM(order_count) order_count from (
@@ -50,7 +65,11 @@
 	                    UNION ALL
 	                SELECT store_id, count(*) order_count FROM bm_order_detail_non_user GROUP BY store_id ) GROUP BY store_id ) C 
 	        ON S.ID = C.STORE_ID
-    ) WHERE RN BETWEEN #{pageStart } AND #{pageEnd }   
+		) T 
+		<if test="keyword != null">
+			WHERE store_name like '%${keyword}%' 
+		</if>
+	) RESULT WHERE RN BETWEEN #{p.pageStart } AND #{p.pageEnd }   
 	
 	</select>
 	
@@ -208,6 +227,21 @@
 	
 	
 	
+	<update id="orderComplete">
+		<if test="userId == 0">
+			UPDATE BM_ORDER_NON_USER SET 
+			DELEVERY_STATUS = '배달 완료'
+			WHERE ORDER_NUM = #{orderNum }
+		</if>
+		
+		<if test="userId != 0">
+			UPDATE BM_ORDER_USER SET
+			DELEVERY_STATUS = '배달 완료'
+			WHERE ORDER_NUM = #{orderNum }
+		</if>
+	</update>
+	
+	
 	
 	<select id="selectCard" resultType="map">
 		SELECT POINT "point", INFO "info" FROM BM_GIFT_CARD WHERE GIFT_CARD_NUM = #{giftCardNum }
@@ -227,41 +261,130 @@
 	</insert>
 	
 	
+	<select id="salesYear" resultType="Sales">
+		      
+   SELECT TO_DATE(ORDER_DATE, 'YYYY-MM'), SUM(TOTAL_PRICE) TOTAL FROM (    
+       SELECT 
+	        OU.ORDER_NUM
+	        ,TO_CHAR(OU.ORDER_DATE, 'YYYY-MM') ORDER_DATE
+	        ,OUD.TOTAL_PRICE
+	    FROM
+	        BM_ORDER_USER OU
+	    LEFT JOIN
+	        BM_ORDER_DETAIL_USER OUD
+	    ON 
+	        OU.ORDER_NUM = OUD.ORDER_NUM
+	    
+    UNION ALL
+	    
+	     SELECT 
+	        ONU.ORDER_NUM
+	        ,TO_CHAR(ONU.ORDER_DATE, 'YYYY-MM') ORDER_DATE
+	        ,ONUD.TOTAL_PRICE
+	    FROM
+	        BM_ORDER_NON_USER ONU
+	    LEFT JOIN
+	        BM_ORDER_DETAIL_NON_USER ONUD
+	    ON 
+	        ONU.ORDER_NUM = ONUD.ORDER_NUM    
+    ) R
+    WHERE ORDER_DATE BETWEEN TO_CHAR(TRUNC(SYSDATE, 'YYYY'), 'YYYY-MM') AND TO_CHAR(TRUNC(SYSDATE, 'YYYY')+364, 'YYYY-MM')
+    GROUP BY ROLLUP(ORDER_DATE)
+       
 	
-	<select id="getOrderOne" resultType="OrderList">	
 	
-		SELECT O.*,S.STORE_NAME,C.* FROM 
-	   ( SELECT * FROM 
-		  ( SELECT COUNT(*) COUNT1 FROM ( SELECT  * FROM bm_order_non_user  UNION ALL SELECT * FROM bm_order_user ) WHERE delevery_status = '주문접수 대기 중' ),
-          ( SELECT COUNT(*) COUNT2 FROM ( SELECT  * FROM bm_order_non_user  UNION ALL SELECT * FROM bm_order_user ) WHERE delevery_status = '처리 중' ),
-          ( SELECT COUNT(*) COUNT3 FROM ( SELECT  * FROM bm_order_non_user  UNION ALL SELECT * FROM bm_order_user ) WHERE delevery_status = '완료' )) C,	
-	   ( SELECT
-		    U.order_num, U.user_id, U.order_date, U.pay_method, U.delevery_status, U.phone, U.delevery_address1,
-		    U.delevery_address2, U.delevery_address3, UD.store_id, UD.amount, UD.used_point, UD.food_price,
-		    UD.total_price, UD.food_info, UD.request
-		FROM bm_order_user U LEFT JOIN     
-		    bm_order_detail_user UD ON  U.ORDER_NUM = UD.ORDER_NUM
-		    
-		  UNION ALL 
-		 
-		SELECT
-		    NU.order_num, NU.user_id, NU.order_date, NU.pay_method, NU.delevery_status, NU.phone, NU.delevery_address1,
-		    NU.delevery_address2, NU.delevery_address3, NUD.store_id, NUD.amount, NUD.used_point, NUD.food_price,
-		    NUD.total_price, NUD.food_info, NUD.request
-		FROM bm_order_non_user NU LEFT JOIN 
-		    bm_order_detail_non_user NUD ON  NU.ORDER_NUM = NUD.ORDER_NUM  
-	) O
-	LEFT JOIN
-	    BM_STORE S
-	ON 
-		O.STORE_ID = S.ID
-	WHERE 
-		ORDER_NUM = #{orderNum }
 	
+<!-- 	SELECT 
+	   	    SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-01-01') AND LAST_DAY('2021-01-01') THEN TOTAL_PRICE ELSE 0 END) JAN
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-02-01') AND LAST_DAY('2021-02-01') THEN TOTAL_PRICE ELSE 0 END) FEB
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-03-01') AND LAST_DAY('2021-03-01') THEN TOTAL_PRICE ELSE 0 END) MAR
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-04-01') AND LAST_DAY('2021-04-01') THEN TOTAL_PRICE ELSE 0 END) APR
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-05-01') AND LAST_DAY('2021-05-01') THEN TOTAL_PRICE ELSE 0 END) MAY
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-06-01') AND LAST_DAY('2021-06-01') THEN TOTAL_PRICE ELSE 0 END) JUN
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-07-01') AND LAST_DAY('2021-07-01') THEN TOTAL_PRICE ELSE 0 END) JUL
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-08-01') AND LAST_DAY('2021-08-01') THEN TOTAL_PRICE ELSE 0 END) AUG
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-09-01') AND LAST_DAY('2021-09-01') THEN TOTAL_PRICE ELSE 0 END) SEP
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-10-01') AND LAST_DAY('2021-10-01') THEN TOTAL_PRICE ELSE 0 END) OCT
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-11-01') AND LAST_DAY('2021-11-01') THEN TOTAL_PRICE ELSE 0 END) NOB
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-12-01') AND LAST_DAY('2021-12-01') THEN TOTAL_PRICE ELSE 0 END) DEC
+	    ,SUM( CASE WHEN ORDER_DATE BETWEEN TO_DATE('2021-01-01') AND LAST_DAY('2021-12-01') THEN TOTAL_PRICE ELSE 0 END) TOTAL
+	FROM (
+	    SELECT 
+	        OU.ORDER_NUM
+	        ,OU.ORDER_DATE
+	        ,OUD.TOTAL_PRICE
+	    FROM
+	        BM_ORDER_USER OU
+	    LEFT JOIN
+	        BM_ORDER_DETAIL_USER OUD
+	    ON 
+	        OU.ORDER_NUM = OUD.ORDER_NUM
+	    
+    UNION ALL
+	    
+	     SELECT 
+	        ONU.ORDER_NUM
+	        ,ONU.ORDER_DATE
+	        ,ONUD.TOTAL_PRICE
+	    FROM
+	        BM_ORDER_NON_USER ONU
+	    LEFT JOIN
+	        BM_ORDER_DETAIL_NON_USER ONUD
+	    ON 
+	        ONU.ORDER_NUM = ONUD.ORDER_NUM    
+	        
+	   )  -->
 	</select>
 	
 	
+	<select id="salesMonth" resultType="Sales">
+	SELECT
+	    ORDER_DATE
+	   ,SUM(TOTAL_PRICE) TOTAL
+    FROM (
+    	SELECT 
+        	OU.ORDER_NUM
+        	,TO_CHAR(OU.ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE
+        	,OUD.TOTAL_PRICE
+    	FROM
+	        BM_ORDER_USER OU
+	    LEFT JOIN
+	        BM_ORDER_DETAIL_USER OUD
+	    ON 
+	        OU.ORDER_NUM = OUD.ORDER_NUM
+	        
+    UNION ALL
+    
+	    SELECT 
+	        ONU.ORDER_NUM
+	        ,TO_CHAR(ONU.ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE
+	        ,ONUD.TOTAL_PRICE
+	    FROM
+	        BM_ORDER_NON_USER ONU
+	    LEFT JOIN
+	        BM_ORDER_DETAIL_NON_USER ONUD
+	    ON 
+	        ONU.ORDER_NUM = ONUD.ORDER_NUM
+	    ) 
+	WHERE 
+		<if test="time.equals('month') and month == null">
+   		ORDER_DATE BETWEEN TRUNC(SYSDATE, 'MM') AND LAST_DAY(SYSDATE)
+		</if>
+		
+		<if test="time.equals('month') and month != null">
+		ORDER_DATE BETWEEN TRUNC(TO_DATE('${month}-1'), 'MM') AND LAST_DAY('${month}-1')	
+		</if>
+		
+		<if test="time.equals('week')">
+		ORDER_DATE BETWEEN TRUNC(SYSDATE, 'IW') AND TRUNC(SYSDATE+7, 'IW')-1	
+		</if>
+		
+		
+	GROUP BY ROLLUP(ORDER_DATE)
+	ORDER BY ORDER_DATE
+	</select>
 	
+	<!-- ORDER_DATE BETWEEN TRUNC(SYSDATE, 'IW') AND TRUNC (SYSDATE, 'IW')+7 -->
 		
 </mapper>
    

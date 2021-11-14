@@ -19,6 +19,7 @@ import com.baemin.util.CreateOrderNum;
 import com.baemin.util.Page;
 import com.baemin.util.UserInfoSessionUpdate;
 import com.baemin.vo.Cart;
+import com.baemin.vo.CartDetail;
 import com.baemin.vo.OrderInfo;
 import com.baemin.vo.OrderList;
 import com.google.gson.Gson;
@@ -36,16 +37,13 @@ public class OrderServiceImp implements OrderService {
 	
 	@Transactional
 	@Override
-	public long orderPriceCheck(Map cartMap) {
+	public long orderPriceCheck(CartDetail cartDetail) {
 
-		System.out.println("cartMap = " + cartMap);
+		System.out.println("cartDetail = " + cartDetail);
 
-//		List<Integer> cartId = (List<Integer>) cartMap.get("cartId");
-		List<Cart> cartList = (List<Cart>) cartMap.get("cartList");
-		List<Integer> amountList = (List<Integer>) cartMap.get("amountList");
-//		List<Long> totalPriceList =(List<Long>) cartMap.get("totalPriceList");
-//		int deleveryTip = (int) cartMap.get("deleveryTip");
-		int deleveryTip = orderDAO.getDeleveryTip((int) cartMap.get("storeId"));
+		List<Cart> cartList = cartDetail.getCartList();
+		List<Integer> amountList = cartDetail.getAmountList();
+		int deleveryTip = orderDAO.getDeleveryTip(cartDetail.getStoreId());
 
 		List<Long> foodPriceList = orderDAO.foodPriceList(cartList);
 		List<Integer> optionPriceList = orderDAO.optionPriceList(cartList);
@@ -65,7 +63,7 @@ public class OrderServiceImp implements OrderService {
 
 	@Transactional
 	@Override
-	public String order(Map cartMap, OrderInfo info, LoginDetail user, HttpSession session) {
+	public String order(CartDetail cartDetail, OrderInfo info, LoginDetail user, HttpSession session) {
 		
 		String orderNum = CreateOrderNum.createOrderNum();
 		
@@ -79,13 +77,13 @@ public class OrderServiceImp implements OrderService {
 
 		Map<String, String> orderDetail = new HashMap<>();
 		Gson gson = new Gson();
-
-		String amount = cartMap.get("amountList").toString();
-		String foodPrice = cartMap.get("totalPriceList").toString();
-		String cartList = gson.toJson(cartMap.get("cartList"));
+		
+		String amount = cartDetail.getAmountList().toString();
+		String foodPrice = cartDetail.getTotalPriceList().toString();
+		String cartList = gson.toJson(cartDetail.getCartList());
 			   cartList = cartList.substring(1, cartList.length()-1); 
-		String totalPrice = cartMap.get("menuTotalPrice").toString();
-		String storeId = cartMap.get("storeId").toString();
+		String totalPrice = cartDetail.getMenuTotalPrice()+"";
+		String storeId = cartDetail.getStoreId() + "";
 		
 		orderDetail.put("orderNum", orderNum);
 		orderDetail.put("amount", amount);
@@ -105,7 +103,7 @@ public class OrderServiceImp implements OrderService {
 		
 		// 로그인 사용자가 포인트 사용했을때
 		if(info.getUsedPoint() != 0 ) {
-			String storeName =  cartMap.get("storeName").toString();
+			String storeName =  cartDetail.getStoreName();
 			int usedPoint =  -info.getUsedPoint();
 			int result = adminDAO.pointUpdate(userId, storeName, usedPoint);
 			
@@ -121,7 +119,7 @@ public class OrderServiceImp implements OrderService {
 		
 		// 회원 포인트 적립
 		if (user != null) {
-			String storeName =  cartMap.get("storeName").toString();
+			String storeName =  cartDetail.getStoreName();
 			int point = Integer.parseInt(totalPrice);
 				point = (int) (point * 0.01);
 			

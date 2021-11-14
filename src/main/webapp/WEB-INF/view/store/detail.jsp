@@ -15,7 +15,7 @@
 <!-- 메인 -->
 
 <!-- 푸터 -->
-<%@ include file="../include/footer.jsp"%>
+<%@ include file="/WEB-INF/view/include/footer.jsp"%>
 <!-- 푸터 -->
 
 <!-- 메뉴 모달 -->
@@ -26,6 +26,6 @@
 
 
 <script type="text/javascript" src="/js/store/storeDetail.js"></script>
-<script type="text/javascript" src="/js/modal/modal.js"></script>
+<script type="text/javascript" src="/js/util/util.js"></script>
 </body>
 </html>

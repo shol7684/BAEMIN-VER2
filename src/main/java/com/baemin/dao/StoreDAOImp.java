@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.baemin.vo.Food;
+import com.baemin.vo.FoodOption;
 import com.baemin.vo.Review;
 import com.baemin.vo.Store;
 
@@ -35,7 +36,7 @@ public class StoreDAOImp implements StoreDAO {
 	}
 
 	@Override
-	public List<String> foodOption(int foodId) {
+	public List<FoodOption> foodOption(int foodId) {
 		return sql.selectList("store.foodOption", foodId);
 	}
 
@@ -65,7 +66,7 @@ public class StoreDAOImp implements StoreDAO {
 	}
 
 	@Override
-	public Long isLikes(Map<String, Long> m) {
+	public int isLikes(Map<String, Long> m) {
 		return sql.selectOne("store.isLikes", m);
 	}
 
@@ -75,10 +76,12 @@ public class StoreDAOImp implements StoreDAO {
 	}
 
 	@Override
-	public List<Store> storeSearch(int address1, String keyword) {
+	public List<Store> storeSearch(int address1, String keyword, int pageStart, int pageEnd) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("address1", address1);
 		map.put("keyword", keyword);
+		map.put("pageStart", pageStart);
+		map.put("pageEnd", pageEnd);
 
 		return sql.selectList("store.storeSearch", map);
 	}

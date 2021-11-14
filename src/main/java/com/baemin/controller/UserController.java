@@ -32,6 +32,8 @@ import com.baemin.vo.Review;
 import com.baemin.vo.User;
 import com.nimbusds.oauth2.sdk.Request;
 
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
+
 @Controller
 public class UserController {
 
@@ -56,11 +58,12 @@ public class UserController {
 //		System.out.println(SecurityContextHolder.getContext());
 //		System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());;
 		
-		System.out.println("myPage user = " + user);
-		System.out.println("myPage oauth = " + oauth);
-		
 		if (user != null) {
 			
+			System.out.println("유저 정보");
+			System.out.println(user.getUser());
+			
+			System.out.println();
 			System.out.println("user.getUser().getNickname() = " + user.getUser().getNickname());
 			model.addAttribute("nickname", user.getUser().getNickname());
 		}
@@ -69,8 +72,9 @@ public class UserController {
 	}
 
 	@GetMapping("/login")
-	public String login() {
-
+	public String login(HttpServletRequest request, HttpSession session) {
+		String referer = (String) request.getHeader("referer");
+		session.setAttribute("referer", referer);
 		return "user/login";
 	}
 

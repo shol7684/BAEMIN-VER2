@@ -1,28 +1,15 @@
 package com.baemin.config;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 
 @EnableWebSecurity
 @Configuration
@@ -36,6 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private LoginFail loginFail;
 	
 	@Autowired
+	private LoginSuccess loginSuccess;
+	
+	@Autowired
 	private OauthUserService oauthUserService;
 	
 	
@@ -46,11 +36,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	
 	// 내가 인코딩하는게 아니라, 어떤 인코딩으로 패스워드가 만들어졌는지 알려주는 거야!!
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(encodePwd());
-	}
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		auth.userDetailsService(userDetailsService).passwordEncoder(encodePwd());
+//	}
 	
+	// static 폴더 허용
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+	    web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -63,9 +58,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.anyRequest().permitAll()
 		.and()
 			.formLogin()
-			.loginPage("/login")
+			.loginPage("/") // 인증 필요한 페이지 접근시 이동페이지
 			.loginProcessingUrl("/login")
-			.defaultSuccessUrl("/myPage")
+			.successHandler(loginSuccess)
 			.failureHandler(loginFail)
 			.and()
 			.logout()
@@ -75,10 +70,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.loginPage("/login")
 			.userInfoEndpoint()
 			.userService(oauthUserService)
-			
-			
-			
-		
 		;
 		
 		

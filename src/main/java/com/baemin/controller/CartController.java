@@ -1,7 +1,6 @@
 package com.baemin.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,39 +19,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.baemin.util.FoodPriceCalc;
 import com.baemin.vo.Cart;
 import com.baemin.vo.CartDetail;
-import com.baemin.vo.Store;
+import com.baemin.vo.StoreDetail;
 
 @Controller
 public class CartController {
-	
+
 	private static final Logger LOGGER = LogManager.getLogger(CartController.class);
 
-	@Autowired
-	private Store store;
-	
+//	@Autowired
+//	private StoreDetail storeDetail;
+
 	@ResponseBody
 	@PostMapping("/addCart")
-//	public Map<String, Object> addCart(Cart cart, long storeId, int amount, int deleveryTip, String storeName, HttpSession session) {
-	public CartDetail addCart(Cart cart, long storeId, int amount, int deleveryTip, String storeName, HttpSession session) {
-
-//		Map<String, Object> cartMap = (Map<String, Object>) session.getAttribute("cartMap");
+	public CartDetail addCart(Cart cart, int amount, int deleveryTip, long storeId, String storeName, HttpSession session) {
 
 		List<Integer> cartId = null;
 		List<Cart> cartList = null;
 		List<Integer> amountList = null;
 		List<Long> totalPriceList = null;
 		
-		// -------
-		
-		CartDetail cartDetail = (CartDetail) session.getAttribute("cartMap");
+		CartDetail cartDetail = (CartDetail) session.getAttribute("cart");
 		System.out.println("null ?????");
 		System.out.println(cartDetail == null);
+		
 		// 메뉴가격 + 추가옵션 총합구하기
 		long totalPrice = FoodPriceCalc.foodPriceCalc(cart, amount);
 
+		// 장바구니에 처음 담을때
 		if (cartDetail == null) {
-
-//			cartMap = new HashMap<>();
 
 			cartId = new ArrayList<>();
 			cartList = new ArrayList<>();
@@ -64,55 +58,21 @@ public class CartController {
 			amountList.add(amount);
 			totalPriceList.add(totalPrice);
 			
-			
 			// 장바구니가 비었을때 최초 한번만 입력
-//			cartMap.put("storeId", storeId);  // 다른 가게에서 다시 장바구니에 담는경우를 구분하기 위해 추가
-//			cartMap.put("menuTotalPrice", totalPrice);
-//			cartMap.put("storeName", storeName);
-//			cartMap.put("deleveryTip", deleveryTip);
-			
-			
-//			 -------
-			
 			cartDetail = new CartDetail(cartId, cartList, amountList, totalPriceList);
 			cartDetail.setStoreId(storeId);
 			cartDetail.setMenuTotalPrice(totalPrice);
 			cartDetail.setStoreName(storeName);
 			cartDetail.setDeleveryTip(deleveryTip);
 			
-			System.out.println("cartDetail = " + cartDetail);
-			
-			session.setAttribute("cartMap", cartDetail);
-			
-			System.out.println("deleveryTip = " + this.store.getDeleveryTip());
+			session.setAttribute("cart", cartDetail);
 		
 			return cartDetail;
 			
 
-		} else {
-//			cartId =  (List<Integer>) cartMap.get("cartId");
-//			cartList = (List<Cart>) cartMap.get("cartList");
-//			amountList = (List<Integer>) cartMap.get("amountList");
-//			totalPriceList = (List<Long>) cartMap.get("totalPriceList");
-//			
-//			cartMap.put("menuTotalPrice", (long) cartMap.get("menuTotalPrice") + totalPrice);
-//			
-//			if (cartList.contains(cart)) {
-//
-//				int index = cartList.indexOf(cart);
-//				amountList.set(index, (amountList.get(index) + amount));
-//				totalPriceList.set(index, (totalPriceList.get(index) + totalPrice));
-//
-//			} else {
-//				cartId.add(cartId.size() + 1);
-//				cartList.add(cart);
-//				amountList.add(amount);
-//				totalPriceList.add(totalPrice);
-//			}
-			
-			
-			// --------
-			
+		} 
+//		장바구니에 1개 이상 담겨있을때	
+		else {
 			cartId =  cartDetail.getCartId();
 			cartList = cartDetail.getCartList();
 			amountList = cartDetail.getAmountList();
@@ -132,144 +92,117 @@ public class CartController {
 				amountList.add(amount);
 				totalPriceList.add(totalPrice);
 			}
-			
 		}
+		cartDetail.setCartId(cartId);
+		cartDetail.setCartList(cartList);
+		cartDetail.setAmountList(amountList);
+		cartDetail.setTotalPriceList(totalPriceList);
+		
+		session.setAttribute("cart", cartDetail);
 
-//		cartMap.put("cartId", cartId);
-//		cartMap.put("cartList", cartList);
-//		cartMap.put("amountList", amountList);
-//		cartMap.put("totalPriceList", totalPriceList);
-//
-//		session.setAttribute("cartMap", cartMap);
-//
-//		System.out.println(cartMap);
-		
-		// -----------
-		
-		cartDetail = new CartDetail(cartId, cartList, amountList, totalPriceList);
-		session.setAttribute("cartMap", cartDetail);
-		
-
-//		return cartMap;
 		return cartDetail;
 
 	}
 
 	@ResponseBody
 	@GetMapping("/cartList")
-//	public Map<String, Object> cartList(HttpSession session) {
 	public CartDetail cartList(HttpSession session) {
 
-//		Map<String, Object> cartMap = (Map<String, Object>) session.getAttribute("cartMap");
-//		System.out.println(cartMap == null);
-//		if (cartMap != null) {
-//			return cartMap;
-//		}
-		// -----------
-		CartDetail cartDetail = (CartDetail) session.getAttribute("cartMap");
+		CartDetail cartDetail = (CartDetail) session.getAttribute("cart");
 		if (cartDetail != null) {
 			return cartDetail;
 		}
 
 		return null;
 	}
-	
+
 	@ResponseBody
 	@DeleteMapping("/cartAll")
 	public void deleteAllCart(HttpSession session) {
-		session.removeAttribute("cartMap");
+		session.removeAttribute("cart");
 	}
-	
+
 	@ResponseBody
 	@DeleteMapping("/cartOne")
-	public Map<String, Object> deleteOneCart(HttpSession session, int index) {
-		
-		Map<String, Object> cartMap = (Map<String, Object>) session.getAttribute("cartMap");
-		
-		if(cartMap == null) {
+	public CartDetail deleteOneCart(HttpSession session, int index) {
+
+		CartDetail cartDetail = (CartDetail) session.getAttribute("cart");
+
+		if (cartDetail == null) {
 			return null;
 		}
-		
-		List<Integer> cartId = (List<Integer>) cartMap.get("cartId");
-		List<Cart> cartList =  (List<Cart>) cartMap.get("cartList");
-		List<Integer> amountList = (List<Integer>) cartMap.get("amountList");
-		List<Long> totalPriceList =(List<Long>) cartMap.get("totalPriceList");
-		
-		long menuTotalPrice = (long) cartMap.get("menuTotalPrice");
-		
+
+		List<Integer> cartId = cartDetail.getCartId();
+		List<Cart> cartList = cartDetail.getCartList();
+		List<Integer> amountList = cartDetail.getAmountList();
+		List<Long> totalPriceList = cartDetail.getTotalPriceList();
+		long menuTotalPrice = cartDetail.getMenuTotalPrice();
+
 		cartId.remove(index);
-		
-		if(cartId.size() == 0 ) {
-			session.removeAttribute("cartMap");
+
+		if (cartId.size() == 0) {
+			session.removeAttribute("cart");
 			return null;
 		}
 		menuTotalPrice -= totalPriceList.get(index);
-		
+
 		cartList.remove(index);
 		amountList.remove(index);
 		totalPriceList.remove(index);
-		
-		
-		cartMap.put("cartId", cartId);
-		cartMap.put("cartList", cartList);
-		cartMap.put("amountList", amountList);
-		cartMap.put("totalPriceList", totalPriceList);
-		cartMap.put("menuTotalPrice", menuTotalPrice);  
-		
-		session.setAttribute("cartMap", cartMap);
-		
-		return cartMap;
+
+		cartDetail.setCartId(cartId);
+		cartDetail.setCartList(cartList);
+		cartDetail.setAmountList(amountList);
+		cartDetail.setTotalPriceList(totalPriceList);
+		cartDetail.setMenuTotalPrice(menuTotalPrice);
+
+		session.setAttribute("cart", cartDetail);
+
+		return cartDetail;
 	}
-	
-	
+
 	@ResponseBody
 	@PatchMapping("/cartAmount")
-	public Map<String, Object> cartAmount(int cartNum, String clickBtn, HttpSession session) {
-		
+	public CartDetail cartAmount(int cartNum, String clickBtn, HttpSession session) {
+
 		System.out.println(cartNum);
 		System.out.println(clickBtn);
-		
-		Map<String, Object> cartMap = (Map<String, Object>) session.getAttribute("cartMap");
-		
-		List<Integer> cartId = (List<Integer>) cartMap.get("cartId");
-		List<Cart> cartList =  (List<Cart>) cartMap.get("cartList");
-		List<Integer> amountList = (List<Integer>) cartMap.get("amountList");
-		List<Long> totalPriceList =(List<Long>) cartMap.get("totalPriceList");
-		
-		long menuTotalPrice =  (long) cartMap.get("menuTotalPrice");
+
+		CartDetail cartDetail = (CartDetail) session.getAttribute("cart");
+
+		List<Integer> cartId = cartDetail.getCartId();
+		List<Cart> cartList = cartDetail.getCartList();
+		List<Integer> amountList = cartDetail.getAmountList();
+		List<Long> totalPriceList = cartDetail.getTotalPriceList();
+		long menuTotalPrice = cartDetail.getMenuTotalPrice();
+
 		int amount = amountList.get(cartNum);
 		long totalPrice = totalPriceList.get(cartNum);
 		long foodPrice = totalPrice / amount;
-		
-		if(clickBtn.equals("plus")) {
+
+		if (clickBtn.equals("plus")) {
 			amountList.set(cartNum, amount + 1);
 			totalPriceList.set(cartNum, foodPrice * (amount + 1));
-			menuTotalPrice += foodPrice; 
-			
+			menuTotalPrice += foodPrice;
+
 		} else {
-			
-			if(amount <= 1) {
-				return cartMap;
+
+			if (amount <= 1) {
+				return cartDetail;
 			}
-			
+
 			amountList.set(cartNum, amount - 1);
 			totalPriceList.set(cartNum, foodPrice * (amount - 1));
-			menuTotalPrice -= foodPrice; 
+			menuTotalPrice -= foodPrice;
 		}
-		
-			cartMap.put("amountList", amountList);
-			cartMap.put("totalPriceList", totalPriceList);
-			cartMap.put("menuTotalPrice", menuTotalPrice);
-		
-			session.setAttribute("cartMap", cartMap);
-		
-		
-		return cartMap;
+
+		cartDetail.setAmountList(amountList);
+		cartDetail.setTotalPriceList(totalPriceList);
+		cartDetail.setMenuTotalPrice(menuTotalPrice);
+
+		session.setAttribute("cart", cartDetail);
+
+		return cartDetail;
 	}
-	
-	
-	
-	
-	
 
 }

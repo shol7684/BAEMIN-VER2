@@ -2,25 +2,32 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/view/include/link.jsp" %>
 	
-	
-    <!-- <script type="text/javascript" src="/js/imgPreview.js" ></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script type="text/javascript" src="/js/admin/orderSelect.js" ></script>
+<!-- sock js -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+<!-- STOMP -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>	
+<!-- 날짜 포맷 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" ></script>
+
 <link rel="stylesheet" href="/css/admin/admin.css" >
 <link rel="stylesheet" href="/css/modal.css" >
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
 
 <div class="move_top"><i class="fas fa-arrow-alt-circle-up"></i></div>
 
+	
+
+
 <div class="wrap">
     <section class="tab">
          <ul class="box">
+			<li class=""><a href="/admin/main">주문접수</a></li>
 			<li class="store_management"><a href="/admin/storeManagement">매장 관리</a></li>
-			<li class="sales_check"><a href="#">매출 확인</a></li>
+			<li class="sales"><a href="/admin/salesManagement">매출 확인</a></li>
+			<li class="order_search"><a href="#">주문번호 검색</a></li>
 			<li class="home"><a href="/">홈으로</a></li>
 		</ul>
     </section>
-
 
     <aside>
         <ul class="aside_tab">
@@ -32,11 +39,6 @@
             	<div>처리 중</div>
             	<div class="processing_count"></div>
             </li>
-            
-            <li>
-            	<div>완료</div>
-            	<div></div>
-            </li>
             <!-- <li>주문 조회</li> -->
          </ul>
     </aside>
@@ -45,7 +47,7 @@
 
     <main>
         <div id="cont_box">
-            <ul class="order_list first">
+            <ul class="order_list">
                 <!-- 주문접수 > 접수 대기 -->
                 <!-- <li> -->
                     <!-- <ul> -->
@@ -61,12 +63,12 @@
 	</main>
 </div>
 
-   	<!-- 푸터 -->
+<%--    	<!-- 푸터 -->
 	<%@ include file="/WEB-INF/view/include/footer.jsp" %>
 	<!-- 푸터 -->
+ --%>
 
 
-	
 	
 
 
@@ -102,14 +104,11 @@
 	    </div>
 	</div>
 	
-
 <!-- 주문 접수 배달시간 설정 모달 -->
 <%@ include file="/WEB-INF/view/admin/deleveryTimerModal.jsp" %>
 
 
-<script type="text/javascript" src="/js/modal/modal.js" ></script>
+<script type="text/javascript" src="/js/util/util.js" ></script>
 <script type="text/javascript" src="/js/admin/adminMain.js" ></script>
-
-
 </body>
 </html>

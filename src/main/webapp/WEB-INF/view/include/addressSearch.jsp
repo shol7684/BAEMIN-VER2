@@ -9,19 +9,7 @@
 		onclick="closeDaumPostcode()" alt="닫기 버튼">
 </div>
 
-<script
-	src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script type="text/javascript">
-	$("#sample2_address").on("propertychange change keyup paste input",
-			function() {
-
-				// 현재 변경된 데이터 셋팅
-				/* newValue = $(this).val(); */
-
-				// 현재 실시간 데이터 표츌
-				/* alert("텍스트 :: " + newValue); */
-			});
-</script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <script>
 	// 우편번호 찾기 화면을 넣을 element
@@ -70,34 +58,16 @@
 								extraAddr = ' (' + extraAddr + ')';
 							}
 							// 조합된 참고항목을 해당 필드에 넣는다.
-							document.getElementById("sample2_extraAddress").value = extraAddr;
-
 						} else {
-							document.getElementById("sample2_extraAddress").value = '';
 						}
 
 						// 우편번호와 주소 정보를 해당 필드에 넣는다.
-						document.getElementById('sample2_postcode').value = data.zonecode;
-						document.getElementById("sample2_address").value = addr;
+						document.getElementById('address1').value = data.zonecode;
+						document.getElementById("address2").value = addr;
 
-						/* ---------------------------- form 자동 서브밋 추가 ---------------------------- */
-
-						/*          setTimeout(function(){
-						             
-						             $("#search_btn").trigger("click");
-						             
-						          $(".search_btn").bind("click", function(){
-						          });
-						          
-						         },100);  */
-
-						$("#search_btn").click();
-
-						/* ---------------------------- form 자동 서브밋 추가 ---------------------------- */
 
 						// 커서를 상세주소 필드로 이동한다.
-						document.getElementById("sample2_detailAddress")
-								.focus();
+						document.getElementById("address3").focus();
 
 						// iframe을 넣은 element를 안보이게 한다.
 						// (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)

@@ -12,8 +12,6 @@
 	</script>
 	
 	
-	
-	
     <section class="title">
         <h1>포인트</h1>
     </section>
@@ -31,10 +29,8 @@
                 </div>
 
                 <div class="point_number_area">
-                	<form action="/admin/pointRegist" method="post">
-	                    <input type="text" class="point_number" name="giftCardNum" placeholder="상품권 번호를 입력해주세요">
-	                    <input type="submit" value="등록">
-                    </form>
+                    <input type="text" class="point_number" maxlength="20" name="giftCardNum" placeholder="상품권 번호를 입력해주세요">
+                    <input type="button" value="등록">
                 </div>
             </div>
             
@@ -63,8 +59,6 @@
 	                	
 	                </div>
 				</li><hr>
-					
-				
 	
 			</c:forEach>
 			
@@ -82,6 +76,35 @@
        $(".point_regi button").click(function(){
            $(".point_number_area").fadeToggle(100);
        })
+       
+       $(".point_number_area input[type=button]").click(function(){
+    	   
+    	   const giftCardNum = $(".point_number").val().replaceAll(" ", "");
+    	   
+    	   if(!giftCardNum) {
+    		   return;
+    	   }
+    	   
+    	   $.ajax({
+    		   url: "/admin/pointRegist",
+    		   data: {giftCardNum : giftCardNum},
+    		   type: "POST"
+    	   })
+    	   .done(function(result){
+    		   swal(result);
+    		   
+    	   })
+    	   .fail(function(){
+    		   swal("에러");
+    	   })
+    	   
+    	   
+       })
+       
+       
+       
+       
+       
 
     </script>
 </body>

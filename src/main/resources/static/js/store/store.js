@@ -1,8 +1,9 @@
 
 $(document).ready(function() {
 	const category = $(".category").data("category");
+	const address1 = $(".address1").val();
 	let sort = "기본순";
-	nowOption();
+	$(".option li[data-sort='기본순']").addClass("active");
 
 	$("li[data-category = '" + category + "'] > span").css("border-bottom", "3px solid #333333");
 	$("li[data-category = '" + category + "'] > span").css("color", "#333333");
@@ -15,11 +16,11 @@ $(document).ready(function() {
 
 	$(window).scroll(function(){
 		winHeight = $(window).height();
-		docHeigth = $(document).height();
+		docHeight = $(document).height();
 		
 		const top = $(window).scrollTop();
 		
-		if(docHeigth <= winHeight + top + 10 ) {
+		if(docHeight <= winHeight + top + 10 ) {
 			if(run) {
 				return;
 			}
@@ -29,7 +30,9 @@ $(document).ready(function() {
 			run = true;
 			
 			const data = {
-				page : page
+				page : page,
+				category : category,
+				address1 : address1
 			}
 			
 			$.ajax({
@@ -60,10 +63,14 @@ $(document).ready(function() {
 $(".option li").click(function() {
 	
 	sort = $(this).data("sort");
-	nowOption();
+	/*nowOption();*/
+	$(".option li").removeClass("active");
+	$(this).addClass("active");
 	
 	const data = {
-		sort : sort
+		sort : sort,
+		category : category,
+		address1 : address1
 	}
 	$.ajax({
 		url: "/store/sortStore",
@@ -87,12 +94,8 @@ $(".option li").click(function() {
 
 
 function nowOption(){
-	$(".option li").removeClass("active")
-	for(var i=0;i<$(".option li").length;i++ ) {
-		if($(".option li").eq(i).data("sort") == sort ) {
-			$(".option li").eq(i).addClass("active");
-		}
-	}
+	$(".option li").removeClass("active");
+	$(".option li[data-sort='" + sort +"']").addClass("active");
 }
 
 
@@ -116,40 +119,55 @@ function storeList(result){
 			
 			let scoreHtml = "";
 			for(var j=0;j<5;j++) {
-				if(Math.round(score)  >= j) {
+				if(Math.round(score)  > j) {
 					scoreHtml += "<i class='fas fa-star'></i> ";
 				} else {
 					scoreHtml += "<i class='far fa-star'></i> ";
 				}
 			}
+			let isOpenHtml = "";
+			if(result[i]["isOpen"] == "false") {
+				isOpenHtml = `<div class="is_open">
+								<a href="/store/detail/${storeList.id }">지금은 준비중입니다</a>
+							</div>`;
+			}
+			
 			
 			html += `<li >
-                     <div>
-                        <a href="/store/detail/${id }">   
-                            <img src="${storeImg }" alt="이미지">
-                            <div class="inf">
-                              ${openingTime } ${closingTime } ${score }
-                                <h2>${storeName }</h2>
-                                <div>
-                                	<span>평점 ${score }</span>
-                                	<span class="score_box">
-                                		${scoreHtml}
-			               			</span>
-                                </div>
-                                <div><span>리뷰 ${reviewCount }</span><span>ㅣ</span><span>사장님 댓글 ${bossCommentCount }</span></div>
-                                <div><span>배달시간 ${deleveryTime }분</span><span>최소주문금액 ${minDelevery }원</span></div>
-                                <div>배달팁 ${deleveryTip }원</div>
-                            </div>
-                        </a>
-                    </div>
+						<div class="img_box">
+							<a href=/store/detail/${id }"><img src="${storeImg }" alt="이미지"></a>
+						</div>
+				
+						<div class="info_box">
+						
+							<h2><a href="/store/detail/${id }">${storeName }</a></h2>
+							
+							<a>
+							<span>
+								<span>평점 ${score }</span>
+								
+								<span class="score_box">
+									${scoreHtml}
+								</span>
+							</span>
+								
+							<span>
+								<span>리뷰 ${reviewCount }</span>
+								<span>사장님 댓글 ${bossCommentCount }</span>
+							</span>
+							
+							<span>
+								<span>최소주문금액 ${minDelevery }원</span>
+								<span>배달팁 ${deleveryTip }원</span>
+							</span>
+							<span>배달시간 ${deleveryTime }분</span>
+							</a>
+						</div>
+                	${isOpenHtml}
                 </li>`;
 		}
 	return html;	
 }
-
-
-
-
 
 
 

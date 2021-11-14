@@ -23,7 +23,6 @@ public class CartDetail {
 	private int deleveryTip;
 	
 	public CartDetail(List<Integer> cartId, List<Cart> cartList, List<Integer> amountList, List<Long> totalPriceList) {
-		super();
 		this.cartId = cartId;
 		this.cartList = cartList;
 		this.amountList = amountList;

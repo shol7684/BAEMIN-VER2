@@ -22,8 +22,12 @@ $(document).ready(function() {
 			
 			const reviewContent = $(this).siblings(".review_content").val();
 			const reviewScore = $(this).siblings(".review_score").val();
+			const reviewImg = $(this).siblings(".review_img").val();
 			
 			$(".review_modify_modal textarea").val(reviewContent);
+			$(".review_modify_modal .preview").attr("src", reviewImg);
+			$(".review_modify_modal .img_box div").css("display", "block");
+			
 		}
 
 		openModal(modal, size);
@@ -82,68 +86,32 @@ $(document).ready(function() {
 	});
 	
 	
+
+
+
+
+
+$(".img").change(function(e){
+	const preview = $(this).siblings("div").find(".preview");
+	const fileReader = new FileReader();
 	
+	fileReader.readAsDataURL(e.target.files[0]);
 	
-	
-
-	
-	
-	
-	
-
-
-
-
-
-
-
-
-
-	/* -----------------------------이미지 미리보기----------------------------- */
-	var file = document.querySelector(".img");
-	/*  var file = $(".img_box .img"); */
-
-	file.onchange = function(e) {
-		var fileReader = new FileReader();
-		fileReader.readAsDataURL(e.target.files[0]);
-
-
-		fileReader.onload = function(e) {
-			$(".img_box div").css("display", "block");
-			console.log(e.target.result);
-			$(".preview").attr("src", e.target.result);
-
-			fileReader.onload;
-		}
+	fileReader.onload = function(){
+		preview.attr("src", fileReader.result);
+		$(".img_box div").css("display", "block");
 	}
+})
 
-	$(".img_close").click(function() {
-		imgClose();
-	});
-
-	/* -----------------------------이미지 미리보기----------------------------- */
-	/* -----------------------------리뷰 수정 이미지 미리보기----------------------------- */
-	/*var modifyImg = document.querySelector(".modify_img");
-
-	modifyImg.onchange = function(e) {
-		var fileReader = new FileReader();
-		fileReader.readAsDataURL(e.target.files[0]);
+$(".img_close").click(function(){
+	$(".preview").attr("src", "");
+	$("#img").val("");
+	$(".img_box div").css("display", "none");
+	
+})
 
 
-		fileReader.onload = function(e) {
-			$(".img_box div").css("display", "block");
-			console.log(e.target.result);
-			$(".preview").attr("src", e.target.result);
 
-			fileReader.onload;
-		}
-	}
-
-	$(".img_close").click(function() {
-		$(".preview").attr("src", "");
-		$(".img_box div").css("display", "none");
-	});*/
-	/* -----------------------------리뷰 수정 이미지 미리보기----------------------------- */
 /*	var modal = $(".modal");
 	var closeA = $(".closeA");
 	var closeB = $(".closeB");

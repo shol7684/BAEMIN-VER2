@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.baemin.Interceptor.AddressInterceptor;
+import com.baemin.Interceptor.OrderInterceptor;
 import com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilter;
 
 @Configuration
@@ -19,6 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	@Value("${upload.path}")
 	private String uploadPath;
+	
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -37,7 +38,20 @@ public class WebConfig implements WebMvcConfigurer {
         registrationBean.addUrlPatterns("/*");
         return registrationBean;
     }
-
+    
+    
+    @Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		registry.addInterceptor(new OrderInterceptor())
+		.addPathPatterns("/order");
+	}
+    
+//    @Override
+//	public void addInterceptors(InterceptorRegistry registry) {
+//		registry.addInterceptor(new AdminInterceptor())
+//		.addPathPatterns("/admin/**")
+//		;
+//	}
     
 
 //	@Override

@@ -20,6 +20,8 @@
 	</properties>
 	<dependencies>
 
+
+	
 		<!-- SMTP -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -46,6 +48,13 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 		</dependency>
+
+		<dependency>
+		    <groupId>com.googlecode.json-simple</groupId>
+		    <artifactId>json-simple</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
+
 
 
 		<!-- 썸네일 만들기 -->

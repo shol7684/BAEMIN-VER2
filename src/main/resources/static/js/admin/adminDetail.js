@@ -114,7 +114,6 @@ $(document).ready(function() {
 	
 
 
-
 	// 체크박스 체크 확인용 임시
 	$(".menu_delete_checkbox").change(function(){
 		if($(this).is(":checked")){
@@ -174,8 +173,13 @@ $(document).ready(function() {
 
 
 
+	$("#img").change(function(e){
+		imgPreview(e, $(this));
+	})
 
-
+	$(".img_close").click(function(){
+		imgClose();
+	})
 
 
 	function cs(value) {

@@ -3,6 +3,7 @@
 <%@ include file="/WEB-INF/view/include/link.jsp" %>
 <link rel="stylesheet" href="/css/layout/nav.css" >
 <link rel="stylesheet" href="/css/store/search.css" >
+<link rel="stylesheet" href="/css/store/store-li.css">
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
 
 
@@ -17,7 +18,7 @@
 					<input type="submit" id="submit">
 				</div>
 				<div>	
-					<input type="text" class="search" name="keyword" value="${keyword }" placeholder="어떤 가게를 찾으시나요?">
+					<input type="text" class="search" name="keyword" maxlength="33" value="${keyword }" placeholder="어떤 가게를 찾으시나요?">
 					<div class="info">현재 주소지를 기준으로 검색됩니다.</div>
 					<input type="hidden" value="${BMaddress1 }" name="address1" id="deleveryAddress1">
 					<%@ include file="/WEB-INF/view/include/modifyAddress.jsp" %> 
@@ -34,7 +35,9 @@
 			<button>전체삭제</button>
 		</div>
 		<div class="search_word">
+		
 			<ul>
+				<c:if test="${!empty searchKeyword }">
 				<c:forEach items="${searchKeyword }" var="searchKeyword">
 				
 					<li>
@@ -43,56 +46,29 @@
 					</li>
 					
 				</c:forEach>
+				</c:if>
 			</ul>
 		</div>
 		
-		
-		 <div class="box">
-
-                <ul class="store">
-                	
-                	<c:forEach items="${store }" var="store" >
-                
-                    <li >
-	                    <div>
-	                        <a href="/store/detail/${store.id }">           
-	                            <img src="${store.storeImg }" alt="이미지">
-	                            <div class="inf">
-	                                <h2>${store.storeName }</h2>
-	                                <div>
-	                                	<span>평점 ${store.score }</span>
-	                                	
-	                                	<span class="score_box">
-						                   	<c:forEach begin="0" end="4" var="i">
-						                   		<c:if test="${store.score >= i }">
-						                   			<i class="fas fa-star"></i>
-						                   		</c:if>
-						                   		<c:if test="${store.score < i }">
-						                   			<i class="far fa-star"></i>
-						                   		</c:if>
-						                   	</c:forEach>
-				               			</span>
-	                                </div>
-	                             
-	                                
-	                                <div><span>리뷰 ${store.reviewCount }</span><span>ㅣ</span><span>사장님 댓글 ${store.bossCommentCount }</span></div>
-	                                <div><span>배달시간 ${store.deleveryTime }분</span><span>최소주문금액 <fm:formatNumber value="${store.minDelevery }"  pattern="###,###" />원</span></div>
-	                                <div>배달팁 <fm:formatNumber value="${store.deleveryTip }"  pattern="###,###" />원</div>
-	                            </div>
-	                        </a>
-                        </div>
-                    </li>
+		<div class="box">
+			<c:if test="${nosuch }"> 
+				<div class="nosuch">검색 결과가 없습니다</div>
+			</c:if>
+			
+			<ul class="store">
+			<c:set var="store_admin" value="/store" />
+			<c:forEach items="${store }" var="storeList" >
+				<%@ include file="/WEB-INF/view/store/store-li.jsp" %>
+			</c:forEach>
                     
-                    </c:forEach>
-                    
-                    <li class="temp">
-                    </li>
-                </ul>
-            </div>
-	
+			</ul>
+		</div>
+            
+        <c:set var="movePage" value="/store/search/" />
+        <c:set var="query" value="?keyword=${keyword }&address1=${address1 }" />  
+		<%@ include file="/WEB-INF/view/include/pageBox.jsp" %>
 	</main>
 
-  
   
 	<%@ include file="/WEB-INF/view/include/nav.jsp" %>
 

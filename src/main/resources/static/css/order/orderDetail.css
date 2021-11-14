@@ -23,18 +23,18 @@ main .order_cont {
 }
 
 main div {
-    font-size: 15px;
+    font-size: 1.5rem;
 }
 
 main .order_cont .store_name {
-	font-size: 20px;
+	font-size: 2rem;
 	font-weight: bold;
 	
 }
 
 main .order_cont .order_info {
 	margin-top: 10px;
-	font-size: 15px;
+	font-size: 1.5rem;
 	
 }
 
@@ -43,7 +43,6 @@ main .order_menu  {
 }
 
 main .order_menu li {
-	/* background :red; */
     position: relative;
 }
 
@@ -63,7 +62,7 @@ main .total div span:last-child {
 }
 
 main .order_menu li ul li {
-    font-size: 15px;
+    font-size: 1.5rem;
     list-style: disc;
     margin-left: 20px;
     color: #a5a5a5;
@@ -83,7 +82,7 @@ main .price {
 
 
 main .price div {
-    font-size: 18px;
+    font-size: 1.8rem;
     font-weight: bold;
 }
 
@@ -92,7 +91,7 @@ main .total{
 }
 
 main .total div {
-	font-size: 20px;
+	font-size: 2rem;
 	font-weight: bold;
 }
 

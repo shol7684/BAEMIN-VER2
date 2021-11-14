@@ -3,12 +3,16 @@
 <%@ include file="/WEB-INF/view/include/link.jsp" %>
 <!-- <link rel="stylesheet" href="/css/layout/nav.css"> -->
 <link rel="stylesheet" href="/css/order/order.css">
+<!-- sock js -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+<!-- STOMP -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
 	
 	
 	<!-- <script>
-		if("${cartMap}" == "") {
+		if("${cart}" == "") {
 			alert(123);
 		}
 	</script> -->
@@ -22,28 +26,30 @@
 	
 	<main>
 		
-	<form action="/order" method="post" onsubmit="return addressCheck()" >
+	<form>
+	
 	<ul>
 		<li>
 			<div class="order_info">
-				<h2>${cartMap.storeName }</h2><hr>
+				<h2>${cart.storeName }</h2><hr>
 				<h2>주문정보</h2>
 				
+				
 				<ul>
-					<c:if test="${fn:length(cartMap.cartList) > 0 }">
-					<c:forEach begin="0" end="${fn:length(cartMap.cartList) -1 }" var="j"  >
+					<c:if test="${fn:length(cart.cartList) > 0}">
+					<c:forEach begin="0" end="${fn:length(cart.cartList) -1 }" var="j"  >
 					
 						<li>
-							<div>${cartMap.cartList[j].foodName }</div>
-							<div class="price">ㆍ기본가격 <fm:formatNumber value="${cartMap.cartList[j].foodPrice }"  pattern="###,###" />원</div>
+							<div class="food_name">${cart.cartList[j].foodName }</div>
+							<div class="price">ㆍ기본가격 <fm:formatNumber value="${cart.cartList[j].foodPrice }"  pattern="###,###" />원</div>
 						
 							
-							<c:if test="${fn:length(cartMap.cartList[j].foodOptionName) > 0 }">
-								<c:forEach  begin="0" end="${fn:length(cartMap.cartList[j].foodOptionName) -1 }" var="i"  >
+							<c:if test="${fn:length(cart.cartList[j].foodOptionName) > 0 }">
+								<c:forEach  begin="0" end="${fn:length(cart.cartList[j].foodOptionName) -1 }" var="i"  >
 								
 									<div class="menu_option"> 
-										<span>ㆍ${cartMap.cartList[j].foodOptionName[i]  }</span>
-										<span><fm:formatNumber  value="${cartMap.cartList[j].foodOptionPrice[i] }" pattern="###,###" />원</span>
+										<span>ㆍ${cart.cartList[j].foodOptionName[i]  }</span>
+										<span><fm:formatNumber  value="${cart.cartList[j].foodOptionPrice[i] }" pattern="###,###" />원</span>
 									</div>
 															
 								</c:forEach> 
@@ -51,12 +57,12 @@
 							
 							<div class="amount">
 								<div class="sum">
-									<fm:formatNumber value="${cartMap.totalPriceList[j] }" pattern="###,###" />원
+									<fm:formatNumber value="${cart.totalPriceList[j] }" pattern="###,###" />원
 								</div>
 								<!-- 메뉴 하나 총합 -->
 								<span class="amount_box">
 				                    <button type="button" class="minus">-</button>
-				                    <input type="number" id="amount" min="1" value="${cartMap.amountList[j] }" readonly >
+				                    <input type="number" id="amount" min="1" value="${cart.amountList[j] }" readonly >
 				                    <button type="button" class="plus">+</button>
 			                   </span>
 							</div>
@@ -89,10 +95,10 @@
 				 
 				<div>전화번호</div>
 				<c:if test="${!empty user  }">
-					<div class="input_area"> <input type="number" value="${user.phone }" name="phone" readonly required onkeypress="return lenthCheck(this, 11)"> </div>
+					<div class="input_area"> <input type="number" value="${user.phone }" name="phone" readonly required onkeypress="return lenthCheck(this, 11)" autocomplete="off" > </div>
 				</c:if>
-				<c:if test="${empty user  }">
-					<div class="input_area"> <input type="number" name="phone" required> </div>
+				<c:if test="${empty user.phone || empty user  }">
+					<div class="input_area"> <input type="number" name="phone" required onkeypress="return lenthCheck(this, 11)" autocomplete="off" > </div>
 				</c:if>
 			</div>
 		<hr>
@@ -107,8 +113,10 @@
 		
 		<li>
 			<h2>결제수단</h2>
-				<input type="radio" checked="checked" value="신용카드" name="payMethod" >신용카드
-				<input type="radio" value="현장결제" name="payMethod">현장결제
+				
+				<label><input type="radio" checked="checked" value="신용카드" name="payMethod" >신용카드</label>
+				
+				<label><input type="radio" value="현장결제" name="payMethod">현장결제</label>
 			<hr>
 		</li>
 		
@@ -142,28 +150,28 @@
 		
 		<li class="pay">
 		
-			<div class="order_price">주문금액 : <fm:formatNumber value="${cartMap.menuTotalPrice }"  pattern="###,###" />원</div>
-			<div>배달팁 <fm:formatNumber value="${cartMap.deleveryTip }"  pattern="###,###" />원 </div> 
+			<div class="order_price">주문금액 : <fm:formatNumber value="${cart.menuTotalPrice }"  pattern="###,###" />원</div>
+			<div>배달팁 <fm:formatNumber value="${cart.deleveryTip }"  pattern="###,###" />원 </div> 
 			
 			<div class="point_dis"><span>포인트 할인 </span><span></span> </div>
 				
 			<div class="total">
-				<fm:formatNumber value="${cartMap.menuTotalPrice + cartMap.deleveryTip}"  pattern="###,###" />원 결제하기
+				<fm:formatNumber value="${cart.menuTotalPrice + cart.deleveryTip}"  pattern="###,###" />원 결제하기
 			</div>
 			
-			<input type="hidden" value="${cartMap.menuTotalPrice + cartMap.deleveryTip}" name="total" id="total"> 
-			<input type="hidden" value="${cartMap.deleveryTip }" name="deleveryTip" id="delevery_tip"> 
+			<input type="hidden" value="${cart.menuTotalPrice + cart.deleveryTip}" name="total" id="total"> 
+			<input type="hidden" value="${cart.deleveryTip }" name="deleveryTip" id="delevery_tip"> 
+			<input type="hidden" value="${orderNum }" id="order_num">
 			
-			
-			<input type="submit" value="주문하기" class="order_btn">
+			<input type="button" value="주문하기" class="order_btn">
 		</li>
-		
 		
 		
 		</ul>
 		
-	</form>
+		</form>
 	
+		<button class="com">컴플릿</button>
 		
 	</main>
 
@@ -178,7 +186,10 @@
 	<!-- 푸터 -->
 	<%@ include file="/WEB-INF/view/include/footer.jsp" %>
 	<!-- 푸터 -->
+	
 	<script type="text/javascript" src="/js/order/order.js" ></script>
+	<!-- iamport.payment.js -->
+  	<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
 </body>
 </html>
 

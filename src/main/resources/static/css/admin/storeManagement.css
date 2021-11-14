@@ -2,9 +2,8 @@
 	color: gold;
 }
 
-.box {
-	margin: 0 auto;
-	max-width: 1200px;
+.is_open {
+	display: none;
 }
 
 #tab {
@@ -23,10 +22,10 @@ section.tab ul {
 }
 
 section.tab ul li {
-	width: 33.33%;
+	width: 100%;
 	text-align: center;
 	border: 0px;
-	font-size: 20px;
+	font-size: 2rem;
 	background: #333333;
 	line-height: 30px;
 	cursor: pointer;
@@ -48,172 +47,43 @@ section.tab ul li:hover {
 	transition: ease-in-out 0.15s
 }
 
-.store_reg_btn button {
-	width: 200px;
-	padding: 25px 40px;
-	border-radius: 10px;
+section.box form {
+	display: flex;
+	align-items: center;
+	font-size: 1.6rem;
+}
+
+section.box button,
+section.box input {
+	padding: 5px;
 	border: 1px solid #999;
-	font-size: 18px;
+}
+
+.store_reg_btn button {
+	width: 120px;
 	margin: 15px;
 }
 
-.container {
-	width: 100%;
+.store_search input {
+	border-radius: 10px;
 }
+
+.store_search button {
+	width: 40px;
+}
+
+	 
+
 
 /* 콘텐츠 */
 main {
 	background: #fff;
 }
-
-/* 상단 카테고리 */
-/* 
-.category{
-    border-bottom: 1px solid #ddd;
-    white-space: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden; 
-    padding: 15px 0;
-    box-shadow: 0px 2px 3px 0px rgb(0 0 0 / 25%);
-    margin: 0 auto;
-    max-width: 1200px;
+main h1 {
+	margin-left: 10px;
 }
 
-.category::-webkit-scrollbar {
-    background: none;
-}
-
-.category li {
-    font-size: 16px;
-	font-weight: bold;
-    padding: 0 15px;
-    display:inline;
-    text-align: center;
-    color: #ddd;
-}
-
-.category li > span{
-	padding-bottom: 5px;
-}
-
-.category li:hover {
-    color: #333333;
-    cursor: pointer;
-    transition: 0.1s;
-}
- */
-/* 상단 카테고리 */
-
-/* 가게 목록 */
-.box h1 {
-	margin: 15px;
-}
-
-.box img {
-	display: block;
-	margin: 0 auto;
-	width: 90%;
-	max-width: 500px;
-}
-
-.box .store {
-	display: flex;
-	flex-wrap: wrap;
-}
-
-.box .store li {
-	border: 1px solid #ddd;
-	border-radius: 10px;
-	width: 47%;
-	margin: 15px;
-	padding: 25px 0;
-	position: relative;
-}
-
-.box .store li.temp {
-	border: none;
-}
-
-.box .store li>div {
-	padding: 10px;
-}
-
-.box .store li img {
-	width: 170px;
-	height: 170px;
-	position: absolute;
-	top: 15px;
-	left: 15px;
-	background-size: cover;
-	object-fit: cover;
-	border-radius: 10px;
-}
-
-.box .store li:hover img {
-	transform: scale(1.05);
-	transition: 0.1s;
-}
-
-.box .store li .inf {
-	margin-top: -10px;
-	font-size: 18px;
-	padding-left: 185px;
-}
-
-.box .store li .inf h2 {
-	font-size: 18px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.box .store li .inf div span {
-	margin-right: 5px;
-}
-
-.score_box i {
-	font-size: 15px;
-}
-
-.score_box i.fas {
-	color: gold;
-}
-
-/* 가게 목록 */
-.page_box {
-	display: flex;
-	justify-content: center;
-	margin-bottom: 20px;
-}
-
-.page_box li {
-	border: 1px solid #999;
-	border-right: none;
-	width: 35px;
-	height: 35px;
-	text-align: center;
-	line-height: 35px;
-}
-
-.page_box li:last-child {
-	border-right: 1px solid #999;
-}
-
-.page_box li a {
-	display: block;
-	width: 100%;
-	height: 100%;
-}
-
-.now_page {
-	background: #30DAD9;
-	color: #fff;
-}
-
-.now_page:hover {
-	color: #fff;
-}
-
+/* 상단 카테
 /* 콘텐츠 */
 @media ( max-width :1250px) {
 	#tab {
@@ -222,91 +92,54 @@ main {
 }
 
 @media ( max-width :1150px) {
-	.box .store li {
-		margin: 13px;
-	}
-	.box .store li img {
-		width: 150px;
-		height: 150px;
-	}
-	.box .store li .inf {
-		font-size: 16px;
-		padding-left: 163px;
-		position: relative;
-		top: -5px;
-	}
 }
 
 @media ( max-width :1024px) {
-	#tab {
-		width: 100%;
+	/* 탭 */
+	section.tab {
+		margin-top: 0px;
+		display: none;
 	}
-	.container {
-		width: 100%;
+	.tab .box {
+		display: block;
 	}
-	.box .store li {
-		width: 100%;
-		border: none;
-		border-radius: 0;
-		border-bottom: 2px solid #ddd;
+		
+	header .admin_page_btn  {
+		display: none;
 	}
-	.box .store li img {
-		top: 5px;
-		left: 5px;
+	header .menu_tab {
+		display: block;
 	}
-	.box .store li .inf {
-		font-size: 16px;
-		padding-left: 154px;
-		position: relative;
-		top: -15px;
-	}
+	
+	/* 탭 */
 }
 
-@media ( max-width :780px) {
-	.container {
-		width: 99%;
-	}
-	.category {
-		padding: 10px 0;
-	}
-	.category li {
-		font-size: 15px;
-		padding: 10px 15px;
-	}
-	.box .store li {
-		padding: 25px 0 0px;
-	}
-	.box .store li img {
-		width: 90px;
-		height: 90px;
-	}
-	.box .store li .inf {
-		font-size: 13px;
-		padding-left: 93px;
-		top: -18px;
-		margin-bottom: -10px;
-	}
-	.box .store li .inf h2 {
-		font-size: 15px;
-	}
-	section.tab {
-		width: 100%;
-		margin-top: 20px;
-	}
+@media ( max-width :767px) {
+	
 	section.tab ul li {
-		font-size: 16px;
 		height: 50px;
 	}
 	section.tab ul li a {
 		line-height: 50px;
 	}
-	.page_box {
-		margin-top: 20px;
+	
+	section.box {
+		font-size: 1.5rem;
 	}
-	.page_box li {
-		width: 25px;
-		height: 25px;
-		line-height: 25px;
-		font-size: 12px;
+	.store_reg_btn button {
+		width: 80px;
+	}
+	
+	section.box button, 
+	section.box input {
+		border-radius: 10px;
+	} 
+}
+@media ( max-width :767px) {
+	
+	.store_reg_btn button {
+		margin: 15px 10px;
 	}
 }
+
+

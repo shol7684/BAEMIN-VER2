@@ -1,14 +1,9 @@
+
  
  	$(".search").focus();
  	
  	
  	inputCheck();
- 	
- 	/*const searchList = "${searchList }";
- 	if(searchList == "[]") {
- 		$(".search_word li").css("display" , "none");
- 	} 
- */
  	
  	$("input[name='keyword']").keyup(function(key){
  		inputCheck();

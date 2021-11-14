@@ -1,20 +1,24 @@
 package com.baemin.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.baemin.util.Page;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
+import com.baemin.vo.Sales;
 import com.baemin.vo.Store;
 
 public interface AdminService {
 
 	// 관리자 메인 주문 목록
 	List<OrderList> orderList(String list);
+	
+	List<OrderList> orderList(String list, int page);
 
 	// 매장관리 탭 가게 목록
 	List<Store> storeList(Page p);
+
+	List<Store> storeList(Page p, String keyword);
 
 	// 매장관리 탭 가게 등록하기
 	void storeRegist(Store store);
@@ -34,9 +38,12 @@ public interface AdminService {
 	// 상품권 등록
 	int pointRegist(String giftCardNum, long id);
 
-	// 사용자가 주문시 실시간 주문요청 받기 웹소켓
-	OrderList getOrderOne(String orderNum);
-
 	int orderCancle(String orderNum, String cancleReason, long userId);
+
+	int orderComplete(String orderNum, long userId);
+
+	List<Sales> sales(String time, String month);
+
+	
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.baemin.vo.Food;
+import com.baemin.vo.FoodOption;
 import com.baemin.vo.Review;
 import com.baemin.vo.Store;
 
@@ -15,7 +16,7 @@ public interface StoreDAO {
 
 	List<Food> foodList(long id);
 
-	List<String> foodOption(int foodId);
+	List<FoodOption> foodOption(int foodId);
 
 	void reviewWrite(Review review);
 
@@ -27,11 +28,11 @@ public interface StoreDAO {
 
 	void deleteLikes(Map<String, Long> map);
 
-	Long isLikes(Map<String, Long> m);
+	int isLikes(Map<String, Long> m);
 
 	List likesList(long userId);
 
-	List<Store> storeSearch(int address1, String address2);
+	List<Store> storeSearch(int address1, String address2, int pageStart, int pageEnd);
 
 
 }

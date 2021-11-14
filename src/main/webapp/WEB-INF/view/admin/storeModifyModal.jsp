@@ -14,12 +14,12 @@
     <form action="/admin/storeModify" method="post" enctype="multipart/form-data"> 
 		<div class="modal_box">
 	         <ul>
-	            <li>
+	            <li class="category">
 	                <label for="category">
 	                    <h2>카테고리</h2>
 	                </label>	
-	
-	                <div>
+		
+					<div class="input_area">
 	                    <select id="category" name="category">
 	                        <option value="100">피자</option>
 	                        <option value="101">치킨</option>
@@ -32,105 +32,131 @@
 	                        <option value="108">야식</option>
 	                        <option value="109">한식</option>
 	                    </select>
-	                </div>
+                    </div>
 	            </li>
 	
+	
 	            <li>
-	                <label for="storeName" >
+	                <label for="store_name" >
 	                    <h2>매장 이름</h2>
 	                </label>
-	                <div><input type="text" id="storeName" name="storeName" value="${store.storeInfo.storeName }" required spellcheck="false" ></div>
+	                <div class="input_area">
+	                	<input type="text" value="${store.storeInfo.storeName }" id="store_name" name="storeName" value="" required spellcheck="false" >
+	                </div>
+                </li>
 	
-	            <li class="location">
+	
+	
+				<li class="location">
 	                <label for="location">
 	                    <h2>매장 위치</h2>
 	                </label>
 					
-	                    <div class="sample">
-	                        <input type="button" onclick="sample2_execDaumPostcode()" value="우편번호 찾기" id="sample2_btn" ><br>
-	                        <input type="text" onclick="sample2_execDaumPostcode()" value="${store.storeInfo.storeAddress1 }" id="sample2_postcode" placeholder="우편번호" readonly name="storeAddress1" required>
-	
-	                        <input type="text" onclick="sample2_execDaumPostcode()" value="${store.storeInfo.storeAddress2 }" id="sample2_address" placeholder="주소" readonly name="storeAddress2" required><br>
-	                        <input type="text" id="sample2_detailAddress" value="${store.storeInfo.storeAddress3 }" placeholder="상세주소" name="storeAddress3">
-	                        <input type="hidden" id="sample2_extraAddress" placeholder="참고항목" readonly>
-	
-	                       <%@ include file="/WEB-INF/view/include/addressSearch.jsp" %>
-	                    </div>
-	
+                    <div class="input_area">
+                        <input type="button" onclick="sample2_execDaumPostcode()" value="우편번호 찾기" id="sample2_btn" ><br>
+                        <input type="text" value="${store.storeInfo.storeAddress1 }" onclick="sample2_execDaumPostcode()" id="address1" placeholder="우편번호" readonly name="storeAddress1" required>
+
+                        <input type="text" value="${store.storeInfo.storeAddress2 }" onclick="sample2_execDaumPostcode()" id="address2" placeholder="주소" readonly name="storeAddress2" required><br>
+                        <input type="text" value="${store.storeInfo.storeAddress3 }" id="address3" placeholder="상세주소" name="storeAddress3">
+
+                       <%@ include file="/WEB-INF/view/include/addressSearch.jsp" %>
+                    </div>
 	            </li>
 	
-	            <li>
-	                <label for="storePhoneNumber">
+	
+	
+	 			<li>
+	                <label for="store_phone_number">
 	                    <h2>매장 전화번호</h2>
 	                </label>
-	                <div><input type="number" value="${store.storeInfo.storePhone }" onkeypress="return lenthCheck(this, 11);" id="storePhoneNumber" name="storePhone" required></div>
+	                <div class="input_area">
+	                	<input type="number" value="${store.storeInfo.storePhone }" onkeypress="return lenthCheck(this, 11);" id="store_phone_number" name="storePhone" required>
+                	</div>
 	            </li>
-	
-	            <li class="business_hour">
+	            
+	            
+	            
+				 <li class="business_hour">
                     <h2>영업시간</h2>
-	                <div>
-	                     <span>
+	                <div class="select_box">
+	                
+	                	<span>
 	                        <select name="openingTime" id="opening_time" required>
 	                            <c:forEach begin="0" end="24" var="i">
 	                            	<option value="${i }">${i }</option>
 	                            </c:forEach>
 	                        </select>
-	                    </span>
-	                    
-	                    <span> ~ </span>
-	                    
-	                    <span>
+                        </span>
+                        
+                        <span>
 	                        <select name="closingTime" id="closing_time" required>
-                                <c:forEach begin="0" end="24" var="i">
+	                               <c:forEach begin="0" end="24" var="i">
 	                            	<option value="${i }">${i }</option>
 	                            </c:forEach>
 	                        </select>
-	                    </span>
+                        </span>
+                        
 	                </div>
 	            </li>
+	            
+	            
 	
-	            <li>
-	                <label for="minDeleveryPrice">
+	            <li class="min_delevery_price">
+	                <label for="min_delevery_price">
 	                    <h2>최소 배달금액</h2>
 	                </label>
-	                <div><input type="number" value="${store.storeInfo.minDelevery }" onkeypress="return lenthCheck(this, 8);" id="minDeleveryPrice" name="minDelevery" required>원</div>
+	                <div class="input_area">
+                		<input type="number" value="${store.storeInfo.minDelevery }" onkeypress="return lenthCheck(this, 8);" id="min_delevery_price" name="minDelevery" required>
+	                </div>
 	            </li>
 	            
-	            <li>
-	                <label for="minDeleveryPrice">
+	            
+	            
+	            <li class="delevery_tip">
+	                <label for="delevery_tip">
 	                    <h2>배달팁</h2>
 	                </label>
-	                <div><input type="number" value="${store.storeInfo.deleveryTip }" onkeypress="return lenthCheck(this, 8);" id="deleveryTip" name="deleveryTip" required >원</div>
+	                <div class="input_area">
+	                	<input type="number" value="${store.storeInfo.deleveryTip }" onkeypress="return lenthCheck(this, 8);" id="delevery_tip" name="deleveryTip" required >
+	                </div>
 	            </li>
 	            
-	            <li>
-	                <label for="deleveryTime">
+	            
+	            
+	            <li class="delevery_time">
+	                <label for="delevery_time">
 	                    <h2>예상 배달시간</h2>
 	                </label>
-	                <div><input type="number" value="${store.storeInfo.deleveryTime }" onkeypress="return lenthCheck(this, 3);"  pattern="/d*" value="" id="deleveryTime" name="deleveryTime" required>분</div>
+	                <div class="input_area">
+	                	<input type="number" value="${store.storeInfo.deleveryTime }" onkeypress="return lenthCheck(this, 3);"  pattern="/d*" value="" id="delevery_time" name="deleveryTime" required>
+	                </div>
 	            </li>
 	            
-	             <li>
+	            
+	            
+	             <li class="store_des">
 	                <label for="store_des">
 	                    <h2>가게 정보</h2>
 	                </label>
-	                <div class="store_des"><textarea  id="store_des" name="storeDes" maxlength="500" >${store.storeInfo.storeDes }</textarea></div>
-	                
+	                <div class="input_area">
+	                	<textarea id="store_des" name="storeDes" maxlength="500" >${store.storeInfo.storeDes }</textarea>
+                	</div>
 	            </li> 
+	            
+	            
 	
-	            <li>
+	            <li>	
                     <h2>매장 이미지 첨부</h2>
                     
-                    <div id="img_area">
-                   	 	<label for="img" /></label>
-			    		<input type="file" id="img" name="file" >
-			    		
-		                <div class="img_box">
+                    <div class="img_box">
+			    		<label for="img">사진첨부</label>
+		    			<input type="file" id="img" class="img" name="file" >
+			    			
+			    		<div>
 			    			<img class="preview">
-			    			<button type="button" class="img_close"> x</button>
-				    	</div>
-                    </div>
-	                
+			    			<button type="button" class="img_close"><i class="fas fa-times"></i></button>
+		    			</div>
+			    	</div>
 	            </li>
 	        </ul>
 		</div>

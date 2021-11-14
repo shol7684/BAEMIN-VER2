@@ -6,13 +6,15 @@ import java.util.Map;
 import com.baemin.util.Page;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
+import com.baemin.vo.Sales;
 import com.baemin.vo.Store;
 
 public interface AdminDAO {
 
-	List<OrderList> orderList(String list);
+	List<OrderList> orderList(String list, Page p);
 
-	List<Store> storeList(Page p);
+//	List<Store> storeList(Page p);
+	List<Store> storeList(Page p, String keyword);
 
 	void storeRegist(Store store);
 
@@ -34,7 +36,12 @@ public interface AdminDAO {
 
 	int pointUpdate(long userId, String info, int point);
 
-	OrderList getOrderOne(String orderNum);
+	int orderComplete(String orderNum, long userId);
+
+	List<Sales> salesYear();
+
+	List<Sales> sales(String time, String month);
+
 
 
 

@@ -1,4 +1,4 @@
-package com.baemin.error;
+package com.baemin.error2;
 
 public class ErrorPage {
 

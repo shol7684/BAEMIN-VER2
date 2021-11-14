@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.baemin.util.Page;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
+import com.baemin.vo.Sales;
 import com.baemin.vo.Store;
 
 @Repository
@@ -20,13 +21,24 @@ public class AdminDAOImp implements AdminDAO {
 	private SqlSession sql;
 
 	@Override
-	public List<OrderList> orderList(String list) {
-		return sql.selectList("admin.orderList", list);
+	public List<OrderList> orderList(String list, Page p) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("pageStart", p.getPageStart());
+		map.put("pageEnd", p.getPageEnd());
+		return sql.selectList("admin.orderList", map);
 	}
 
 	@Override
-	public List<Store> storeList(Page p) {
-		return sql.selectList("admin.storeList", p);
+	public List<Store> storeList(Page p, String keyword) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("p", p);
+		map.put("keyword", keyword);
+		
+		System.out.println("p = " + p);
+		System.out.println("keyword = " + keyword);
+		
+		return sql.selectList("admin.storeList", map);
 	}
 
 	@Override
@@ -97,6 +109,16 @@ public class AdminDAOImp implements AdminDAO {
 		
 		return sql.update("admin.orderCancle", map);
 	}
+	
+	@Override
+	public int orderComplete(String orderNum, long userId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("orderNum", orderNum);
+		map.put("userId", userId);
+		
+		return sql.update("admin.orderComplete", map);
+	}
+	
 
 	@Override
 	public Map selectCard(String giftCardNum) {
@@ -114,9 +136,19 @@ public class AdminDAOImp implements AdminDAO {
 	}
 
 	@Override
-	public OrderList getOrderOne(String orderNum) {
-		return sql.selectOne("admin.getOrderOne", orderNum);
+	public List<Sales> salesYear() {
+		return sql.selectList("admin.salesYear");
 	}
+
+	@Override
+	public List<Sales> sales(String time, String month) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("time", time);
+		map.put("month", month);
+		return sql.selectList("admin.salesMonth", map);
+	}
+
+
 
 	
 }

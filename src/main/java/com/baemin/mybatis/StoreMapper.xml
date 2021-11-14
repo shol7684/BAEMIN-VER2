@@ -5,55 +5,84 @@
 <mapper namespace="store">
 
 	<select id="storeList" resultType="store">
-	SELECT * FROM     
-		( SELECT rownum rn, s.*,t.* FROM 
-			BM_STORE s
-		        LEFT JOIN    
-					( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM  
-						( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
-					) t
-				ON s.id = t.store_id     
-				WHERE CATEGORY = #{category} AND STORE_ADDRESS1 LIKE '${address1}%' )
-		WHERE rn BETWEEN ${startPage } AND ${endPage }	
 		
-		<if test="sort == '배달 빠른 순'">
-			ORDER BY DELEVERY_TIME
-		</if>
-		
-		<if test="sort == '배달팁 낮은 순'">
-			ORDER BY DELEVERY_TIP
-		</if>
-		
-		<if test="sort == '별점 높은 순'">
-			ORDER BY SCORE
-		</if>
-		
-		<if test="sort == '리뷰 많은 순'">
-			ORDER BY REVIEW_COUNT
-		</if>
-		
-		<if test="sort == '최소 주문 금액 순'">
-			ORDER BY MIN_DELEVERY
-		</if>
-	
-		
+	SELECT * FROM (
+	    SELECT ROWNUM RN, RESULT.* FROM (
+	        SELECT C.* FROM     
+                ( SELECT s.*,t.*, mod(24 - s.opening_time + s.closing_time, 24) 영업시간, 'true' is_open FROM 
+                    BM_STORE s
+                LEFT JOIN    
+                   ( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM 
+                        ( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
+                    ) t
+                ON s.id = t.store_id     
+                WHERE CATEGORY = #{category} AND STORE_ADDRESS1 LIKE '${address1}%' 
+                
+                 <if test="sort == '배달 빠른 순'">
+					ORDER BY DELEVERY_TIME
+				</if>
+				
+				<if test="sort == '배달팁 낮은 순'">
+					ORDER BY DELEVERY_TIP
+				</if>
+				
+				<if test="sort == '별점 높은 순'">
+					ORDER BY SCORE
+				</if>
+				
+				<if test="sort == '리뷰 많은 순'">
+					ORDER BY REVIEW_COUNT
+				</if>
+				
+				<if test="sort == '최소 주문 금액 순'">
+					ORDER BY MIN_DELEVERY
+				</if>
+                 
+            ) C  WHERE TO_CHAR(SYSTIMESTAMP, 'HH24') BETWEEN opening_time AND opening_time + 영업시간 OR 영업시간 = 0
+            
+	         UNION ALL
+	         
+	         SELECT C.* FROM     
+				( SELECT s.*,t.*, mod(24 - s.opening_time + s.closing_time, 24) 영업시간, 'false' is_open FROM 
+					BM_STORE s
+                LEFT JOIN    
+                    ( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM 
+                        ( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
+                    ) t
+                ON s.id = t.store_id     
+                WHERE CATEGORY = #{category} AND STORE_ADDRESS1 LIKE '${address1}%' 
+	            ) C  WHERE TO_CHAR(SYSTIMESTAMP, 'HH24') NOT BETWEEN opening_time AND opening_time + 영업시간 
+	        ) RESULT
+	    ) WHERE RN BETWEEN ${startPage } AND ${endPage }
 	</select>
 
 
 
 
 	<select id="storeDetail" resultType="Store">
-		SELECT * FROM 
-			BM_STORE,
-			( SELECT * FROM  
-				( SELECT ROUND(AVG(score),1) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review WHERE store_id = #{id } ),
-				( SELECT COUNT(*) LIKES_COUNT FROM BM_LIKES WHERE STORE_ID = #{id } ),
-				( SELECT SUM(order_count) order_count from (
-					SELECT count(*) order_count FROM bm_order_detail_user WHERE store_id = #{id }
-						UNION ALL
-					SELECT count(*) order_count FROM bm_order_detail_non_user WHERE store_id = #{id } ) )
-			) 
-		WHERE ID = #{id }
+	SELECT RESULT.*, CASE WHEN TO_CHAR(SYSDATE,'HH24') BETWEEN OPENING_TIME AND OPENING_TIME + 영업시간 OR 영업시간 = 0 THEN 'true' ELSE 'false' END IS_OPEN  FROM 
+    ( SELECT S.*, C.*, MOD(24 - S.OPENING_TIME + S.CLOSING_TIME, 24) 영업시간  FROM 
+        BM_STORE S
+        ,( SELECT * FROM  
+            ( SELECT
+                ROUND(AVG(score),1) SCORE
+                ,COUNT(REVIEW_CONTENT) REVIEW_COUNT
+                ,COUNT(BOSS_COMMENT) BOSS_COMMENT_COUNT
+                ,COUNT(CASE WHEN SCORE=1 THEN 1 END) SCORE1
+                ,COUNT(CASE WHEN SCORE=2 THEN 1 END) SCORE2
+                ,COUNT(CASE WHEN SCORE=3 THEN 1 END) SCORE3
+                ,COUNT(CASE WHEN SCORE=4 THEN 1 END) SCORE4
+                ,COUNT(CASE WHEN SCORE=5 THEN 1 END) SCORE5
+            FROM bm_review where store_id = #{id } )
+            ,( SELECT COUNT(*) LIKES_COUNT FROM BM_LIKES WHERE STORE_ID = #{id } )
+            ,( SELECT SUM(order_count) order_count from (
+                    SELECT count(*) order_count FROM bm_order_detail_user WHERE store_id = #{id }
+                        UNION ALL
+                    SELECT count(*) order_count FROM bm_order_detail_non_user WHERE store_id = #{id } )
+             ) 
+        ) C
+        WHERE ID = #{id }
+    ) RESULT
 	</select>
 	
 	
@@ -110,7 +139,11 @@
 		UPDATE BM_REVIEW SET
 		    REVIEW_CONTENT = #{reviewContent }
 		    ,SCORE = #{score}
+		    
+		    <if test="reviewImg != null">
 		    ,REVIEW_IMG = #{reviewImg }
+		    </if>
+		    
 		WHERE
 			ORDER_NUM = ${orderNum }    
 	</update>
@@ -154,57 +187,123 @@
 		STORE_ID = #{storeId }			
 	</delete>
 	
-	<select id="isLikes" resultType="long">
-		SELECT STORE_ID FROM BM_LIKES WHERE USER_ID = #{userId } AND STORE_ID = #{storeId }
+	<select id="isLikes" resultType="int">
+		SELECT COUNT(*) IS_LIKES FROM BM_LIKES WHERE USER_ID = #{userId } AND STORE_ID = #{storeId }
 	</select>
 	
 	
 	<select id="likesList" resultType="Store">
-		SELECT 
-		    s.id
-		    ,s.category
-		    ,s.store_name
-		    ,s.store_address1
-		    ,s.store_address2
-		    ,s.store_address3
-		    ,s.store_phone
-		    ,s.store_img
-		    ,s.store_thumb
-		    ,s.opening_time
-		    ,s.closing_time
-		    ,s.delevery_tip
-		    ,s.store_des
-		    ,t.score
-		    ,t.review_count
-		    ,t.boss_comment_count
-		    ,l.user_id
-		    ,l.likes_date
-    	FROM 
-            BM_STORE s
-        LEFT JOIN    
-            ( SELECT r.store_id, r.score, r.review_count, r.boss_comment_count FROM  
-                ( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r 
-            ) t
-        ON s.id = t.store_id
-        RIGHT JOIN
-            ( SELECT USER_ID,STORE_ID,LIKES_DATE FROM BM_LIKES WHERE USER_ID = #{userId} ) l
-        ON s.id = l.store_id 
-        ORDER BY LIKES_DATE DESC
+	SELECT  
+		  id
+		,category
+		,store_name
+		,store_address1
+		,store_address2
+		,store_address3
+		,store_phone
+		,store_img
+		,store_thumb
+		,opening_time
+		,closing_time
+		,delevery_tip
+		,store_des
+		,score
+		,review_count
+		,boss_comment_count
+		,user_id
+		,likes_date
+		,is_open
+	FROM (   
+		SELECT *  FROM (
+			SELECT 
+                s.*, t.*, l.user_id, l.likes_date, mod(24 - s.opening_time + s.closing_time, 24) 영업시간, 'true' is_open 
+            FROM
+                BM_STORE s
+            LEFT JOIN    
+                ( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM 
+                    ( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
+                ) t
+            ON s.id = t.store_id
+            LEFT JOIN
+                BM_LIKES l
+            ON s.id = l.store_id 
+        ) WHERE user_id = #{userId } AND (TO_CHAR(SYSTIMESTAMP, 'HH24') BETWEEN opening_time AND opening_time + 영업시간 OR 영업시간 = 0)
+        
+        UNION ALL
+        
+         SELECT * FROM (
+            SELECT 
+                s.*, t.*, l.user_id, l.likes_date, mod(24 - s.opening_time + s.closing_time, 24) 영업시간, 'false' is_open 
+            FROM
+                BM_STORE s
+            LEFT JOIN    
+                ( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM 
+                     ( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
+                 ) t
+            ON s.id = t.store_id
+            LEFT JOIN
+                BM_LIKES l
+            ON s.id = l.store_id 
+        ) WHERE user_id = #{userId } AND (TO_CHAR(SYSTIMESTAMP, 'HH24') NOT BETWEEN opening_time AND opening_time + 영업시간 )
+	) ORDER BY LIKES_DATE DESC
 	
 	</select>
 	
 	
 	<select id="storeSearch" resultType="Store" >
-	SELECT rownum rn, s.*,t.* FROM 
-		BM_STORE s
-	        LEFT JOIN    
-				( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM  
-					( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
-				) t
-			ON s.id = t.store_id     
-			WHERE STORE_ADDRESS1 LIKE '${address1}%' AND STORE_NAME LIKE '%${keyword}%' 
+	
+	SELECT 
+		rn
+	    ,id
+	    ,category
+		,store_name
+		,store_address1
+		,store_address2
+		,store_address3
+		,store_phone
+		,store_img
+		,store_thumb
+		,opening_time
+		,closing_time
+		,delevery_tip
+		,store_des
+		,score
+		,review_count
+		,boss_comment_count
+		,list_count
+		,is_open
+	FROM (
+	    SELECT ROWNUM RN, RESULT.* FROM (
+	        SELECT COUNT(*) OVER() list_count, C.* FROM     
+                ( SELECT s.*,t.*, mod(24 - s.opening_time + s.closing_time, 24) 영업시간, 'true' is_open FROM 
+                    BM_STORE s
+                LEFT JOIN    
+                    ( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM 
+                        ( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
+                    ) t
+                    ON s.id = t.store_id     
+                 WHERE STORE_ADDRESS1 LIKE '${address1}%' AND store_name LIKE '%${keyword}%' 
+            ) C  WHERE TO_CHAR(SYSTIMESTAMP, 'HH24') BETWEEN opening_time AND opening_time + 영업시간 OR 영업시간 = 0
+            
+        	UNION ALL
+	         
+	        SELECT COUNT(*) OVER() list_count, C.* FROM   
+				( SELECT s.*,t.*, mod(24 - s.opening_time + s.closing_time, 24) 영업시간, 'false' is_open FROM 
+					BM_STORE s
+                LEFT JOIN    
+                    ( SELECT r.store_id, round(r.score, 1) score, r.review_count, r.boss_comment_count FROM 
+                        ( SELECT store_id, AVG(score) SCORE, count(review_content) review_count, count(boss_comment) boss_comment_count FROM bm_review GROUP BY store_id ) r  
+                    ) t
+                    ON s.id = t.store_id     
+                   WHERE STORE_ADDRESS1 LIKE '${address1}%' AND store_name LIKE '%${keyword}%' 
+            ) C  WHERE TO_CHAR(SYSTIMESTAMP, 'HH24') NOT BETWEEN opening_time AND opening_time + 영업시간 
+        ) RESULT
+    ) WHERE RN BETWEEN ${pageStart } AND ${pageEnd }
 	
 	</select>
 	
 	
 </mapper>
+	                 
+
+	    

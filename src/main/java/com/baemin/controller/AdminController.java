@@ -12,6 +12,7 @@ import java.util.Optional;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,10 +35,13 @@ import com.baemin.service.AdminService;
 import com.baemin.service.StoreService;
 import com.baemin.util.FoodInfoFromJson;
 import com.baemin.util.Page;
+import com.baemin.util.UploadFile;
 import com.baemin.util.UserInfoSessionUpdate;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
+import com.baemin.vo.Sales;
 import com.baemin.vo.Store;
+import com.baemin.vo.StoreDetail;
 
 @Controller
 public class AdminController {
@@ -46,6 +51,9 @@ public class AdminController {
 
 	@Autowired
 	private StoreService storeService;
+	
+	@Autowired
+	private UploadFile uploadFile;
 	
 	private static final Logger LOGGER = LogManager.getLogger(AdminController.class);
 
@@ -57,13 +65,13 @@ public class AdminController {
 
 	@ResponseBody
 	@GetMapping("/admin/orderList")
-	public List<Map> orderList(String list) {
+	public List<Map<String, Object>> orderList(String list) {
 
 		System.out.println(list);
 		
 		List<OrderList> orderList = adminService.orderList(list);
 		
-		List<Map> deleveryInfo = new ArrayList<>();
+		List<Map<String, Object>> deleveryInfo = new ArrayList<>();
 		
 		for(int i=0;i<orderList.size();i++) {
 			deleveryInfo.add(FoodInfoFromJson.foodInfoFromJson(orderList.get(i)));
@@ -71,38 +79,64 @@ public class AdminController {
 		
 		return deleveryInfo;
 	}
+	
+	@ResponseBody
+	@GetMapping("/admin/orderNextPage")
+	public ResponseEntity<List<Map<String, Object>>> orderListNextPage(String list, int page){
+		
+		List<OrderList> orderList = adminService.orderList(list, page);
+		
+		List<Map<String, Object>> deleveryInfo = new ArrayList<>();
+		
+		for(int i=0;i<orderList.size();i++) {
+			deleveryInfo.add(FoodInfoFromJson.foodInfoFromJson(orderList.get(i)));
+		}
+		
+		return new ResponseEntity<>(deleveryInfo, HttpStatus.OK);
+	}
+	
+	
 
 	@GetMapping({"/admin/storeManagement", "/admin/storeManagement/{movePage}"})
-	public String storeManagement(Model model, @PathVariable Optional<Integer> movePage) {
+	public String storeManagement(Model model, @PathVariable Optional<Integer> movePage, String keyword) {
 
-		Page p = new Page(movePage);
+		Page p = new Page(movePage, 20);
 		
-		System.out.println(p);
+		List<Store> storeList = null;
+		if(keyword == null ) {
+			 storeList = adminService.storeList(p);
+		} else {
+			storeList = adminService.storeList(p,keyword);
+		}
 		
-		List<Store> storeList = adminService.storeList(p);
+		if(storeList.size() == 0) {
+			model.addAttribute("nosuch", true);
+			return "admin/storeManagement";
+		}
 		
-			
 		model.addAttribute("lastPage", p.lastPage(storeList.get(0).getListCount()));
 		model.addAttribute("page", p);
 		model.addAttribute("storeList", storeList);
+		
+		System.out.println(storeList);
 
 		return "admin/storeManagement";
 	}
 	
 	
 	@PostMapping("/admin/storeRegist")
-	public String storeRegist(Store store, MultipartFile file) {
-		
-		System.out.println(store);
+	public String storeRegist(Store store, MultipartFile file) throws IOException {
 		
 		if(file.isEmpty()) {
 			String img = File.separator + "img" + File.separator + "none.gif";
 			store.setStoreImg(img);
 			store.setStoreThumb(img);
 		} else {
-			
+			String img = uploadFile.fildUpload(file);
+			store.setStoreImg(img);
+			store.setStoreThumb(img);
 		}
-		
+			 
 		adminService.storeRegist(store);
 		
 		return "redirect:/admin/storeManagement";
@@ -110,7 +144,7 @@ public class AdminController {
 	
 	
 	@GetMapping("/admin/detail/{id}")
-	public String adminStoreDetail(@PathVariable int id,Model model, @AuthenticationPrincipal LoginDetail user) {
+	public String adminStoreDetail(@PathVariable int id,Model model, @AuthenticationPrincipal LoginDetail user) throws NotFoundException {
 		
 		long userId = 0;
 		String role = "";
@@ -120,11 +154,9 @@ public class AdminController {
 			model.addAttribute("adminPage" , true);
 		}
 		
-		Map<String, Object> store = storeService.storeDetail(id, userId);
+		StoreDetail storeDetail = storeService.storeDetail(id, userId);
 
-		System.out.println("가게 정보 = " + store);
-
-		model.addAttribute("store", store);
+		model.addAttribute("store", storeDetail);
 		model.addAttribute("role", role);
 		
 		return "admin/adminStoreDetail";
@@ -152,7 +184,7 @@ public class AdminController {
 	}
 	
 	@PostMapping("/admin/menu")
-	public String addMenu(Food food, String[] foodOption, Integer[] foodOptionPrice, MultipartFile file) {
+	public String addMenu(Food food, String[] foodOption, Integer[] foodOptionPrice, MultipartFile file) throws IOException {
 		
 		System.out.println("food = " + food);
 		System.out.println("foodOption= " + Arrays.toString(foodOption));
@@ -162,10 +194,12 @@ public class AdminController {
 			String img = File.separator + "img" + File.separator + "none.gif";
 			food.setFoodImg(img);
 			food.setFoodThumb(img);
-			
 		} 
 //		이미지 첨부 o 
 		else {
+			String img = uploadFile.fildUpload(file);
+			food.setFoodImg(img);
+			food.setFoodThumb(img);
 		}
 		
 		adminService.addMenu(food, foodOption, foodOptionPrice);
@@ -182,41 +216,51 @@ public class AdminController {
 	
 	
 	@PostMapping("/admin/storeModify")
-	public String storeModify(Store store) {
+	public String storeModify(Store store, MultipartFile file) throws IOException {
+		
+		if(!file.isEmpty()){
+			String img = uploadFile.fildUpload(file);
+			store.setStoreImg(img);
+		}
+		
 		adminService.storeModify(store);
 		return "redirect:/admin/detail/" + store.getId();
 	}
 	
 	
 	@ResponseBody
-	@PostMapping("/admin/orderAccept")
+	@PatchMapping("/admin/orderAccept")
 	public ResponseEntity<String> orderAccept(String orderNum, int time, long userId) {
 //		userId == 0 비회원
 		int result = adminService.orderAccept(orderNum, time, userId);
-		if(result == 1) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
+		
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@ResponseBody
-	@PostMapping("/admin/orderCancle")
+	@PatchMapping("/admin/orderCancle")
 	public ResponseEntity<String> orderCancle(String orderNum, String cancleReason, long userId) {
 //		userId == 0 비회원
 		int result = adminService.orderCancle(orderNum, cancleReason, userId);
 		
-		if(result == 1) {
-			return new ResponseEntity<>(HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-				
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@PatchMapping("/admin/orderComplete")
+	public ResponseEntity<String> orderComplete(String orderNum, long userId) {
+//		userId == 0 비회원
+		
+		System.out.println(orderNum);
+		System.out.println(userId);
+		
+		int result = adminService.orderComplete(orderNum, userId);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	
-	
-	
+	@ResponseBody
 	@PostMapping("/admin/pointRegist")
 	public String pointRegist(String giftCardNum, @AuthenticationPrincipal LoginDetail user, HttpSession session,  RedirectAttributes rttr) throws ServletException, IOException {
 		int point = adminService.pointRegist(giftCardNum, user.getUser().getId());
@@ -224,26 +268,32 @@ public class AdminController {
 		if(point != 0) {
 			UserInfoSessionUpdate.sessionUpdate(point+"", "point", user, session);
 			DecimalFormat fm = new DecimalFormat();
-			rttr.addFlashAttribute("pointRegistMessage", fm.format(point) +"원 충전되었습니다");
+			return fm.format(point) +"원 충전되었습니다";
 		} else {
-			rttr.addFlashAttribute("pointRegistMessage", "잘못된 번호입니다");
+			return "잘못된 번호입니다";
 		}
-		return "redirect:/user/point";
+		 
 	}
 	
 	
+	@GetMapping("/admin/salesManagement")
+	public String sales() {
+		
+		return "admin/sales";
+	}
 	
-	// 사용자가 주문시 실시간 주문요청 받기 웹소켓
 	@ResponseBody
-	@GetMapping("/admin/order-one")
-	public Map getOrderone(String orderNum) {
+	@GetMapping("/admin/sales")
+	public List<Sales> sales(String time,String month) {
+//		time =
+//		week, month, outerMonth, year
 		
-		OrderList order = adminService.getOrderOne(orderNum);
-		
-		Map map = FoodInfoFromJson.foodInfoFromJson(order);
-		return map;
+		List<Sales> sales = adminService.sales(time,month);
+		return sales;
 	}
+	
+	
+	
 	
 
 }
- 

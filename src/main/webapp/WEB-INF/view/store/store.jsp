@@ -3,6 +3,7 @@
 <%@ include file="../include/link.jsp" %>
 
 <link rel="stylesheet" href="/css/store/store.css">
+<link rel="stylesheet" href="/css/store/store-li.css">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fm" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -47,48 +48,15 @@
             <div class="box">
 				
 				<c:if test="${empty storeList }">
-					<img alt="이미지" src="/img/temp2.png">
+					<img class="temp_img" alt="이미지" src="/img/temp2.png">
 					<style>main .box {background: #F6F6F6; max-width: 100%; }</style>
 				</c:if>
 				
 				
-				
                 <ul class="store">
-                	<c:forEach items="${storeList }" var="storeList"  varStatus="status">
-                    <li >
-	                    <div>
-	                        <a href="/store/detail/${storeList.id }">   
-	                                
-	                            <img src="${storeList.storeImg }" alt="이미지">
-	                            
-	                            <div class="inf">
-	                              ${storeList.openingTime } ${storeList.closingTime } ${storeList.score }
-	                                <h2>${storeList.storeName }</h2>
-	                                <div>
-	                                	<span>평점 ${storeList.score }</span>
-	                                	
-	                                	<span class="score_box">
-	                                	
-					                	<c:forEach begin="0" end="4" var="i">
-				                   			<c:if test="${storeList.score >= i }">
-						                   		<i class="far fas fa-star"></i>
-				                   			</c:if>
-				                   			<c:if test="${storeList.score < i }">
-						                   		<i class="far fa-star"></i>
-				                   			</c:if>
-				                   		</c:forEach>
-					                   	
-				               			</span>
-	                                </div>
-                                    <div><span>리뷰 ${storeList.reviewCount }</span><span>ㅣ</span><span>사장님 댓글 ${storeList.bossCommentCount }</span></div>
-	                                <div><span>배달시간 ${storeList.deleveryTime }분</span><span>최소주문금액 <fm:formatNumber value="${storeList.minDelevery }"  pattern="###,###" />원</span></div>
-	                                <div>배달팁 <fm:formatNumber value="${storeList.deleveryTip }"  pattern="###,###" />원</div>
-	                                 
-	                            </div>
-	                        </a>
-                        </div>
-                    </li>
-                    
+                	<c:set var="store_admin" value="/store" />
+                	<c:forEach items="${storeList }" var="storeList">
+                    	<%@ include file="/WEB-INF/view/store/store-li.jsp" %>
                     </c:forEach>
                 </ul>
             </div>

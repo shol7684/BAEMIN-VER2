@@ -1,5 +1,6 @@
 package com.baemin.vo;
 
+
 import org.springframework.stereotype.Repository;
 
 import lombok.Getter;
@@ -9,7 +10,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Repository
 public class Store {
 	
 	private long id;
@@ -23,9 +23,9 @@ public class Store {
 	private String storeThumb;
 	private int openingTime;
 	private int closingTime;
-	private long minDelevery;
+	private int minDelevery;
 	private int deleveryTime;
-	private long deleveryTip;
+	private int deleveryTip;
 	private String storeDes;
 	
 	private float score;
@@ -34,8 +34,17 @@ public class Store {
 	private int bossCommentCount;
 	private int likesCount;
 	
+	private int score1; // 리뷰 1점
+	private int score2; // 리뷰 2점
+	private int score3; // 리뷰 3점
+	private int score4; // 리뷰 4점
+	private int score5; // 리뷰 5점	
+	
 	// 매장 총 수
 	private int listCount;
+	
+	//오픈중?
+	private String isOpen;
 	
 	
 }

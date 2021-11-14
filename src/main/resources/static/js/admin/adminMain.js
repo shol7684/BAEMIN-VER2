@@ -1,104 +1,193 @@
 
 
-$(document).ready(function(){
+const listArr = ["주문접수 대기 중", "처리 중", "완료"];
+let nowList = listArr[0];
+
+// 주문 완료 메세지 받기
+
+const socket = new SockJS('/websocket');
+
+const stompClient = Stomp.over(socket);
+
+stompClient.connect({}, function() {
+
+	stompClient.subscribe('/topic/order-complete', function(message) {
+		// 화면에 출력중인 view 갯수 
+		const list = $(".order_list li").length;
+		
+		if(list < 20) {
+			orderList(listArr[0]);
+		}
+	});
+});
+	
+	
 	
 let size = $(window).width();
 
-$(window).resize(function() {
+$(window).off().resize(function() {
 	size = $(window).width();
+	
+	if(size > 1023) {
+		$(".tab").show();
+	} else {
+		$(".tab").hide();
+	}
 })
+	
+
+$(".menu_tab").click(function(){
+	
+	if($(".tab").css("display") == "none") {
+		$(".tab").fadeIn();
+		$(this).addClass("active");
+	} else {
+		$(".tab").fadeOut();
+		$(this).removeClass("active");
+	}
+	
+});
+
 
 
 $(".aside_tab li").click(function(){
+	$(".order_list").html("");
 	$(".aside_tab li").removeClass("active");
 	$(this).addClass("active");
 	const index = $(this).index() 
-	orderList(index);
+	nowList = listArr[index];
+	
+	orderList(nowList);
+	run = false;
+	page = 2;
 })
 
 
+let winHeight = 0;
+let docHeight = 0;
+let page = 2;
+let run = false;
+
+$(window).scroll(function(){
+	winHeight = $(window).height();
+	docHeight = $(document).height();
+	
+	const top = $(window).scrollTop();
+	
+	if(docHeight <= winHeight + top + 10 ) {
+		if(run) {
+			return;
+		}
+		run = true;
+		
+		orderList(nowList, page);
+		page ++;
+		
+	} // if
+}) // scroll
 
 
-orderList(0);
+orderList(listArr[0]);
 
-function orderList(index){
-	const list = ["주문접수 대기 중", "처리 중", "완료"];
+function orderList(list, nextPage){
+	let url = "/admin/orderList";
+	let page = 1;
+	
+	if(nextPage) {
+		page = nextPage;
+		url = "/admin/orderNextPage"
+	}
 	
 	$.ajax({
-		url: "/admin/orderList",
+		url: url,
 		type: "get",
-		data: {list : list[index]},
-		success: function(result) {
-			
-			if(result != "") {
-				const count1 = result[0]["orderListDetail"]["count1"];
-				const count2 = result[0]["orderListDetail"]["count2"];
-				const count3 = result[0]["orderListDetail"]["count3"];
-				$(".wait_count").text(count1);
-				$(".processing_count").text(count2);
-				$(".aside_tab li").eq(2).find("div").eq(1).text(count3);
-			}
-			
-			let html = "";
-			for(var i=0;i<result.length;i++) {
-				const orderListDetail = result[i]["orderListDetail"];
-				const amount = result[i]["amount"];
-				const cart = result[i]["cart"];
-				
-				let foodInfo =" ";
-				for(var j=0;j<cart.length;j++) {
-					let foodOptionName = "";
-					if(cart[j]["foodOptionName"] != null) {
-						foodOptionName = "[" + cart[j]["foodOptionName"] + "]"; 
-					}
-					foodInfo += cart[j]["foodName"] + foodOptionName + ", ";
-				}
-				
-				if(foodInfo.endsWith(" ")) {
-					foodInfo = foodInfo.substring(0, foodInfo.length-2);
-				}
-				
-				
-				html += `<li class="order_box">
-						<div class="time">
-			    			<div>${moment(orderListDetail["orderDate"]).format("MM월 DD일")}</div>
-			    			<div>${moment(orderListDetail["orderDate"]).format("HH시 mm분")}</div>
-			    		</div>
-		   	
-			    		<div class="info">
-                      		<div style="font-weight: bold;">
-	                   			<span>
-	                  				<span>[메뉴  ${amount.length}개] ${orderListDetail["totalPrice"]}원</span> 
-	                  				<span class="payMethod"> ${orderListDetail["payMethod"] }</span>
-	                			</span>
-                   			</div>
-		                        		
-	                   		<div style="font-weight: bold;">${foodInfo } </div>
-	                   		<div style="font-weight: bold;">${orderListDetail["deleveryAddress2"] }</div>
-	                   		
-	                   		<div>${orderListDetail["storeName"] }</div> 
-			                 			
-			                <div class="button_box">
-	                      		<input type="hidden" value="${orderListDetail["orderNum"] }" class="order_num" >
-	                      		<input type="hidden" value="${orderListDetail["deleveryAddress2"] }" class="delevery_address2" >
-	                      		<input type="hidden" value="${orderListDetail["deleveryAddress3"] }" class="delevery_address3" >
-	                      		<input type="hidden" value="${orderListDetail["phone"] }" class="phone" >
-	                      		<input type="hidden" value="${orderListDetail["request"] }" class="request" >
-	                      		<input type="hidden" value="${amount }" class="amount" >
-	                      		<input type="hidden" value="${foodInfo}" class="food_info" >
-	                      		<input type="hidden" value="${orderListDetail["userId"] }" class="user_id" >
-			                 	<input type="button" value="${"주문 접수"}" class="order_accept btn">
-			                 </div>
-			            </div>     
-					</li>`;
-			}
-			$(".order_list").html(html);
-		},
-		error: function() {
-			alert("에러가 발생했습니다");
+		data: {
+			list : list,
+			page : page
+		}	
+	})
+	.done(function(result){
+		if(result != "") {
+			const count1 = result[0]["orderListDetail"]["count1"];
+			const count2 = result[0]["orderListDetail"]["count2"];
+			$(".wait_count").text(count1);
+			$(".processing_count").text(count2);
+			waitCount = count1;
 		}
-	}) // ajax
-	
+		
+		let html = "";
+		for(var i=0;i<result.length;i++) {
+			const orderListDetail = result[i]["orderListDetail"];
+			const amount = result[i]["amount"];
+			const cart = result[i]["cart"];
+			
+			let foodInfo =" ";
+			for(var j=0;j<cart.length;j++) {
+				let foodOptionName = "";
+				if(cart[j]["foodOptionName"] != null) {
+					foodOptionName = "[" + cart[j]["foodOptionName"] + "]"; 
+				}
+				foodInfo += cart[j]["foodName"] + foodOptionName + ", ";
+			}
+			
+			if(foodInfo.endsWith(" ")) {
+				foodInfo = foodInfo.substring(0, foodInfo.length-2);
+			}
+			
+			let btnValue = "";
+			let btnClass = "";
+			if(list == '주문접수 대기 중') {
+				btnValue = "주문 접수";
+				btnClass = "order_accept";
+			} else if(list == '처리 중') {
+				btnValue = "완료";
+				btnClass = "complete";
+			}
+			
+			html += 
+				`<li class="order_box">
+					<div class="time">
+		    			<div>${moment(orderListDetail["orderDate"]).format("MM월 DD일")}</div>
+		    			<div>${moment(orderListDetail["orderDate"]).format("HH시 mm분")}</div>
+		    		</div>
+	   	
+		    		<div class="info">
+                  		<div style="font-weight: bold;">
+                   			<span>
+                  				<span>[메뉴  ${amount.length}개] ${orderListDetail["totalPrice"]}원</span> 
+                  				<span class="payMethod"> ${orderListDetail["payMethod"] }</span>
+                			</span>
+               			</div>
+	                        		
+                   		<div style="font-weight: bold;">${foodInfo } </div>
+                   		<div style="font-weight: bold;">${orderListDetail["deleveryAddress2"] }</div>
+                   		
+                   		<div>${orderListDetail["storeName"] }</div> 
+		            </div>     	
+		            		
+	                <div class="button_box">
+                  		<input type="hidden" value="${orderListDetail["orderNum"] }" class="order_num" >
+                  		<input type="hidden" value="${orderListDetail["deleveryAddress2"] }" class="delevery_address2" >
+                  		<input type="hidden" value="${orderListDetail["deleveryAddress3"] }" class="delevery_address3" >
+                  		<input type="hidden" value="${orderListDetail["phone"] }" class="phone" >
+                  		<input type="hidden" value="${orderListDetail["request"] }" class="request" >
+                  		<input type="hidden" value="${amount }" class="amount" >
+                  		<input type="hidden" value="${foodInfo}" class="food_info" >
+                  		<input type="hidden" value="${orderListDetail["userId"] }" class="user_id" >
+	                 	<input type="button" value="${btnValue}" class="${btnClass} btn">
+	                 </div>
+				</li>`;
+		}
+		$(".order_list").html(html);	
+		
+		if(result != "") {
+			run = false;
+		}
+		
+	})
+	.fail(function(){
+		alert("에러가 발생했습니다");
+	})	 // ajax
 }	
 
 
@@ -108,6 +197,8 @@ let userId = 0;
 $(document).on("click", ".order_accept", function(){
 	const modal = $(".order_accept_modal");
 	const orderIndex = $(this).parent().parent().parent("li").index();
+	console.log("orderIndex = " + orderIndex);
+	
 	
 	orderNum = $(this).siblings(".order_num").val();
 	userId =  $(this).siblings(".user_id").val();
@@ -118,8 +209,6 @@ $(document).on("click", ".order_accept", function(){
 	const phone = $(this).siblings(".phone").val();
 	const amount = $(this).siblings(".amount").val().split(",");
 	const foodInfo = $(this).siblings(".food_info").val().split(", ");
-	
-	console.log($(this).siblings(".food_info").val());
 	
 	if(deleveryAddress3 =="null") deleveryAddress3 = "";
 	if(request =="null") request = "";
@@ -137,33 +226,23 @@ $(document).on("click", ".order_accept", function(){
 	modal.find(".request > div").text(request);
 	modal.find(".menu ul").html(menuHtml);
 	
-	
 	openModal(modal, size);
-	
-	console.log(orderIndex);
 	
 	
 	
 	// 배달시간 설정 모달
 	$(".delevery_timer_btn").off().click(function(){
-		const modal = $(".delevery_timer_modal");
-		openModal(modal, size);
-		
-		console.log("orderNum = " + orderNum);
+		openModal($(".delevery_timer_modal"), size);
 	})
  		
 	// 시간 설정	
 	$(".delevery_timer_modal li").off().click(function(){
 		$(".delevery_timer_modal li").removeClass("select");
 		$(this).addClass("select");
-		
-		console.log($(".select").data("time"));
-		console.log($(".select").data());
 	})
 		
 	// 주문수락 완료	
 	$(".accept").off().click(function(){
-		cs(userId);
 		const time = $(".delevery_timer_modal .select").data("time");
 		
 		if(!time) {
@@ -180,44 +259,33 @@ $(document).on("click", ".order_accept", function(){
 		$.ajax({
 			url: "/admin/orderAccept",
 			data: data,
-			type: "POST",
-			success: function(){
-				$(".delevery_timer_modal li").removeClass("select");
-				$(".delevery_timer_modal section li[data-time=30]").addClass("select");
-				
-				const waitCount = Number($(".wait_count").text());
-				const procCount = Number($(".processing_count").text());
-				$(".wait_count").text(waitCount - 1 );
-				$(".processing_count").text(procCount + 1 );
-				
-				swal("주문접수완료");
-				closeModal();
-			},
-			error: function() {
-					swal("실패");
-				},
-			complete: function(result){
-				if(result.status != 200) {
-					swal("해당 주문번호가 없습니다");
-				} else {
-					$(".order_list > li").eq(orderIndex).remove();
-				}
-			}
+			type: "PATCH"
 		})
+		.done(function(){
+			$(".order_list li").eq(orderIndex).remove();
+			$(".delevery_timer_modal li").removeClass("select");
+			$(".delevery_timer_modal section li[data-time=30]").addClass("select");
+			
+			updateCount();
+			swal("주문접수완료");
+			closeModal();
+		})
+		.fail(function(){
+			swal("실패");
+		})
+		
 	})
 	
 	
 	// 주문 거부하기
 	$(".order_cancle_btn").off().click(function(){
-		const modal = $(".order_cancle_modal");
-		
-		openModal(modal, size);
+		openModal($(".order_cancle_modal"), size);
 		
 		let cancleReason = "";
 		
 		// 거부사유 선택
 		$(".order_cancle_modal li").off().click(function(){
-			$(".order_cancle_modal li").removeClass("select");	
+			$(".order_cancle_modal li").removeClass("select");
 			$(this).addClass("select");
 			cancleReason = $(this).data("reason");
 		})
@@ -237,49 +305,90 @@ $(document).on("click", ".order_accept", function(){
 			
 			$.ajax({
 				url: "/admin/orderCancle",
-				type: "POST",
-				data: data,
-				success: function(result){
-					$(".order_cancle_modal li").removeClass("select");
-					
-					const waitCount = Number($(".wait_count").text());
-					const procCount = Number($(".processing_count").text());
-					$(".wait_count").text(waitCount - 1 );
-					$(".processing_count").text(procCount + 1 );
-					swal("취소완료");
-					closeModal();
-				},
-				error: function() {
-					swal("실패");
-				},
-				complete: function(result){
-					if(result.status != 200) {
-						swal("해당 주문번호가 없습니다");
-					} else {
-						$(".order_list > li").eq(orderIndex).remove();
-					}
-				}
+				type: "PATCH",
+				data: data
 			})
-			
-			
+			.done(function(){
+				$(".order_list li").eq(orderIndex).remove(); 
+				updateCount();
+				swal("취소완료");
+				closeModal();
+				
+			})
+			.fail(function(){
+				swal("실패");
+			})
 		})
 	})
 })
+
+
+
 	
+
+// 배달 완료	
+$(document).on("click", ".complete", function(){
+	const orderIndex = $(this).parent().parent().parent("li").index();
+	orderNum = $(this).siblings(".order_num").val();
+	userId =  $(this).siblings(".user_id").val();
+	console.log(userId);
+	console.log(orderNum);
+	console.log(orderIndex);
+	const data = {
+		userId : userId,
+		orderNum : orderNum
+	}
+	
+	swal("배달 완료후 눌러주세요", {
+		  buttons: ["취소", "완료"],
+	})
+	.then(function(value){
+		if(!value) {
+			return;
+		}
+		
+		$.ajax({
+			url: "/admin/orderComplete",
+			type: "PATCH",
+			data: data
+		})
+		.done(function(result){
+			console.log(result);
+			$(".order_list > li").eq(orderIndex).remove();
+		})
+		.error(function(){
+			swal("에러");
+		})
+	}) 
+})
 	
 	
 $(".move_top").click(function(){
 	$("html").animate({ scrollTop: 0 }, 100);
 })
 	
-
 	
-
-
-function cs(value){
-	console.log(value);
+	
+function updateCount(){
+	const waitCount = Number($(".wait_count").text());
+	const procCount = Number($(".processing_count").text());
+	$(".wait_count").text(waitCount - 1 );
+	$(".processing_count").text(procCount + 1 );
 }
+
+
+
+function closeModal() {
+	$("#modal_bg").hide();
+	$(".modal").css("top", "100%");
+	$(".modal_box").scrollTop(0);
+	$("body").css("overflow", "visible");
+	$("input[type='checkBox']").prop("checked", false);
 	
-
-
-})
+	$(".delevery_timer_modal li").removeClass("select");
+	$(".delevery_timer_modal section li[data-time=30]").addClass("select");
+	$(".order_cancle_modal li").removeClass("select");
+	
+	
+};
+	

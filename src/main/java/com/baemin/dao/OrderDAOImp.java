@@ -19,7 +19,7 @@ public class OrderDAOImp implements OrderDAO {
 	private SqlSession sql;
 
 	@Override
-	public int getDeleveryTip(int storeId) {
+	public int getDeleveryTip(long storeId) {
 		return sql.selectOne("order.getDeleveryTip", storeId);
 	}
 

@@ -16,29 +16,41 @@
 		        <h1>주문 내역</h1>
 		    </section>
 		</c:if>    
-	
+		
 	    <main>
 	        <div class="order_list">
 	         	<c:if test="${empty deleveryInfo }" >
 	        		<img alt="이미지" src="/img/temp.png" class="temp_img"> 
 	        	</c:if> 
+	        	
 	         	<c:if test="${!empty deleveryInfo }" >
 	        		<style>body {background: #fff; } </style> 
 	        	</c:if> 
 	        	
+        		<ul id="order_list">
+        		
 	        	<c:forEach items="${deleveryInfo }" var="deleveryInfo" varStatus="i">
-	        		<ul id="order_list">
-	                    <li>
-	                    	<div class="delevery_state">
-	                    		<span><fm:formatDate value="${deleveryInfo.orderListDetail.orderDate }" pattern="M월d일" /> </span>
-	                    		
-                    			<span>${deleveryInfo.orderListDetail.deleveryStatus}</span> 
-	                    	</div>
-	                    	
-	                        <a href="/store/detail/${deleveryInfo.orderListDetail.storeId }" class="store_move">
-	                        	<span><img src="${deleveryInfo.orderListDetail.storeImg }" alt="이미지"></span>
-	                            <span class="inf">
-	                            	<h2> ${deleveryInfo.orderListDetail.storeName }</h2><br> 
+                    <li>
+                    	<div class="img_box">
+                    		<a href="#"><img src="${deleveryInfo.orderListDetail.storeImg }" alt="이미지"></a>
+                   		</div>
+                    
+                    
+                    	<div class="info_box">
+                    		<span>
+                    			<fm:formatDate value="${deleveryInfo.orderListDetail.orderDate }" pattern="M월d일" />
+	                   			<span>${deleveryInfo.orderListDetail.deleveryStatus}</span> 
+                    		</span>
+
+                           	<h2>
+                           		<a href="/store/detail/${deleveryInfo.orderListDetail.storeId }" >
+                           			${deleveryInfo.orderListDetail.storeName }
+                           		</a>
+                           	</h2>
+                           	 
+                            <span class="info">
+	                       	 	<a href="/store/detail/${deleveryInfo.orderListDetail.storeId }" >
+	                       	 	
 	                           		<c:set value="${fn:length(deleveryInfo.cart)}" var="cart" />
 	                           		<c:if test="${cart > 1 }">
 	                           			<span>${deleveryInfo.cart[0].foodName } 외 ${cart -1 }개</span>
@@ -47,54 +59,41 @@
 		                                <span>${deleveryInfo.cart[0].foodName } ${deleveryInfo.amount[0] }개 </span>
 	                           		</c:if>     
 	                                <span><fm:formatNumber value="${deleveryInfo.orderListDetail.totalPrice + deleveryInfo.orderListDetail.deleveryTip - deleveryInfo.orderListDetail.usedPoint }" pattern="###,###" /> 원</span>
-	                             </span>
-	                        </a>
+		                        </a>
+                             </span>
+                        </div>
+                        
+                        <div class="review_btn_box">
+	                        <button class="order_detail">상세보기</button>
+	                        <c:if test="${!empty user }">
 	                        
-	                        <div class="review_btn_box">
-		                        <button class="order_detail">상세보기</button>
-		                        <c:if test="${!empty user }">
-		                        
-	                    			<input type="hidden" class="order_num" value="${deleveryInfo.orderListDetail.orderNum }">
-		                        	<input type="hidden" class="store_id" value="${deleveryInfo.orderListDetail.storeId }">
+                    			<input type="hidden" class="order_num" value="${deleveryInfo.orderListDetail.orderNum }">
+	                        	<input type="hidden" class="store_id" value="${deleveryInfo.orderListDetail.storeId }">
+	                        	
+	                        	<c:if test="${empty deleveryInfo.orderListDetail.reviewContent }">
+		                        	<button class="review regi">리뷰쓰기</button>
+	                        	</c:if>
+	                        	<c:if test="${!empty deleveryInfo.orderListDetail.reviewContent }">
+		                        	<button class="review modify">리뷰 수정하기</button>
+		                        	<input type="hidden" value="${deleveryInfo.orderListDetail.reviewContent }" class="review_content" >
+		                        	<input type="hidden" value="${deleveryInfo.orderListDetail.score }" class="review_score" >
+		                        	<input type="hidden" value="${deleveryInfo.orderListDetail.reviewImg}" class="review_img" name="store_img">
+	                        	</c:if>
 		                        	
-		                        	<c:if test="${empty deleveryInfo.orderListDetail.reviewContent }">
-			                        	<button class="review regi">리뷰쓰기</button>
-		                        	</c:if>
-		                        	<c:if test="${!empty deleveryInfo.orderListDetail.reviewContent }">
-			                        	<button class="review modify">리뷰 수정하기</button>
-			                        	<input type="hidden" value="${deleveryInfo.orderListDetail.reviewContent }" class="review_content" >
-			                        	<input type="hidden" value="${deleveryInfo.orderListDetail.score }" class="review_score" >
-		                        	</c:if>
-			                        	
-		                        </c:if>
-	                        </div>
-						</li>
-	            </ul>
-	        	</c:forEach>
-	        </div>
-	        <ul class="page_box">
-	        	<c:if test="${page.nowPage > page.pageCount}">
-	        		<li><a href="/orderList/${page.prevPage }">이전</a></li>
-	        	</c:if> 
-	        	<c:forEach begin="${page.pageNum }" end="${page.pageNum + page.pageCount-1 }" var="i">
-	        		<c:if test="${i <= lastPage}">
-	        			
-	        			<c:if test="${i != page.nowPage }">
-		        			<li><a href="/orderList/${i }">${i }</a></li>
-	        			</c:if>
-	        			<c:if test="${i == page.nowPage }">
-	        				<li><a class="now_page" href="/orderList/${i }">${i }</a></li>
-	        			</c:if>
-	        			
-	        		</c:if>
-	        	</c:forEach>
-	        	
-        		<c:if test="${page.pageNum + page.pageCount < lastPage }">
-		        	<li><a href="/orderList/${page.nextPage }">다음</a></li>
-        		</c:if>
-	        </ul>
+	                        </c:if>
+                        </div>
+                        
+                        
+                        
+                        
+					</li>
+        	</c:forEach>
+            </ul>
+        </div>
+        <c:set var="movePage" value="/orderList/" />
+        <%@ include file="/WEB-INF/view/include/pageBox.jsp" %>
 	           
-	    </main>
+    </main>
 </div>
 
     <!-- 하단 메뉴 -->
@@ -110,7 +109,7 @@
 	<!-- 리뷰 쓰기 모달 -->
     <div id="modal_bg"></div>
 
-    <div class="review_modal modal resister">
+    <div class="review_modal modal">
     	<div id="modal_header">
 			<button class="closeA"><i class="fas fa-times"></i></button>
 			<h1>리뷰 쓰기</h1>
@@ -133,12 +132,13 @@
 	    	</div>
 	    	
 	    	<div class="img_box">
-	    		<label for="img" /></label>
-	    		<input type="file" id="img" class="img" name="file">
+	    		<label for="img">사진첨부</label>
+	    			<input type="file" id="img" class="img" name="file" >
+	    		
 	    	
 	    		<div>
 	    			<img class="preview">
-	    			<button type="button" class="img_close"> x</button>
+	    			<button type="button" class="img_close"><i class="fas fa-times"></i></button>
     			</div>
 	    	</div>
     	</div>
@@ -181,12 +181,12 @@
 	    	</div>
 	    	
 	    	<div class="img_box">
-	    		<label for="img" /></label>
-	    		<input type="file" id="img" class="img" name="file">
-	    	
+	    		<label for="img2">사진첨부</label>
+    			<input type="file" id="img2" class="img" name="file" >
+	    			
 	    		<div>
 	    			<img class="preview">
-	    			<button type="button" class="img_close"> x</button>
+	    			<button type="button" class="img_close"><i class="fas fa-times"></i></button>
     			</div>
 	    	</div>
     	</div>

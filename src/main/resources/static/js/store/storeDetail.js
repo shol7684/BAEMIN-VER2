@@ -1,7 +1,15 @@
 
 
 $(document).ready(function() {
-const minDelevery = Number($("#min_delevery").data("min_delevery"));
+	const minDelevery = Number($("#min_delevery").data("min_delevery"));
+	const deleveryTip = Number($("#delevery_tip").data("delevery_tip"));
+	const storeId = $("#store_id").val();
+	const storeName = $("#store_name").data("store_name");
+	
+	console.log("최소 주문금액 = " + minDelevery);
+	console.log("배달팁 = " + deleveryTip);
+	console.log("가게 아이디= " + storeId);
+	console.log("가게 이름= " + storeName);
 		
 	let size = $(window).width();
 
@@ -9,9 +17,28 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 		size = $(window).width();
 	})
 
-
 	// 다른가게에서 담은 상품인지 확인
 	let cartStoreId = null;
+	let cartSize = 0;
+	
+	// 가게 입장시 카트리스트 불러오기
+	$.ajax({
+		url: "/cartList",
+		type: "get"
+	})
+	.done(function(result){
+		if(result == "" ) {
+			cartReset();
+			return;
+		}
+		cartList(result);
+		console.log("장바구니 정보");
+	})
+	.fail(function(){
+		swal("장바구니 정보 에러");
+	})
+	
+	
 
 
 	// 찜하기
@@ -33,25 +60,25 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 		$.ajax({
 			url: "/store/likes",
 			type: "POST",
-			data: data,
-			success: function(result){
+			data: data
+		})
+		.done(function(result){
+			if(result == 0) {
+			} else {
 				
-				if(result == 0) {
-					
+				let likesCount = $(".likes_count").data("count");
+				
+				if(likes == "on") {
+					$(".likes_count").text(likesCount+1);
+					$(".likes_count").data("count", likesCount+1 );
 				} else {
-					
-					let likesCount = $(".likes_count").data("count");
-					
-					if(likes == "on") {
-						$(".likes_count").text(likesCount+1);
-						$(".likes_count").data("count", likesCount+1 );
-					} else {
-						$(".likes_count").text(likesCount-1);
-						$(".likes_count").data("count", likesCount-1 );
-					}
+					$(".likes_count").text(likesCount-1);
+					$(".likes_count").data("count", likesCount-1 );
 				}
-			} 
-		}) // ajax
+			}
+		})
+		
+		 // ajax
 	}) // 찜
 
 
@@ -62,51 +89,50 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 	// 장바구니에 담은 메뉴가격 총합
 	let menuTotalPrice = 0;
 
+
 	// 메뉴 클릭시 모달창 
-	const food = $(".menu > li .in");
-	food.click(function() {
+	$(".menu > li .menu_box").click(function() {
+		const isOpen = $("#is_open").data("is_open");
+		if(!isOpen) {
+			swal("지금은 준비중이에요");
+			return;
+		}
 		
 		const foodId = $(this).find("#food_id").val();
-		
 		$.ajax({
 			url: "/foodOption",
 			type: "get",
-			data: {foodId : foodId},
-			success: function(result) {
-				
-				if(result.length == 0) {
+			data: {foodId : foodId}
+		})
+		.done(function(result){
+			if(result.length == 0) {
 					$("#option").hide();
 				} else {
 					$("#option").show();
 				}
 				
-				let html = "";
-				
-				for(var i=0;i<result.length;i++) {
-					html += `<li>
-		                <div class="option_box">
-		                	<span>
-	                			<i class="fas fa-check-square"></i>
-             	 				<input type="checkbox" class="menu_option" name="option" value="${result[i]["optionName"] }"> ${result[i]["optionName"] }
-                				<input type="hidden" class="option_price" value="${result[i]["optionPrice"] }">
-    	            			<input type="hidden" class="option_id" value="${result[i]["id"] }">
-                 	 		</span>
-                			<span>${result[i]["optionPrice"] } 원</span>
-	                	</div>
-	              	</li>`;
-				}
-				
-				$("#option ul").html(html);
-				
-			}, // success
-			fail: function(){
-				alert("에러가 발생했습니다");
-				food.hide();
+			let html = "";
+			
+			for(var i=0;i<result.length;i++) {
+				html += `<li>
+	                <div class="option_box">
+	                	<span>
+                			<i class="fas fa-check-square"></i>
+         	 				<input type="checkbox" class="menu_option" name="option" value="${result[i]["optionName"] }"> ${result[i]["optionName"] }
+            				<input type="hidden" class="option_price" value="${result[i]["optionPrice"] }">
+	            			<input type="hidden" class="option_id" value="${result[i]["id"] }">
+             	 		</span>
+            			<span>${result[i]["optionPrice"] } 원</span>
+                	</div>
+              	</li>`;
 			}
-		}); // ajax
-		
-		
-		
+				
+			$("#option ul").html(html);
+		})
+		.fail(function(){
+			swal("에러가 발생했습니다");
+			food.hide();
+		}) // ajax
 		
 		
 		const addCartModal = $(".food_modal");
@@ -181,10 +207,8 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 	
 	
 	
-	
 	// 장바구니 담기
 	$(".add_cart").click(function(){
-		const storeId = $("#store_id").val();
 		if(cartStoreId != null && storeId != cartStoreId ) {
 			swal({
 				buttons: ["취소", "담기"],
@@ -195,34 +219,37 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 				if (value == true) {
 					deleteCartAll();
 					addCart($(this));
-					
-					$(".add_cart_alarm").show();
-					setTimeout(function(){
-						$(".add_cart_alarm").hide();
-					},1000);
-					
-					closeModal();
 				}
 			});			
 		} else {
 			addCart($(this));
-			
-			$(".add_cart_alarm").show();
-			setTimeout(function(){
-				$(".add_cart_alarm").hide();
-			},1000);
-			
-			closeModal();
-		
 		}
 	}) // 장바구니 담기
 	
 	
 	
+	
+	// 장바구니 전부 삭제
+	$("#cart i").click(function(){
+		deleteCartAll();
+	})	
+
+	// 리뷰탭 그래프
+	const reviewCount = $(".store_review_count").data("review_count");
+	
+	if(reviewCount != 0) {
+		for(var i=1;i<=5;i++) {
+			const target = $(".graph.score"+i)
+			const score = target.data("score"+i) / reviewCount * 100;
+			target.css("background","gold").css("width", score+"%");
+		}
+	}
+	
+	
+	
+	
 	function addCart(addCart){
-		
 		// 선택한 추가옵션 배열에 저장
-		const storeId = $("#store_id").val();
 		const foodOptionName = new Array();
 		const foodOptionPrice = new Array();
 		const foodOptionId = new Array();
@@ -231,9 +258,6 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 		const foodName = addCart.siblings(".add_cart_food_name").val();
 		const foodPrice = addCart.siblings(".add_cart_food_price").val();
 	 	const foodId = addCart.siblings(".add_cart_food_id").val();
-	 	
-	 	const deleveryTip = $("#delevery_tip").val();
-	 	const storeName = $("#store_name").val();
 			
 			
 		// 선택된 추가옵션 가져오기 
@@ -248,133 +272,102 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 		})
 		
 		const data = {
-			storeId : storeId,
-			deleveryTip: deleveryTip,
-			storeName : storeName,
 			foodId : foodId,
 			foodName : foodName,
 			foodPrice : foodPrice,
 			amount : amount,
 			foodOptionName : foodOptionName,
 			foodOptionId : foodOptionId,
-			foodOptionPrice : foodOptionPrice
+			foodOptionPrice : foodOptionPrice,
+			deleveryTip : deleveryTip,
+			storeId : storeId, 
+			storeName : storeName
 		}
 		
 		$.ajax({
 			url: "/addCart",
 			type: "post",
 			data : data,
-			traditional : true,
-			success: function(result) {
-				
-				cartList(result);
-				
-				// 밖에 있으니 작동이 안되서 추가
-				// 장바구니 1개 삭제
-				$(document).off().on("click", ".cancle_btn", function() {
-					const index = $(this).parent().index();
-					$.ajax({
-						url: "/cartOne",
-						type: "DELETE",
-						data: {index : index},
-						success: function(result) {
-							if(result == "") {
-								cartReset();
-								return;
-							}
-							cartList(result);
-							$(".m_cart_count").css("display" , "block");
-							$(".m_cart_count").text(result["cartId"].length);
-						},
-						fail: function() {
-							swal("에러가 발생했습니다");
-						}
-					})
-				}); // 장바구니 1개 삭제
-			}, // success
-			fail: function(){
-				swal("에러가 발생했습니다");
-			}
-		}); // ajax
+			traditional : true
+		})
+		.done(function(result){
+			cartList(result);
+			
+			alarm();	
+			closeModal();
+			$("#amount").val(1);
+			
+			// 밖에 있으니 작동이 안되서 추가
+			$(document).on("click", ".cancle_btn", function() {
+				const index = $(this).parent().index();
+				deleteCartOne(index);
+			}); // 장바구니 1개 삭제
+			
+			
+		}) // done
+		.fail(function(){
+			swal("에러가 발생했습니다");
+		}) // ajax
 	} // addCart
 	
 	
 	
-	
-	
-	
+	function alarm(text) {
+		$(".alarm").text(text);
+		
+		$(".alarm").show();
+		setTimeout(function(){
+			$(".alarm").hide();
+		},1000);
+	}
+			
 	
 	// 장바구니 1개 삭제
 	$(document).on("click", ".cancle_btn", function() {
 		const index = $(this).parent().index();
+		deleteCartOne(index);
+	}); 
+	
+	
+	// 장바구니 1개 삭제
+	function deleteCartOne(index){
 		$.ajax({
 			url: "/cartOne",
 			type: "DELETE",
-			data: {index : index},
-			success: function(result) {
-				if(result == "") {
-					cartReset();
-					return;
-				}
-				cartList(result);
-			},
-			fail: function() {
-				swal("에러가 발생했습니다");
-			}
+			data: {index : index}
 		})
-	}); // 장바구니 1개 삭제
-	
-	
-
-	
-		
-	
-	// 가게 입장시 카트리스트 불러오기
-	$.ajax({
-		url: "/cartList",
-		type: "get",
-		success: function(result){
-			if(result == "" ) {
+		.done(function(result){
+			if(result == "") {
 				cartReset();
 				return;
 			}
 			cartList(result);
-		},
-		fail: function() {
+			$(".m_cart_count").css("display" , "block");
+			$(".m_cart_count").text(result["cartId"].length);
+		})
+		.fail(function(){
 			swal("에러가 발생했습니다");
-		}
-	})
-
-
-
-
-
-	// 장바구니 전부 삭제
-	$("#cart i").click(function(){
-		deleteCartAll();
-	})	
+		})
+	}
+	
 
 	function deleteCartAll(){
 		$.ajax({
 			url: "/cartAll",
-			type: "DELETE",
-			success: function(){
-				cartReset();
-			},
-			fail: function(){
-				swal("에러가 발생했습니다");
-			}
+			type: "DELETE"
+		})
+		.done(function(){
+			cartReset();
+		})
+		.fail(function(){
+			swal("에러가 발생했습니다");
 		})
 	}
 
 
-
-
-
-
-
 	function cartList(result){
 		console.log(result);
+		cartSize = result["cartList"].length;
 		
 		let html = "";
 		for(var i=0;i<result["cartId"].length;i++) {
@@ -404,6 +397,8 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 		}
 		menuTotalPrice = result["menuTotalPrice"];
 		
+		console.log("cartlist menuTotalPrice = " + menuTotalPrice);
+		
 		$(".cart ul").html(html);
 		$(".total").html("총 합계 : " + result["menuTotalPrice"].toLocaleString() + "원");
 
@@ -412,7 +407,7 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 		$(".m_cart_count").css("display" , "block");
 		$(".m_cart_count").text(result["cartId"].length);
 		
-		console.log("cartStoreId2= " + result["storeId"]);
+		console.log("장바구니 가게 id " + result["storeId"]);
 		
 		cartStoreId = result["storeId"];
 		
@@ -422,11 +417,6 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 
 	// 주문금액이 최소주문금액 이상이어야 주문가능
 	function minDeleveryCheck(menuTotalPrice) {
-		
-		const minDelevery = Number($("#min_delevery").data("min_delevery"));
-		
-		console.log("min_delevery = "  +minDelevery );
-		
 		if(minDelevery <= menuTotalPrice) {
 			$(".order_btn").attr("disabled", false); 
 			$(".order_btn").css("background", "#30DAD9");
@@ -437,8 +427,6 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 			$(".order_btn").text(minDelevery + "원 이상 주문할 수 있습니다");
 			
 		}
-		
-		
 		// 최소주문금액 알림 추가
 	}
 
@@ -478,7 +466,7 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 		$(".order_btn").attr("disabled", true); 
 		$(".order_btn").text("주문하기");
 		menuTotalPrice = 0;
-		
+		cartSize = 0;
 		$(".m_cart_count").css("display" , "none");
 		$(".m_cart_count").text("");
 	};
@@ -492,6 +480,11 @@ const minDelevery = Number($("#min_delevery").data("min_delevery"));
 	});
 	// 모바일 주문하기
 	$(".m_cart_img_box").click(function() {
+		
+		if(cartSize == 0 ){
+			alarm("메뉴를 추가해주세요");
+			return;
+		}
 		location.href = "/order";
 	});
 	

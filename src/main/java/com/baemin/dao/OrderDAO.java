@@ -9,7 +9,7 @@ import com.baemin.vo.OrderList;
 
 public interface OrderDAO {
 	// 메뉴 총합가격 계산시 배달팁 가져오기
-	int getDeleveryTip(int storeId);
+	int getDeleveryTip(long storeId);
 	
 	//	메뉴 총합가격 계산시 음식가격
 	List<Long> foodPriceList(List<Cart> cartList);

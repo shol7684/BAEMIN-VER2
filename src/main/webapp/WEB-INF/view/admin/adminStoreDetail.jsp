@@ -44,31 +44,16 @@ function submitCheck() {
 }
 
 
-function lenthCheck(e, length) {
-	console.log(e.value.length);
-	console.log(length);
-	
-	if(e.value.length >= length) {
-		return false;
-	}
-	
-	$(this).off().focusout(function(){
-		if(e.value.length > length) {
-			e.value = "";
-		}
-	})
-	
-	return true;
-}
-
 </script>
 	
 	
 	<link rel="stylesheet" href="/css/admin/addMenuModal.css" >
 	<link rel="stylesheet" href="/css/admin/storeRegiModal.css" >
+	
+ 	<script type="text/javascript" src="/js/util/util.js" ></script>
  	<script type="text/javascript" src="/js/store/storeDetail.js" ></script>
  	<script type="text/javascript" src="/js/admin/adminDetail.js" ></script>
- 	<script type="text/javascript" src="/js/modal/modal.js"></script>
+ 	<!-- <script type="text/javascript" src="/js/modal/modal.js"></script> -->
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3fe0c2eaecb263f09df91a81c2ec64a0&libraries=services,clusterer,drawing"></script>
 </body>
 </html>

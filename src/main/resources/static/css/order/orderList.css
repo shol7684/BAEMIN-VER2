@@ -1,6 +1,9 @@
 body {
 	background: #F6F6F6;
 }
+a:hover {
+	color: unset;
+}
 
 .wrap {
 	width: 1000px;
@@ -42,170 +45,137 @@ main ul .order_box {
 
 #order_list li {
 	border: 1px solid #ddd;
-	height: 150px;
-	padding: 30px 0px 50px 70px;
-	margin: 20px;
-	position: relative;
-	border-bottom: 2px solid #ddd;
-}
-
-#order_list .delevery_state {
-	position: relative;
-	bottom: 5px;
-	left: 145px;
-	font-size: 15px;
-	color: #999;
-	width: 50%;
-}
-
-#order_list li img {
-	width: 180px;
-	height: 180px;
-	position: absolute;
-	top: 15px;
-	left: 15px;
-	background-size: cover;
-	border-radius: 10px;
-}
-
-.review_btn_box {
-	position: absolute;
-	right: 15px;
-	top: 15px;
-	width: 100px;
-	height: 200px;
-}
-
-.review_btn_box button {
-	margin-top: 10px;
-	width: 100%;
-	padding: 5px;
-	background: #fff;
-}
-
-#order_list .inf {
-	left: 145px;
-	position: relative;
-	font-size: 18px;
-}
-
-#order_list .inf h2 {
-	font-size: 18px;
-	font-weight: bold;
-	display: inline;
-}
-
-
-.page_box {
 	display: flex;
-	justify-content: center;
-	margin-bottom: 20px;
+	padding: 15px;
 }
 
-.page_box li {
-	border: 1px solid #999;
-	border-right: none;
-	width: 35px;
-	height: 35px;
-	text-align: center;
-	line-height: 35px;
+#order_list li .img_box {
+	height: 130px;
+	width: 130px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	margin-right: 20px;
+	overflow: hidden;
 }
 
-.page_box li:last-child {
-	border-right: 1px solid #999;
-}
-
-.page_box li a {
-	display: block;
+#order_list li .img_box img {
 	width: 100%;
 	height: 100%;
 }
-.now_page {
-	background: #30DAD9;
-	color: #fff;
+
+#order_list li .info_box {
+	flex: 4;
+	overflow: hidden;
 }
-.now_page:hover {
-	color: #fff;
+
+#order_list li .info_box h2,
+#order_list li .info_box > span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
+
+#order_list li .review_btn_box {
+	flex: 1;
+	text-align: center;
+}
+
+#order_list li .review_btn_box button {
+	height: 30px;
+	width: 100px;
+	background: none;
+	margin-bottom: 10px;
+	font-size: 1.3rem;
+}
+
 
 
 /* ------------리뷰 쓰기 모달-------------- */
-.review_modal .modal_box {
+.modal  .modal_box {
 	height: calc(100% - 80px);
 }
 
-.review_modal form {
+.modal form {
 	display: inline;
 }
 
-.score_box {
+.modal .score_box {
 	width: 80%;
 	margin: 0 auto;
 	text-align: center;
 	padding: 20px;
 }
 
-.score_box .fas {
+.modal .score_box .fas {
 	color: gold;
 }
 
-.review_text {
+.modal .review_text {
 	margin: 0 auto;
 	width: 90%;
 }
 
-.review_text textarea {
+.modal .review_text textarea {
 	width: 90%;
 	margin: 0 auto 30px auto;
 	display: block;
 	padding: 5px;
-	font-size: 16px;
+	font-size: 1.6rem;;
+	background: #eee;
+	border: none;
 }
 
-.img_box {
+.modal .img_box {
 	width: 80%;
 	margin: 0 auto 50px;
 }
 
-.img_box label {
-	width: 40px;
-	height: 40px;
-	background: #ddd;
-	display: inline-block;
+.modal .img {
+	display: none; 
 }
 
-.img_box div {
-	width: 200px;
+.modal .img_box label {
+	display: inline-block;
+	width: 80px;
+	height: 60px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	text-align: center;
+	line-height: 60px;
+}
+
+.modal .img_box div {
 	margin-top: 20px;
 	position: relative;
 	display: none;
+	width: 150px;
+	height: 150px;
 }
 
-.img_box img {
-	width: 200px;
-	height: 200px;
+.modal .img_box img {
+	width: 100%;
+	height: 100%;
 	border-radius: 10px;
-	margin-bottom: 50px;
+	object-fit: cover;
+	border: 1px solid #ddd;
 }
 
-.img_close {
-	background: rgba(0, 0, 0, 0.7);
+.modal .img_close {
+	background: #ccc;
 	position: absolute;
-	top: 0;
-	right: 0;
+	top: -10px;
+	right: -10px;
 	width: 25px;
 	height: 25px;
 	color: #fff;
-	border-radius: 5px;
+	border-radius: 50%;
+	border: none;
 }
 
-.review_submit_btn {
+.modal .review_submit_btn {
 	background: #ddd;
 }
 /* ------------리뷰 쓰기, 수정하기 모달-------------- */
-
-
-
 @media ( max-width :1023px) {
 	.wrap {
 		width: 99%;
@@ -213,20 +183,7 @@ main ul .order_box {
 	section.title {
 		height: 80px;
 	}
-	#order_list li img {
-		width: 130px;
-		height: 130px;
-		top: 20px;
-		left: 15px;
-	}
-	#order_list .delevery_state {
-		bottom: 6px;
-		left: 83px;
-		font-size: 13px;
-	}
-	#order_list .inf {
-		left: 83px;
-	}
+
 }
 
 @media ( max-width :767px) {
@@ -234,47 +191,41 @@ main ul .order_box {
 		width: 99%;
 		min-height: calc(100vh - 160px);
 	}
-	#order_list li {
-		width: 100%;
-		margin: 0;
-		padding: 10px 0 10px 0;
+	
+	#order_list li .img_box {
 		height: 100px;
+		width: 100px;
+		margin-right: 15px;
 	}
-	#order_list li img {
-		width: 90px;
-		height: 90px;
-		top: 10px;
-		left: 5px;
+	
+	#order_list li .review_btn_box button {
+		width: 80px;
+		border-radius: 10px;
 	}
-	#order_list .delevery_state {
-		bottom: 0px;
-		left: 105px;
-	}
-	.review_btn_box {
+
+	.modal .review_btn_box {
 		right: 0px;
 		top: 5px
 	}
-	.review_btn_box button {
+	.modal .review_btn_box button {
 		width: 80px;
 		font-size: 10px;
 	}
-	#order_list .inf {
-		left: 105px;
-		font-size: 15px;
+}
+
+
+
+@media ( max-width :480px) {
+	#order_list li {
+		padding: 15px 5px;
 	}
-	#order_list .inf h2 {
-		font-size: 15px;
-		display: inline;
+
+	#order_list li .review_btn_box button {
+		width: 60px;
 	}
 	
-	.page_box {
-		margin-top: 20px;
-	}
-	.page_box li {
-		width: 25px;
-		height: 25px;
-		line-height: 25px;
-		font-size: 12px;
+	#order_list li .img_box {
+		margin-right: 10px;
 	}
 	
 }

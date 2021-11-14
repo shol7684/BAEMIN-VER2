@@ -1,34 +1,24 @@
 package com.baemin.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import com.baemin.Interceptor.WebSocketInterceptor;
-
-
+@EnableWebSocketMessageBroker
 @Configuration
-@EnableWebSocket
-public class WebSocketConfig implements WebSocketConfigurer {
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-	@Autowired
-	private WebSocketHandler webSocketHandler;
-	
+	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		  registry.addEndpoint("/websocket").withSockJS();
+	}
 	
 	@Override
-	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(webSocketHandler, "/chating")
-		.addInterceptors(webSocketInterceptor())
-		;
-		
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		registry.enableSimpleBroker("/topic");
+		registry.setApplicationDestinationPrefixes("/message");
 	}
-	
-	@Bean
-	public WebSocketInterceptor webSocketInterceptor() {
-		return new WebSocketInterceptor();
-	}
-
 }
+

@@ -2,7 +2,7 @@
 $(document).ready(function(){
 
         
-       
+       alert("js 삭제");
 
 
 	let size = $(window).width();

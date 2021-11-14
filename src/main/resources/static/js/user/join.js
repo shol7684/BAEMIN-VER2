@@ -80,7 +80,7 @@ $(".nickname").focusout(function() {
 		valueType : "nickname" 
 	};
 
-	const impossibilityMsg = "이미 사용중이거나 탈퇴한 닉네임입니다";
+	const impossibilityMsg = "이미 사용중인 닉네임입니다";
 	const possibilityMsg = "사용 가능합니다";
 
 	overlapCheck(data, nicknameCheckMsg, impossibilityMsg, possibilityMsg);

@@ -54,7 +54,7 @@ main form .input_box>div:nth-child(3) button i {
 main form input[type=text] {
 	height: 100%;
 	width: 100%;
-	font-size: 18px;
+	font-size: 1.8rem;
 	background: none;
 	border: none;
 	padding-left: 5px;
@@ -77,7 +77,7 @@ main .info {
 }
 
 i.fa-search {
-	font-size: 18px;
+	font-size: 1.8rem;
 	color: #999999;
 	margin-left: 15px;
 }
@@ -117,11 +117,10 @@ main form input[type=submit] {
 	margin: 0 5px 5px 5px;
 	padding: 5px 10px 5px 10px;
 	overflow-x: auto;
-	display: inline;
+	display: inline-block;
 }
 
 .search_word li span, .search_word li i {
-	font-size: 17px;
 	color: #30A9A6;
 	cursor: pointer;
 }
@@ -132,87 +131,13 @@ main form input[type=submit] {
 	margin-left: 15px;
 }
 
-/* 가게 목록 */
-.box .store {
-	display: flex;
-	flex-wrap: wrap;
-	margin: 0px 0 40px 0;
+.nosuch {
+	font-size: 2.3rem;
+    text-align: center;
 }
 
-.box .store li {
-	border: 1px solid #ddd;
-	border-radius: 10px;
-	width: 46%;
-	margin: 10px auto;
-	padding: 25px 0;
-	position: relative;
-}
 
-.box .store li.temp {
-	border: none;
-}
 
-.box .store li>div {
-	padding: 10px;
-}
-
-.box .store li img {
-	width: 170px;
-	height: 170px;
-	position: absolute;
-	top: 15px;
-	left: 15px;
-	background-size: cover;
-	object-fit: cover;
-	border-radius: 10px;
-}
-
-.box .store li:hover img {
-	transform: scale(1.05);
-	transition: 0.1s;
-}
-
-.box .store li .inf {
-	margin-top: -10px;
-	font-size: 18px;
-	padding-left: 185px;
-}
-
-.box .store li .inf h2 {
-	font-size: 18px;
-	overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.box .store li .inf div span {
-	margin-right: 5px;
-}
-
-.score_box i {
-	font-size: 15px;
-}
-
-.score_box i.fas {
-	color: gold;
-}
-
-/* 가게 목록 */
-@media ( max-width :1150px) {
-	.box .store li {
-		
-	}
-	.box .store li img {
-		width: 150px;
-		height: 150px;
-	}
-	.box .store li .inf {
-		font-size: 16px;
-		padding-left: 163px;
-		position: relative;
-		top: -5px;
-	}
-}
 
 @media ( max-width :1024px) {
 	main {
@@ -228,16 +153,6 @@ main form input[type=submit] {
 		border-radius: 0;
 		border-bottom: 2px solid #ddd;
 	}
-	.box .store li img {
-		top: 5px;
-		left: 5px;
-	}
-	.box .store li .inf {
-		font-size: 16px;
-		padding-left: 154px;
-		position: relative;
-		top: -15px;
-	}
 }
 
 @media ( max-width :780px) {
@@ -247,30 +162,11 @@ main form input[type=submit] {
 	main form .input_box {
 		width: 95%;
 	}
-	main form input[type=text] {
-		font-size: 16px;
-	}
 	main form .input_box>div:first-child {
 		width: 40px;
 	}
 	i.fa-search {
-		font-size: 16px;
-	}
-	.box .store li {
-		padding: 25px 0 0px;
-	}
-	.box .store li img {
-		width: 90px;
-		height: 90px;
-	}
-	.box .store li .inf {
-		font-size: 13px;
-		padding-left: 93px;
-		top: -18px;
-		margin-bottom: -10px;
-	}
-	.box .store li .inf h2 {
-		font-size: 15px;
+		font-size: 1.6rem;
 	}
 	.search_word {
 		margin-bottom: 15px;

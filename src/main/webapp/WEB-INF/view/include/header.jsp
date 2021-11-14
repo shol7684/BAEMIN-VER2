@@ -21,7 +21,7 @@ header .admin_page_btn a {
 </style>
 
 </head>
-<body onselectstart='return false'>
+<body >
 	<!-- <body> -->
 
 
@@ -40,6 +40,14 @@ header .admin_page_btn a {
 				</div>
 			</div>
 			<!-- 임시 -->
+			
+			<div class="menu_tab_box active">
+				<div class="menu_tab">
+					<span> </span>
+					<span> </span>
+					<span> </span>
+				</div>
+			</div>
 
 		</div>
 	</header>

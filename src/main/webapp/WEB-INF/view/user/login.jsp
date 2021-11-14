@@ -61,6 +61,13 @@
 						<img src="/img/google_login_btn.png">
 					</a>
 				</div>
+				
+				<div>
+					<a href="/oauth2/authorization/facebook">
+						페이스북
+						<img src="/img/google_login_btn.png">
+					</a>
+				</div>
 			</div>
 			
 			<div class="join"><a href="/join" >회원 가입하러 가기</a></div>

@@ -1,23 +1,22 @@
 package com.baemin.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.StringTokenizer;
-import java.util.TreeSet;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.jni.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,11 +32,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.baemin.config.LoginDetail;
 import com.baemin.service.StoreService;
+import com.baemin.util.CookieManager;
+import com.baemin.util.Page;
+import com.baemin.util.UploadFile;
+import com.baemin.vo.FoodOption;
 import com.baemin.vo.Review;
 import com.baemin.vo.Store;
-
-import lombok.Getter;
-import lombok.Setter;
+import com.baemin.vo.StoreDetail;
 
 @Controller
 public class StoreController {
@@ -45,46 +46,44 @@ public class StoreController {
 	@Autowired
 	private StoreService storeService;
 
+	@Autowired
+	private UploadFile uploadFile;
+	
 	private static final Logger LOGGER = LogManager.getLogger(StoreController.class);
 
-	private int category = 0;
-	private int address1 = 0;
-	
-	@Autowired
-	private Store store;
-	
+
 	@GetMapping("/store/{category}/{address1}")
 	public String store(@PathVariable int category, @PathVariable int address1, Model model) {
-		this.category = category;
-		this.address1 = address1;
-		
-		LOGGER.info("가게 카테고리 : " + category + " 우편번호 : " + address1 );
-		
+
+		LOGGER.info("가게 카테고리 : " + category + " 우편번호 : " + address1);
+
 		int page = 1;
 		List<Store> storeList = storeService.storeList(category, address1 / 100, page);
-
+		
 		model.addAttribute("storeList", storeList);
 
 		return "store/store";
 	}
-	
+
 	@ResponseBody
 	@GetMapping("/store/sortStore")
-	public ResponseEntity<List<Store>> sortStore(String sort, Model model){
+	public ResponseEntity<List<Store>> sortStore(String sort, int category, int address1, Model model) {
 		List<Store> storeList = storeService.storeList(category, address1 / 100, sort, 1);
-		return new ResponseEntity<>(storeList,HttpStatus.CREATED);
+		return new ResponseEntity<>(storeList, HttpStatus.OK);
 	}
 
 	@ResponseBody
 	@GetMapping("/storeNextPage")
-	public ResponseEntity<List<Store>> storeNextPage(int page) {
+	public ResponseEntity<List<Store>> storeNextPage(int page, int category, int address1) {
 		List<Store> storeList = storeService.storeList(category, address1 / 100, page);
-		return new ResponseEntity<>(storeList,HttpStatus.CREATED);
+		return new ResponseEntity<>(storeList, HttpStatus.OK);
 	}
+	
+	
 
 	@GetMapping("/store/detail/{id}")
-	public String storeDetail(@PathVariable long id, Model model, @AuthenticationPrincipal LoginDetail user) {
-	
+	public String storeDetail(@PathVariable long id, Model model, @AuthenticationPrincipal LoginDetail user) throws NotFoundException {
+
 		long userId = 0;
 		String role = "";
 		if (user != null) {
@@ -92,35 +91,28 @@ public class StoreController {
 			role = user.getUser().getRole();
 		}
 
-		Map<String, Object> store = storeService.storeDetail(id, userId);
+		StoreDetail storeDetail = storeService.storeDetail(id, userId);
 
-		System.out.println("가게 정보 = " + store);
-
-		model.addAttribute("store", store);
+		model.addAttribute("store", storeDetail);
 		model.addAttribute("role", role);
-		
-		this.store.setDeleveryTip(10000000);
-		
+
 		return "store/detail";
 	}
+	
+	
+	
 
 	// 메뉴 클릭시 음식 추가옵션 가져요기
 	@ResponseBody
 	@GetMapping("/foodOption")
-	public List menuDetail(int foodId) {
-		List<String> foodOption = storeService.foodOption(foodId);
-
+	public List<FoodOption> menuDetail(int foodId) {
+		List<FoodOption> foodOption = storeService.foodOption(foodId);
 		return foodOption;
 	}
 
 	// 리뷰 작성
 	@PostMapping("/store/review")
-	public String review(Review review, MultipartFile file, @AuthenticationPrincipal LoginDetail user) {
-
-		System.out.println(file);
-		System.out.println(file.getOriginalFilename());
-
-		System.out.println(file.isEmpty());
+	public String review(Review review, MultipartFile file, @AuthenticationPrincipal LoginDetail user) throws IOException {
 
 		// 이미지 첨부 x
 		if (file.isEmpty()) {
@@ -130,13 +122,11 @@ public class StoreController {
 
 		// 이미지 첨부 o
 		else {
-			String img = File.separator + "upload" + File.separator + file.getOriginalFilename();
+			String img = uploadFile.fildUpload(file);
 			review.setReviewImg(img);
 		}
 		long userId = user.getUser().getId();
 		review.setUserId(userId);
-
-		System.out.println("유져" + review);
 
 		storeService.reviewWrite(review);
 
@@ -145,21 +135,16 @@ public class StoreController {
 
 	// 리뷰 수정
 	@PostMapping("/store/reviewModify")
-	public String reviewModify(Review review, MultipartFile file, @AuthenticationPrincipal LoginDetail user) {
+	public String reviewModify(Review review, MultipartFile file, @AuthenticationPrincipal LoginDetail user) throws IOException {
 
-		// 이미지 첨부 x
-		if (file.isEmpty()) {
-			String img = "";
-			review.setReviewImg(img);
-		}
-		// 이미지 첨부 o
-		else {
-			String img = File.separator + "upload" + File.separator + file.getOriginalFilename();
+		if(!file.isEmpty()){
+			String img = uploadFile.fildUpload(file);
 			review.setReviewImg(img);
 		}
 		long userId = user.getUser().getId();
 		review.setUserId(userId);
 
+		System.out.println(review);
 		storeService.reviewModify(review);
 
 		return "redirect:/orderList";
@@ -203,113 +188,76 @@ public class StoreController {
 		return "/store/likes";
 	}
 
-	@GetMapping("/store/search")
-	public String search(String address1, String keyword, Model model, HttpServletResponse response,
+	@GetMapping({"/store/search", "/store/search/{movePage}"})
+	public String search(String address1, String keyword, Model model, @PathVariable Optional<Integer> movePage, HttpServletResponse response,
 			HttpServletRequest request) throws UnsupportedEncodingException {
 
 		System.out.println("keyword = " + keyword);
 		System.out.println("address1 = " + address1);
 
-		Cookie[] cookies = request.getCookies();
-
-		String cookieKeyword = "";
-
-		for (int i = 0; i < cookies.length; i++) {
-			if (cookies[i].getName().equals("keyword")) {
-				cookieKeyword = URLDecoder.decode(cookies[i].getValue(), "UTF-8");
-				break;
-			}
-		}
-
-		LinkedHashSet<String> set = new LinkedHashSet<>();
-		StringTokenizer st = new StringTokenizer(cookieKeyword, ", ");
-
-		if(keyword != null ) {
-			set.add(keyword);
+		CookieManager cookieManager = new CookieManager();
+		
+		String findCookie = cookieManager.findCookie("keyword", request);
+		
+		LinkedHashSet<String> set = null;
+		
+		if(keyword == null ) {
+				
+			set = cookieManager.cookieSave(response, findCookie);
+			
+		} else {
+			
+			set = cookieManager.cookieSave(response, keyword, findCookie);
+			
+			cookieManager.addCookie(set.toString(), "keyword", response);
 		}
 		
-		while (st.hasMoreTokens()) {
-			set.add(st.nextToken());
-			
-			if(set.size() > 7) {
-				break;
-			}
-		}
-
+		// 검색어 쿠키 목록
 		model.addAttribute("searchKeyword", set);
-			
-			
-		// 쿠키 저장
-		String s = set.toString();
-		s = s.substring(1, s.length() - 1); // 괄호 제거
-
-		Cookie cookie = new Cookie("keyword", URLEncoder.encode(s, "UTF-8"));
-		cookie.setMaxAge(60*60*24*30);
-		response.addCookie(cookie);
-
-
-		if (address1 != null && !address1.equals("")) {
-
-			List<Store> store = storeService.storeSearch(Integer.parseInt(address1) / 100, keyword);
-			model.addAttribute("store", store);
-
-			System.out.println(store);
-
-		}
-		
+	
+		// 방금 검색한 키워드
 		model.addAttribute("keyword", keyword);
-
+		
+		
+		if (address1 != null && !address1.equals("")) {
+			Page p = new Page(movePage);
+			
+			List<Store> store = storeService.storeSearch(Integer.parseInt(address1) / 100, keyword, movePage);
+			
+			if(store.size() == 0 ) {
+				model.addAttribute("nosuch", true);
+			}
+			else {
+				model.addAttribute("address1", address1);
+				model.addAttribute("store", store);
+				model.addAttribute("lastPage", p.lastPage(store.get(0).getListCount()));
+				model.addAttribute("page", new Page(movePage));
+			}
+		}
 		return "store/search";
 	}
-	
+
 	@ResponseBody
 	@DeleteMapping("/store/keyword-all")
-	public void keywordDelete(HttpServletResponse response) {
+	public void keywordDelete(HttpServletResponse response, HttpServletRequest request) throws UnsupportedEncodingException {
 		Cookie cookie = new Cookie("keyword", null);
 		cookie.setMaxAge(0);
 		response.addCookie(cookie);
 	}
-	
-	
+
 	@ResponseBody
 	@DeleteMapping("/store/keyword-one")
-	public void keywordDelete(String keyword, HttpServletResponse response, HttpServletRequest request ) throws UnsupportedEncodingException {
+	public void keywordDelete(String keyword, HttpServletResponse response, HttpServletRequest request)
+			throws UnsupportedEncodingException {
 		
-		Cookie[] cookies = request.getCookies();
-
-		String cookieKeyword = "";
-
-		for (int i = 0; i < cookies.length; i++) {
-			if (cookies[i].getName().equals("keyword")) {
-				cookieKeyword = URLDecoder.decode(cookies[i].getValue(), "UTF-8");
-				break;
-			}
-		}
-
-		LinkedHashSet<String> set = new LinkedHashSet<>();
-		StringTokenizer st = new StringTokenizer(cookieKeyword, ", ");
-
+		System.out.println("검색어 " + keyword + "삭제");
 		
-		while (st.hasMoreTokens()) {
-			set.add(st.nextToken());
-			
-			if(set.size() > 7) {
-				break;
-			}
-		}
-
-		set.remove(keyword);
+		CookieManager cookieManager = new CookieManager();
 		
-		String s = set.toString();
-		s = s.substring(1, s.length() - 1); // 괄호 제거
+		String findCookie = cookieManager.findCookie("keyword", request);
 
-		Cookie cookie = new Cookie("keyword", URLEncoder.encode(s, "UTF-8"));
-		cookie.setMaxAge(60*60*24*30);
-		response.addCookie(cookie);
-		
+		cookieManager.removeKeyword(response, findCookie, keyword);
 		
 	}
-	
-	
 
 }
