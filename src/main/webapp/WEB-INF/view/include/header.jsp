@@ -53,10 +53,3 @@ header .admin_page_btn a {
 	</header>
 	<!-- 헤더 -->
 
-
-	<script>
-		console.log(location.href);
-		console.log(location.host);
-		console.log(location.pathname); // baemin/home
-		console.log(location.hostname);
-	</script>

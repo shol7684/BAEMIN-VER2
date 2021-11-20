@@ -1,23 +1,28 @@
 
+$(document).ready(function(){
+	
+
 const dateInput = document.getElementById("date");
 dateInput.valueAsDate = new Date();
 
 
-let size = $(window).width();
-
 $(window).off().resize(function() {
-	size = $(window).width();
-	
-	if(size > 1023) {
+	const size = window.innerWidth
+	$("header .menu_tab").removeClass("active");
+	if(size > 1024) {
 		$(".tab").show();
-	} 
+	} else {
+		$(".tab").hide();
+	}
 })
-	
 
 $(".menu_tab").click(function(){
-	
-	if(size < 1024) {
-		$(".tab").stop().fadeToggle();	
+	if($(".tab").css("display") == "none") {
+		$(this).addClass("active");
+		$(".tab").fadeIn();
+	} else {
+		$(this).removeClass("active");
+		$(".tab").fadeOut();
 	}
 });
 
@@ -50,7 +55,6 @@ $(".year_btn").click(function(){
 
 function sales(time,date){
 
-	let now = "";
 	let title = "";
 	let format = "";
 	let dateArr = [];
@@ -89,7 +93,7 @@ function sales(time,date){
 		data: data
 	})
 	.done(function(result) {
-		
+		console.log(result);
 		let html = "";
 		
 		for(var i=0;i<dateArr.length;i++) {
@@ -195,6 +199,6 @@ function getDate(time, date){
 }
 
 
-
+})
 
 

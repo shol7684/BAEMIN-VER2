@@ -6,6 +6,7 @@
         <div><a href="https://github.com/shol7684/BAEMIN-VER2">github</a></div>
         <div>전화번호</div>
         <div>이메일</div>
-        
     </div>
 </footer>
+
+<script src="/js/util/util.js"></script>

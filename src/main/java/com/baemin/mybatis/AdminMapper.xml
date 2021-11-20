@@ -172,6 +172,18 @@
 		)
 	</insert>
 	
+	<insert id="modifyMenuOption">
+		UPDATE BM_FOOD_OPTION SET
+			OPTION_NAME = #{foodOption }
+			,OPTION_PRICE = #{foodOptionPrice }
+		WHERE ID = #{optionId }
+	</insert>
+	
+	
+	<delete id="deleteOption">
+		DELETE BM_FOOD_OPTION WHERE ID = #{optionId }
+	</delete>
+	
 	
 	
 	<update id="storeModify">
@@ -263,35 +275,27 @@
 	
 	<select id="salesYear" resultType="Sales">
 		      
-   SELECT TO_DATE(ORDER_DATE, 'YYYY-MM'), SUM(TOTAL_PRICE) TOTAL FROM (    
-       SELECT 
-	        OU.ORDER_NUM
-	        ,TO_CHAR(OU.ORDER_DATE, 'YYYY-MM') ORDER_DATE
-	        ,OUD.TOTAL_PRICE
-	    FROM
-	        BM_ORDER_USER OU
-	    LEFT JOIN
-	        BM_ORDER_DETAIL_USER OUD
-	    ON 
-	        OU.ORDER_NUM = OUD.ORDER_NUM
-	    
+   	SELECT	TO_DATE(ORDER_DATE, 'YYYY-MM') ORDER_DATE
+   			,SUM(TOTAL_PRICE) TOTAL 
+	FROM 
+			(SELECT		OU.ORDER_NUM
+	        			,TO_CHAR(OU.ORDER_DATE, 'YYYY-MM') ORDER_DATE
+	        			,OUD.TOTAL_PRICE
+	    	FROM		BM_ORDER_USER OU
+	    	LEFT JOIN	BM_ORDER_DETAIL_USER OUD
+	    	ON			OU.ORDER_NUM = OUD.ORDER_NUM
     UNION ALL
-	    
-	     SELECT 
-	        ONU.ORDER_NUM
-	        ,TO_CHAR(ONU.ORDER_DATE, 'YYYY-MM') ORDER_DATE
-	        ,ONUD.TOTAL_PRICE
-	    FROM
-	        BM_ORDER_NON_USER ONU
-	    LEFT JOIN
-	        BM_ORDER_DETAIL_NON_USER ONUD
-	    ON 
-	        ONU.ORDER_NUM = ONUD.ORDER_NUM    
-    ) R
-    WHERE ORDER_DATE BETWEEN TO_CHAR(TRUNC(SYSDATE, 'YYYY'), 'YYYY-MM') AND TO_CHAR(TRUNC(SYSDATE, 'YYYY')+364, 'YYYY-MM')
+	     	SELECT		ONU.ORDER_NUM
+	        			,TO_CHAR(ONU.ORDER_DATE, 'YYYY-MM') ORDER_DATE
+	        			,ONUD.TOTAL_PRICE
+	    	FROM		BM_ORDER_NON_USER ONU
+	    	LEFT JOIN	BM_ORDER_DETAIL_NON_USER ONUD
+	    	ON			ONU.ORDER_NUM = ONUD.ORDER_NUM    
+		    ) R
+		    
+    WHERE	ORDER_DATE BETWEEN TO_CHAR(TRUNC(SYSDATE, 'YYYY'), 'YYYY-MM') 
+    AND 	TO_CHAR(TRUNC(SYSDATE, 'YYYY')+364, 'YYYY-MM')
     GROUP BY ROLLUP(ORDER_DATE)
-       
-	
 	
 	
 <!-- 	SELECT 
@@ -338,34 +342,22 @@
 	
 	
 	<select id="salesMonth" resultType="Sales">
-	SELECT
-	    ORDER_DATE
-	   ,SUM(TOTAL_PRICE) TOTAL
-    FROM (
-    	SELECT 
-        	OU.ORDER_NUM
-        	,TO_CHAR(OU.ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE
-        	,OUD.TOTAL_PRICE
-    	FROM
-	        BM_ORDER_USER OU
-	    LEFT JOIN
-	        BM_ORDER_DETAIL_USER OUD
-	    ON 
-	        OU.ORDER_NUM = OUD.ORDER_NUM
-	        
+	SELECT	ORDER_DATE
+	   		,SUM(TOTAL_PRICE) TOTAL
+    FROM 	(SELECT		OU.ORDER_NUM
+        				,TO_CHAR(OU.ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE
+        				,OUD.TOTAL_PRICE
+    		FROM		BM_ORDER_USER OU
+	    	LEFT JOIN	BM_ORDER_DETAIL_USER OUD
+	    	ON			OU.ORDER_NUM = OUD.ORDER_NUM
     UNION ALL
-    
-	    SELECT 
-	        ONU.ORDER_NUM
-	        ,TO_CHAR(ONU.ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE
-	        ,ONUD.TOTAL_PRICE
-	    FROM
-	        BM_ORDER_NON_USER ONU
-	    LEFT JOIN
-	        BM_ORDER_DETAIL_NON_USER ONUD
-	    ON 
-	        ONU.ORDER_NUM = ONUD.ORDER_NUM
-	    ) 
+	    	SELECT		ONU.ORDER_NUM
+	        			,TO_CHAR(ONU.ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE
+	        			,ONUD.TOTAL_PRICE
+	    	FROM		BM_ORDER_NON_USER ONU
+	    	LEFT JOIN	BM_ORDER_DETAIL_NON_USER ONUD
+	    	ON			ONU.ORDER_NUM = ONUD.ORDER_NUM
+	    	) 
 	WHERE 
 		<if test="time.equals('month') and month == null">
    		ORDER_DATE BETWEEN TRUNC(SYSDATE, 'MM') AND LAST_DAY(SYSDATE)
@@ -379,14 +371,32 @@
 		ORDER_DATE BETWEEN TRUNC(SYSDATE, 'IW') AND TRUNC(SYSDATE+7, 'IW')-1	
 		</if>
 		
-		
 	GROUP BY ROLLUP(ORDER_DATE)
 	ORDER BY ORDER_DATE
 	</select>
 	
 	<!-- ORDER_DATE BETWEEN TRUNC(SYSDATE, 'IW') AND TRUNC (SYSDATE, 'IW')+7 -->
+	
+	
+	<update id="modifyMenu">
+		UPDATE	BM_FOOD 
+		SET		STORE_ID = #{storeId }
+			    ,FOOD_NAME = #{foodName }
+			    ,FOOD_PRICE = #{foodPrice }
+			    ,FOOD_DEC = #{foodDec }
+			    ,FOOD_IMG = #{foodImg }
+			    ,FOOD_THUMB = #{foodThumb }
+		WHERE	ID = #{id }
+	
+	
+	</update>
+	
+	
 		
 </mapper>
+   
+   
+   
    
    
    

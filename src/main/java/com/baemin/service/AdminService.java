@@ -1,6 +1,7 @@
 package com.baemin.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.baemin.util.Page;
 import com.baemin.vo.Food;
@@ -29,20 +30,26 @@ public interface AdminService {
 	void menuDelete(int storeId, long[] deleteNumber);
 
 	void addMenu(Food food, String[] foodOption, Integer[] foodOptionPrice);
-
+	
 	void storeModify(Store store);
 
 	// 주문목록에서 주문수락하기
 	int orderAccept(String orderNum, int time, long userId);
 
 	// 상품권 등록
-	int pointRegist(String giftCardNum, long id);
+	Map<String, Object> pointRegist(String giftCardNum, long id);
 
 	int orderCancle(String orderNum, String cancleReason, long userId);
 
 	int orderComplete(String orderNum, long userId);
 
 	List<Sales> sales(String time, String month);
+
+	void modifyMenu(Food food, String[] foodOption, Integer[] foodOptionPrice, Integer[] optionId);
+
+	void deleteOption(long optionId);
+
+	
 
 	
 

@@ -11,7 +11,7 @@ $(document).ready(function() {
 	
 	let winHeight = 0;
 	let docHeight = 0;
-	let page = 2;
+	let page = 1;
 	let run = false;
 
 	$(window).scroll(function(){
@@ -27,22 +27,23 @@ $(document).ready(function() {
 			console.log("페이지 추가");
 			console.log("sort= " + sort);
 			
+			page++;
 			run = true;
 			
 			const data = {
-				page : page,
 				category : category,
-				address1 : address1
+				address1 : address1,
+				sort : sort,
+				page : page
 			}
 			
 			$.ajax({
-				url: "/storeNextPage",
+				url: "/store/storeList",
 				type: "GET",
 				data : data
 			})
 			.done(function(result){
 				const storeHtml = storeList(result);
-				page++;
 				
 				$(".store").append(storeHtml);
 				
@@ -61,26 +62,28 @@ $(document).ready(function() {
 
 // 가게 정렬 
 $(".option li").click(function() {
-	
 	sort = $(this).data("sort");
-	/*nowOption();*/
+	page = 1;
+	
 	$(".option li").removeClass("active");
 	$(this).addClass("active");
 	
 	const data = {
-		sort : sort,
-		category : category,
-		address1 : address1
-	}
+				category : category,
+				address1 : address1,
+				sort : sort,
+				page : page
+			}
+			
 	$.ajax({
-		url: "/store/sortStore",
+		url: "/store/storeList",
 		type: "get",
 		data: data
 	})
 	.done(function(result, textStatus, xhr){
 		// 페이지 초기화
 		run = false;
-		page = 2;
+		
 		
 		const storeHtml = storeList(result);
 		$(".box ul.store").html(storeHtml);
@@ -93,14 +96,10 @@ $(".option li").click(function() {
 
 
 
-function nowOption(){
-	$(".option li").removeClass("active");
-	$(".option li[data-sort='" + sort +"']").addClass("active");
-}
-
-
 
 function storeList(result){
+	console.log("sort = " + sort);
+	
 	let html = "";
 		for(var i=0;i<result.length;i++) {
 			const id = result[i]["id"];
@@ -133,38 +132,39 @@ function storeList(result){
 			}
 			
 			
-			html += `<li >
-						<div class="img_box">
-							<a href=/store/detail/${id }"><img src="${storeImg }" alt="이미지"></a>
-						</div>
+			html += 
+			`<li >
+				<div class="img_box">
+					<a href=/store/detail/${id }"><img src="${storeImg }" alt="이미지"></a>
+				</div>
+		
+				<div class="info_box">
 				
-						<div class="info_box">
+					<h2><a href="/store/detail/${id }">${storeName }</a></h2>
+					
+					<a>
+					<span>
+						<span>평점 ${score }</span>
 						
-							<h2><a href="/store/detail/${id }">${storeName }</a></h2>
-							
-							<a>
-							<span>
-								<span>평점 ${score }</span>
-								
-								<span class="score_box">
-									${scoreHtml}
-								</span>
-							</span>
-								
-							<span>
-								<span>리뷰 ${reviewCount }</span>
-								<span>사장님 댓글 ${bossCommentCount }</span>
-							</span>
-							
-							<span>
-								<span>최소주문금액 ${minDelevery }원</span>
-								<span>배달팁 ${deleveryTip }원</span>
-							</span>
-							<span>배달시간 ${deleveryTime }분</span>
-							</a>
-						</div>
-                	${isOpenHtml}
-                </li>`;
+						<span class="score_box">
+							${scoreHtml}
+						</span>
+					</span>
+						
+					<span>
+						<span>리뷰 ${reviewCount }</span>
+						<span>사장님 댓글 ${bossCommentCount }</span>
+					</span>
+					
+					<span>
+						<span>최소주문금액 ${minDelevery }원</span>
+						<span>배달팁 ${deleveryTip }원</span>
+					</span>
+					<span>배달시간 ${deleveryTime }분</span>
+					</a>
+				</div>
+        	${isOpenHtml}
+        </li>`;
 		}
 	return html;	
 }

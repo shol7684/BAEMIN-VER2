@@ -46,7 +46,7 @@
 		
 	<c:if test="${!storeList.isOpen}">
 		<div class="is_open">
-			<a href="/store/detail/${storeList.id }">지금은 준비중입니다
+			<a href="/store/detail/${storeList.id }">지금은 준비중입니다</a>
 		</div>
 	</c:if>
 </li>

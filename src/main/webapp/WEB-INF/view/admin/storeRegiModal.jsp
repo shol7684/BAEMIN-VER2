@@ -31,6 +31,8 @@
 	                        <option value="107">족발/보쌈</option>
 	                        <option value="108">야식</option>
 	                        <option value="109">한식</option>
+	                        <option value="110">1인분</option>
+	                        <option value="111">도시락</option>
 	                    </select>
                     </div>
 	            </li>
@@ -68,7 +70,7 @@
 	                    <h2>매장 전화번호</h2>
 	                </label>
 	                <div class="input_area">
-	                	<input type="number" onkeypress="return lenthCheck(this, 11);" id="store_phone_number" name="storePhone" required>
+	                	<input type="number" onkeypress="return lenthCheck(this, 11);" pattern="\d*" id="store_phone_number" name="storePhone" required>
                 	</div>
 	            </li>
 	
@@ -102,7 +104,7 @@
 	                    <h2>최소 배달금액</h2>
 	                </label>
 	                <div class="input_area">
-                		<input type="number" onkeypress="return lenthCheck(this, 8);" id="min_delevery_price" name="minDelevery" required>
+                		<input type="number" onkeypress="return lenthCheck(this, 8);" pattern="\d*" id="min_delevery_price" name="minDelevery" required>
 	                </div>
 	            </li>
 	            
@@ -111,7 +113,7 @@
 	                    <h2>배달팁</h2>
 	                </label>
 	                <div class="input_area">
-	                	<input type="number" onkeypress="return lenthCheck(this, 8);" id="delevery_tip" name="deleveryTip" required >
+	                	<input type="number" onkeypress="return lenthCheck(this, 8);" pattern="\d*" id="delevery_tip" name="deleveryTip" required >
 	                </div>
 	            </li>
 	            
@@ -122,7 +124,7 @@
 	                    <h2>예상 배달시간</h2>
 	                </label>
 	                <div class="input_area">
-	                	<input type="number"  onkeypress="return lenthCheck(this, 3);"  pattern="/d*" value="" id="delevery_time" name="deleveryTime" required>
+	                	<input type="number"  onkeypress="return lenthCheck(this, 3);"  pattern="\d*" value="" id="delevery_time" name="deleveryTime" required>
 	                </div>
 	            </li>
 	            

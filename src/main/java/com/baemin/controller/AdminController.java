@@ -143,6 +143,7 @@ public class AdminController {
 	}
 	
 	
+	
 	@GetMapping("/admin/detail/{id}")
 	public String adminStoreDetail(@PathVariable int id,Model model, @AuthenticationPrincipal LoginDetail user) throws NotFoundException {
 		
@@ -183,12 +184,11 @@ public class AdminController {
 		
 	}
 	
+	
+	
 	@PostMapping("/admin/menu")
 	public String addMenu(Food food, String[] foodOption, Integer[] foodOptionPrice, MultipartFile file) throws IOException {
 		
-		System.out.println("food = " + food);
-		System.out.println("foodOption= " + Arrays.toString(foodOption));
-		System.out.println("foodOptionPrice= " + Arrays.toString(foodOptionPrice));
 //		이미지 첨부 x 
 		if(file.isEmpty()) {
 			String img = File.separator + "img" + File.separator + "none.gif";
@@ -201,16 +201,35 @@ public class AdminController {
 			food.setFoodImg(img);
 			food.setFoodThumb(img);
 		}
-		
 		adminService.addMenu(food, foodOption, foodOptionPrice);
-		
-		
-		
-		
-		
-		
-		
 		return "redirect:/admin/detail/" + food.getStoreId() ;
+	}
+	
+	
+	
+	
+	@PostMapping("/admin/menuModify")
+	public String modifyMenu(Food food, String[] foodOption, Integer[] foodOptionPrice, Integer[] optionId, MultipartFile file) throws IOException {
+		if(file.isEmpty()) {
+			String img = File.separator + "img" + File.separator + "none.gif";
+			food.setFoodImg(img);
+			food.setFoodThumb(img);
+		} else {
+			String img = uploadFile.fildUpload(file);
+			food.setFoodImg(img);
+			food.setFoodThumb(img);
+		}
+		
+		adminService.modifyMenu(food, foodOption, foodOptionPrice, optionId);
+		
+		return "redirect:/admin/detail/" + food.getStoreId();
+	}	
+	
+	
+	@ResponseBody
+	@DeleteMapping("/admin/option")
+	public void deleteOPtion(long optionId) {
+		adminService.deleteOption(optionId);
 	}
 	
 	
@@ -251,9 +270,6 @@ public class AdminController {
 	public ResponseEntity<String> orderComplete(String orderNum, long userId) {
 //		userId == 0 비회원
 		
-		System.out.println(orderNum);
-		System.out.println(userId);
-		
 		int result = adminService.orderComplete(orderNum, userId);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -262,15 +278,13 @@ public class AdminController {
 	
 	@ResponseBody
 	@PostMapping("/admin/pointRegist")
-	public String pointRegist(String giftCardNum, @AuthenticationPrincipal LoginDetail user, HttpSession session,  RedirectAttributes rttr) throws ServletException, IOException {
-		int point = adminService.pointRegist(giftCardNum, user.getUser().getId());
-		
-		if(point != 0) {
-			UserInfoSessionUpdate.sessionUpdate(point+"", "point", user, session);
-			DecimalFormat fm = new DecimalFormat();
-			return fm.format(point) +"원 충전되었습니다";
+	public Map<String, Object> pointRegist(String giftCardNum, @AuthenticationPrincipal LoginDetail user, HttpSession session,  RedirectAttributes rttr) throws ServletException, IOException {
+		Map<String, Object> point = adminService.pointRegist(giftCardNum, user.getUser().getId());
+		if(point != null) {
+			UserInfoSessionUpdate.sessionUpdate(point.get("point").toString(), "point", user, session);
+			return point;
 		} else {
-			return "잘못된 번호입니다";
+			return null;
 		}
 		 
 	}

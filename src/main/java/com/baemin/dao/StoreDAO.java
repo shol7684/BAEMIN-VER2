@@ -30,9 +30,12 @@ public interface StoreDAO {
 
 	int isLikes(Map<String, Long> m);
 
-	List likesList(long userId);
+	List<Store> likesList(long userId);
 
+	List<Store> likesListNonUser(String likes);
+	
 	List<Store> storeSearch(int address1, String address2, int pageStart, int pageEnd);
+
 
 
 }

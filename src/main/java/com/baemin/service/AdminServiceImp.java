@@ -107,19 +107,20 @@ public class AdminServiceImp implements AdminService {
 	
 
 	@Override
-	public int pointRegist(String giftCardNum, long id) {
+	public Map<String, Object> pointRegist(String giftCardNum, long id) {
 		
-		Map giftCard = adminDAO.selectCard(giftCardNum);
+		Map<String, Object> giftCard = adminDAO.selectCard(giftCardNum);
 		
+		System.out.println("giftCart = " + giftCard);
 		if(giftCard != null) {
 			String info = giftCard.get("info").toString();
 			int point = Integer.parseInt(giftCard.get("point").toString());
 			
 			adminDAO.pointUpdate(id, info, point );
-			return point;
+			return giftCard;
 		}
 		
- 		return 0;
+ 		return null;
 	}
 
 	@Override
@@ -129,20 +130,47 @@ public class AdminServiceImp implements AdminService {
 			List<Sales> year = adminDAO.salesYear();
 			
 			return year;
-			
-			
-//			Map<String, Long>  year = adminDAO.salesYear();
-//			List<Sales> list = new ArrayList<>();
-//			String[] yearArr = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOB", "DEC"};
-//			
-//			for(int i=0;i<12;i++) {
-//				list.add(new Sales(null, Long.parseLong(String.valueOf(year.get(yearArr[i])))));
-//			}
-//			list.add(new Sales(null, Long.parseLong(String.valueOf(year.get("TOTAL")))));
-//			return list;
 		}
 		
 		return adminDAO.sales(time,month);
+	}
+
+	@Transactional
+	@Override
+	public void modifyMenu(Food food, String[] foodOption, Integer[] foodOptionPrice, Integer[] optionId) {
+		adminDAO.modifyMenu(food);
+		
+		if(foodOption == null) {
+			return;
+		}
+		
+		for(int i=0,j=0;i<foodOption.length;i++) {
+			if(j < optionId.length && optionId[j] != null) {
+				Map<String, Object> map = new HashMap<>();
+				
+				map.put("optionId", optionId[j]);
+				map.put("foodOption", foodOption[i]);
+				map.put("foodOptionPrice", foodOptionPrice[i]);
+				adminDAO.modifyMenuOption(map);
+				j++;
+				
+			} else {
+				Map<String, Object> map = new HashMap<>();
+				
+				map.put("foodOption", foodOption[i]);
+				map.put("foodOptionPrice", foodOptionPrice[i]);
+				map.put("foodId", food.getId());
+				adminDAO.addMenuOption(map);
+			}
+		}
+		
+	}
+
+	
+	
+	@Override
+	public void deleteOption(long optionId) {
+		adminDAO.deleteOPtion(optionId);
 	}
 
 

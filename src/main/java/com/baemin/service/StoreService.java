@@ -1,7 +1,6 @@
 package com.baemin.service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.apache.ibatis.javassist.NotFoundException;
@@ -13,10 +12,9 @@ import com.baemin.vo.StoreDetail;
 
 public interface StoreService {
 	// 가게 기본정렬
-	List<Store> storeList(int category, int address, int page);
+	List<Store> storeList(int category, int address);
 	
-	// 가게 정렬버튼
-	List<Store> storeList(int category, int i, String sort, int j);
+	List<Store> storeList(int category, int address, String sort, int page);
 
 	// 가게 상세
 	StoreDetail storeDetail(long storeId, long userId) throws NotFoundException;
@@ -32,9 +30,12 @@ public interface StoreService {
 	void likes(long storeId, String likes, long userId);
 
 	// 내가 찜한 가게들
-	List likesList(long userId);
+	List<Store> likesList(long userId);
 
+	List<Store> likesListNonUser(String likes);
+	
 	List<Store> storeSearch(int address1, String keyword, Optional<Integer> movePage);
+
 
 	
 

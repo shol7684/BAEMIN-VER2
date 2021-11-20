@@ -1,144 +1,126 @@
+html {
+	font-size: 60%;
+}
 
-.input_area,textarea {
-	border-radius: 10px; 
+.input_area, textarea {
+	border-radius: 10px;
 }
 
 main {
 	width: 800px;
-	margin : 0 auto 50px ;
-} 
+	margin: 0 auto 50px;
+}
+.temp_img_box {
+	display: none;
+}
 
-
+.temp_img {
+	display: block;
+	width: 90%;
+	max-width: 500px;
+	margin: 0 auto;
+}
 section.title {
-    width: 100%;
+	width: 100%;
 }
 
 section.title h1 {
-    font-size: 24px;
-    text-align: center;
-    margin : 30px 0 50px 0 ;
+	text-align: center;
+	margin: 30px 0 50px 0;
 }
 
 /* main */
-
-main form > ul > li {
+main form>ul>li {
 	margin-bottom: 30px;
-	font-size: 18px;
 }
 
 main div {
-    margin-bottom: 5px;
+	margin-bottom: 5px;
 }
 
-main .menu_option,
-.price {
-	font-size: 16px;
+main .menu_option, .price {
 	color: #999;
 }
 
 main h2 {
-	font-size: 20px;
-	font-weight: bold;
 	margin-bottom: 5px;
+	position: relative;
+}
+
+main .order_info .delete_all {
+	position: absolute;
+	right: 0;
+	border: none;
+	padding: 5px;
 }
 
 main .order_info li {
 	position: relative;
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 10px;
+}
+
+main .order_info li .food_name_box {
+	display: flex;
+	justify-content: space-between;
+	margin-right: 10px;
+}
+
+main .order_info li .food_name_box i {
+	color: #999;
 }
 
 main .amount {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 }
 
 main .amount_box {
 	border: 1px solid #ddd;
-	border-radius: 40px;
-	font-size: 20px;
+	display: flex;
 	width: 150px;
-	padding: 5px;
-	text-align: center;
+	border-radius: 40px;
+	height: 35px;
+	overflow: hidden;
 }
-
 
 main .amount_box button {
 	border: none;
 	background: #fff;
-	font-size: 20px;
-	vertical-align: middle;
+	font-size: 2.2rem;
+	width: 30%;
 }
 
 main .amount_box #amount {
-	width: 50%;
-	border: none;
-	background: none;
 	text-align: center;
-	vertical-align: middle;
-}
-
-main .amount .sum {
-	font-weight: bold;
-	line-height: 43px;
-}
-
-/* 	
-main .amount .amount_box {
-	border: 1px solid #ddd;
-	border-radius: 40px;
-	font-size: 20px;
-	width: 150px;
-	padding: 5px;
-	display: block; 
-	position: absolute;
-	right: 0;
-	bottom:0; 
-	
-}
-
-main .amount .amount_box > span {
-	display: block;
-	float: left;
-	width: 33%;
-	margin-bottom: 5px;
-}
-
-main .amount .amount_box button {
-	width: 100%;
 	border: none;
-	background: #fff;
-	font-size: 20px;
-	
+	width: 40%;
 }
-main .amount .amount_box input {
-	width:100%;
-	border: none;
-	background: #fff;
-	text-align: center;
-}
-
- */
 
 main .input_area {
 	width: 250px;
 	height: 30px;
 	border: 1px solid #ddd;
-	padding-bottom: 5px;
 }
 
 main .input_area input {
-	padding-left: 10px;
-	border: none;	
-	font-size: 15px;
-	width: 97%;
-	padding-bottom: 5px;
-	margin-top:5px; 
-	
+	border: none;
+	width: 100%;
+	height: 100%;
+	padding: 0 10px;
+	box-sizing: border-box;
+}
+
+main #delevery_modify {
+	background: #ddd;
+	margin-left: 5px;
+	padding: 5px;
 }
 
 main .point_dis {
 	display: none;
 }
-
 
 main .order_btn {
 	width: 320px;
@@ -148,25 +130,24 @@ main .order_btn {
 	color: white;
 	border: 2px solid #ddd;
 	font-weight: bold;
-	font-size: 16px;
-	
 }
 
 main .request textarea {
-	padding: 10px;
+	padding: 5px 10px;
 }
-
 
 main .point {
 	border: 1px solid #333333;
-	padding: 10px;
+	padding: 0 10px;
 	width: 300px;
 	position: relative;
-	border-radius:10px; 
+	border-radius: 10px;
 }
 
-main .point > div {
-	margin-bottom: 0px;
+main .point>div {
+	height: 45px;
+	line-height: 45px;
+	margin: 0;
 }
 
 main .point .icon {
@@ -175,103 +156,61 @@ main .point .icon {
 }
 
 main .point_input_box {
-	width: 100%;
-    border-top: 1px solid #ddd;
-    margin-top: 7px;
-    height: 30px;
-    display: none;
-}
-
-main .point_input_box > span {
-	position: relative;
-    display: block;
-    height: 25px;
-	
+	border-top: 1px solid;
+	display: none;
 }
 
 main .point_area .point_input {
-    cursor: text;
-    width: 99%;
-    display: block;
-    margin: 8px auto 0;
-    height:100%; 
-    border: 0;
-    font-size: 15px;
+	width: calc(100% - 90px);
+	border: none;
 }
 
-main .use_point{
-	border: 1px solid #ddd; 
-    position: absolute;
-    top: -4px;
-    right: 0px;
-    padding: 5px;
-    border-radius: 10px;
-    background: #fff;
+main .use_point {
+	border: 1px solid #ddd;
+	background: #fff;
+	padding: 5px;
+	width: 80px;
 }
 
 input[type="submit"] {
 	cursor: pointer;
 }
 
-
-
-@media (max-width:1024px) {
+@media ( max-width :1024px) {
 	main {
 		width: 95%;
 	}
-	
 }
 
-@media (max-width:768px) {
-	main h2 {
-		font-size: 18px;
-	}
-	main li {
-		font-size: 16px;
-	}
-	
+@media ( max-width :767px) {
 	main .input_area {
 		width: 100%;
-		margin: 0 auto;
 	}
-	main .input_area input{
-		margin: 7px auto 0;
-		display: block;
-		padding-left: 5px;
+	main #delevery_modify {
+		border-radius: 10px;
 	}
-	.delevery_info {
-		width: 95%;
-		margin: 0 auto;
-	}
-	
 	.request {
 		margin: 0 auto;
 	}
 	.request textarea {
-		width:90%;
+		width: 100%;
 		display: block;
 		margin: 0 auto;
+		box-sizing: border-box;
 	}
-	
+	main .use_point {
+		border-radius: 10px;
+	}
 	main .point {
-		width: 92%;
 		margin: 0 auto;
+		width: 100%;
+		box-sizing: border-box;
 	}
 	main .order_btn {
-   	    width: 99%;
-	    margin: 0 auto;
-	    display: block;
+		width: 99%;
+		margin: 0 auto;
 	}
-	
-}
-
-@media (max-width:480px) {
-	main h2 {
-		font-size: 16px;
-	}
-	main li {
-		font-size: 14px;
+	main .amount_box {
+		width: 125px;
 	}
 }
-
-

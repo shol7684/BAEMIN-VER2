@@ -26,6 +26,5 @@
 
 
 <script type="text/javascript" src="/js/store/storeDetail.js"></script>
-<script type="text/javascript" src="/js/util/util.js"></script>
 </body>
 </html>

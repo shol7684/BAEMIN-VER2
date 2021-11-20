@@ -2,7 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fm" uri="http://java.sun.com/jsp/jstl/fmt" %>  
-
  <div id="wrap">
 	    <nav>
 	<%-- <img alt="" src="${store.storeInfo.storeImg }"> --%>
@@ -22,13 +21,16 @@
                    		
                    		<span class="store_score" data-score="${store.storeInfo.score }">${store.storeInfo.score }</span>
 					</span><br>
-                  
-                	<c:if test="${!store.isLikes }">
-	                   <span><i class="far fa-heart" ></i> 찜 </span>
-                    </c:if>
-                    <c:if test="${store.isLikes }">
-	                   <span><i class="fas fa-heart" ></i> 찜 </span>
-                    </c:if>
+                    
+                    <c:choose>
+                    	<c:when test="${store.isLikes || isLikes }">
+                    		<span><i class="fas fa-heart" ></i> 찜 </span>
+                    	</c:when>
+                    	
+                    	<c:otherwise>
+                    		<span><i class="far fa-heart" ></i> 찜 </span>
+                    	</c:otherwise>
+                    </c:choose>
                      
 	                <span class="likes_count" data-count=${store.storeInfo.likesCount } >${store.storeInfo.likesCount }</span>
                    
@@ -40,7 +42,7 @@
                   	<div id="delevery_tip" data-delevery_tip="${store.storeInfo.deleveryTip }">배달팁 <fm:formatNumber value="${store.storeInfo.deleveryTip }" pattern="###,###" />원</div>
                   
                   	<c:if test="${adminPage && role == 'ROLE_ADMIN'  }">
-	                  	<div id="admin_button_box">
+	                  	<div id="admin_button_box" data-is_admin="true">
 		                   	<button class="inf_modify">가게정보 수정</button>
 		                   	<button class="add_menu">메뉴 추가</button>
 		                   	<button class="delete_menu">메뉴 삭제</button>
@@ -48,17 +50,18 @@
                   </c:if>
               </div>
 	    </nav>
-	         
-	<!-- ---------------------------------- 모바일 카트 ---------------------------------- -->
+
+
+	<!-- 모바일 카트 -->
    	<div class="m_cart_img">
    		<div class="m_cart_img_box">
    			<i class="fas fa-shopping-cart"></i>
    			<span class="m_cart_count"></span>
    		</div>
    	</div>
-  	<!-- ---------------------------------- 모바일 카트 ---------------------------------- -->
+  	<!-- 모바일 카트 -->
     
-	<!---------------------------------------- 장바구니 -------------------------------------- -->    
+	<!-- 장바구니 -->    
 	    
 	    <aside id="cart">
 	        <div class="cart">	
@@ -89,7 +92,7 @@
 	    </aside>
 	    
 	    <div class="alarm">장바구니에 담았습니다</div>
-	<!---------------------------------------- 장바구니 -------------------------------------- -->    
+	<!-- 장바구니 -->    
 	   
 
 	    <main>
@@ -117,12 +120,12 @@
 		                    
    		                    <fm:formatNumber value="${foodList.foodPrice }" pattern="###,###" />원 
 		                    <input type="hidden" value="${foodList.storeId }" name="storeId" >
-				            <input type="hidden" value="${foodList.id }" name="foodId" id ="food_id"   >
-				            <input type="hidden" value="${foodList.foodName }" name="foodName" id ="food_name" >
-				            <input type="hidden" value="${foodList.foodPrice }" name="foodPrice" id ="food_price"   >
-				            <input type="hidden" value="${foodList.foodDec }" name="foodDec" id ="food_dec"   >
-				            <input type="hidden" value="${foodList.foodImg }" name="foodImg" id ="food_img"   >
-				            <input type="hidden" value="${foodList.foodThumb }" name="foodThumb" id ="food_thumb"   >
+				            <input type="hidden" value="${foodList.id }" name="foodId" class="food_id"   >
+				            <input type="hidden" value="${foodList.foodName }" name="foodName" class="food_name" >
+				            <input type="hidden" value="${foodList.foodPrice }" name="foodPrice" class="food_price"   >
+				            <input type="hidden" value="${foodList.foodDec }" name="foodDec" class="food_dec"   >
+				            <input type="hidden" value="${foodList.foodImg }" name="foodImg" class="food_img"   >
+				            <input type="hidden" value="${foodList.foodThumb }" name="foodThumb" class="food_thumb"   >
 		                </div>
 		                
                     	<div><img src="${foodList.foodImg }" alt="이미지"></div>

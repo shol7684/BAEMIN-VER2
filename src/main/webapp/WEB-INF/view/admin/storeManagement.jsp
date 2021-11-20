@@ -9,15 +9,7 @@
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
 
 	<div id="tab">
-		<section class="tab">
-	         <ul class="box">
-				<li class=""><a href="/admin/main">주문접수</a></li>
-				<li class="store_management"><a href="/admin/storeManagement">매장 관리</a></li>
-				<li class="sales"><a href="/admin/salesManagement">매출 확인</a></li>
-				<li class="order_search"><a href="#">주문번호 검색</a></li>
-				<li class="home"><a href="/">홈으로</a></li>
-			</ul>
-	    </section>
+		 <%@ include file="/WEB-INF/view/admin/admin-tab.jsp" %>
     </div>
     
     <section class="box">
@@ -68,62 +60,63 @@
 	
      
 
-
+	
+	<script type="text/javascript" src="/js/modal/modal.js" ></script>
+	<script src="/js/util/util.js"></script>
 	<script>
 
+	$(window).off().resize(function() {
+		const size = window.innerWidth
+		$("header .menu_tab").removeClass("active");
+		if(size > 1024) {
+			$(".tab").show();
+		} else {
+			$(".tab").hide();
+		}
+	})
 
-let size = $(window).width();
+	$(".menu_tab").click(function(){
+		if($(".tab").css("display") == "none") {
+			$(".tab").fadeIn();
+			$(this).addClass("active");
+		} else {
+			$(".tab").fadeOut();
+			$(this).removeClass("active");
+		}
+	});
 
-$(window).off().resize(function() {
-	size = $(window).width();
+
+	// 매장 등록	
+	$(".store_reg_btn button").click(function(){
+		openModal($(".store_reg_modal"));
+		
+	});
 	
-	if(size > 1023) {
-		$(".tab").show();
-	} 
-})
+	// 이미지 미리보기
+	$(".img").change(function(e){
+		imgPreview(e,$(this));
+	})
 	
-
-$(".menu_tab").click(function(){
-	if(size < 1024) {
-		$(".tab").stop().fadeToggle();	
+	
+	$(".img_close").click(function(){
+		imgClose();
+	})
+		
+	
+		
+	function check(){
+		const address1 = $("#address1").val();
+		const address2 = $("#address2").val();
+		
+		if(!address1 || !address2) {
+			swal("주소를 입력해주세요");
+			return false;
+		}
+		return true;
 	}
-});
-
-
-// 매장 등록	
-$(".store_reg_btn button").click(function(){
-	openModal($(".store_reg_modal"),size);
-	
-});
-
-// 이미지 미리보기
-$(".img").change(function(e){
-	imgPreview(e,$(this));
-})
-
-
-$(".img_close").click(function(){
-	imgClose();
-})
-	
-	
-	
-function check(){
-	const address1 = $("#address1").val();
-	const address2 = $("#address2").val();
-	
-	if(!address1 || !address2) {
-		swal("주소를 입력해주세요");
-		return false;
-	}
-	return true;
-}
-	
-	
 	
 	</script>
-	  <script type="text/javascript" src="/js/modal/modal.js" ></script>
-	<script src="/js/util/util.js"></script>
+
 	
 
 </body>

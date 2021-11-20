@@ -105,6 +105,9 @@ main ul .order_box {
 	text-align: center;
 	padding: 20px;
 }
+.modal .score_box i {
+	font-size: 22px;
+}
 
 .modal .score_box .fas {
 	color: gold;

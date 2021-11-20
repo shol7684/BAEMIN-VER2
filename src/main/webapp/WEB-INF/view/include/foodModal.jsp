@@ -8,7 +8,7 @@
 	<div class="food_modal modal">
 	
     	<div id="modal_header">
-			<button class="closeA"><i class="fas fa-times"></i></button>
+			<button type="button" class="closeA"><i class="fas fa-times"></i></button>
 			<h1>메뉴 상세</h1>
     	</div>
 	            
@@ -67,9 +67,10 @@
 			<input type="hidden" class="add_cart_food_name" >
 			<input type="hidden" class="add_cart_food_price" >
 			<input type="hidden" class="add_cart_food_id" >
-		
+			<div>
 			<div class="min_delevery">배달최소주문금액 <fm:formatNumber value="${store.storeInfo.minDelevery }" pattern="###,###" />원 </div>
             <div class="sum"><span>총 주문금액</span><span class="total_price">0</span></div>
+            </div>
           		
        		<button class=closeB type="button">취소</button>
        		<button class="add_cart" type="button">장바구니에 담기 </button>

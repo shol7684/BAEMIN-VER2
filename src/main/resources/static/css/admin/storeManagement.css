@@ -59,13 +59,20 @@ section.box input {
 	border: 1px solid #999;
 }
 
+.store_search {
+	width: 70%;
+	max-width: 300px;
+}
+
 .store_reg_btn button {
 	width: 120px;
 	margin: 15px;
+	background: #eee;
 }
 
 .store_search input {
 	border-radius: 10px;
+	width: 55%;
 }
 
 .store_search button {

@@ -1,14 +1,11 @@
 package com.baemin.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.StringTokenizer;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +37,8 @@ import com.baemin.vo.Review;
 import com.baemin.vo.Store;
 import com.baemin.vo.StoreDetail;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
+
 @Controller
 public class StoreController {
 
@@ -49,6 +48,9 @@ public class StoreController {
 	@Autowired
 	private UploadFile uploadFile;
 	
+	@Autowired
+	private CookieManager cookieManager;
+	
 	private static final Logger LOGGER = LogManager.getLogger(StoreController.class);
 
 
@@ -56,39 +58,35 @@ public class StoreController {
 	public String store(@PathVariable int category, @PathVariable int address1, Model model) {
 
 		LOGGER.info("가게 카테고리 : " + category + " 우편번호 : " + address1);
-
-		int page = 1;
-		List<Store> storeList = storeService.storeList(category, address1 / 100, page);
-		
+		List<Store> storeList = storeService.storeList(category, address1 / 100);
 		model.addAttribute("storeList", storeList);
-
 		return "store/store";
 	}
 
 	@ResponseBody
-	@GetMapping("/store/sortStore")
-	public ResponseEntity<List<Store>> sortStore(String sort, int category, int address1, Model model) {
-		List<Store> storeList = storeService.storeList(category, address1 / 100, sort, 1);
+	@GetMapping("/store/storeList")
+	public ResponseEntity<List<Store>> sortStore(int category, int address1, String sort, int page,  Model model) {
+		List<Store> storeList = storeService.storeList(category, address1 / 100, sort, page);
 		return new ResponseEntity<>(storeList, HttpStatus.OK);
 	}
-
-	@ResponseBody
-	@GetMapping("/storeNextPage")
-	public ResponseEntity<List<Store>> storeNextPage(int page, int category, int address1) {
-		List<Store> storeList = storeService.storeList(category, address1 / 100, page);
-		return new ResponseEntity<>(storeList, HttpStatus.OK);
-	}
-	
 	
 
 	@GetMapping("/store/detail/{id}")
-	public String storeDetail(@PathVariable long id, Model model, @AuthenticationPrincipal LoginDetail user) throws NotFoundException {
-
+	public String storeDetail(@PathVariable long id, Model model, @AuthenticationPrincipal LoginDetail user, HttpServletRequest request) throws NotFoundException, UnsupportedEncodingException {
 		long userId = 0;
 		String role = "";
 		if (user != null) {
 			userId = user.getUser().getId();
 			role = user.getUser().getRole();
+		} else {
+			String likesList = cookieManager.findCookie("likesList", request);
+			if(likesList == null ) {
+				model.addAttribute("isLikes", false);
+			} else {
+				String[] arr = likesList.split(",");
+				boolean isLikes = Arrays.asList(arr).contains(id+"");
+				model.addAttribute("isLikes", isLikes);
+			}
 		}
 
 		StoreDetail storeDetail = storeService.storeDetail(id, userId);
@@ -114,14 +112,10 @@ public class StoreController {
 	@PostMapping("/store/review")
 	public String review(Review review, MultipartFile file, @AuthenticationPrincipal LoginDetail user) throws IOException {
 
-		// 이미지 첨부 x
 		if (file.isEmpty()) {
 			String img = "";
 			review.setReviewImg(img);
-		}
-
-		// 이미지 첨부 o
-		else {
+		} else {
 			String img = uploadFile.fildUpload(file);
 			review.setReviewImg(img);
 		}
@@ -153,13 +147,15 @@ public class StoreController {
 	// 찜하기
 	@ResponseBody
 	@PostMapping("/store/likes")
-	public long likes(long id, String likes, @AuthenticationPrincipal LoginDetail user) {
-
-		System.out.println("찜하기id =  " + id);
-		System.out.println("찜하기id =  " + likes);
+	public long likes(long id, String likes, @AuthenticationPrincipal LoginDetail user, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		System.out.println("찜하기id =  " + id + " " + likes);
 		long userId = 0;
 		if (user == null) {
 			System.out.println("찜하기 비회원");
+			String likesList = cookieManager.findCookie("likesList", request);
+			LinkedHashSet<String> list = cookieManager.add(likesList, id+"");
+			cookieManager.addCookie(list.toString(), "likesList", response);
+			
 		} else {
 			System.out.println("찜하기 회원");
 			userId = user.getUser().getId();
@@ -172,18 +168,22 @@ public class StoreController {
 
 	// 찜한 가게 목록
 	@GetMapping("/likes/store")
-	public String likes(Model model, @AuthenticationPrincipal LoginDetail user) {
+	public String likes(Model model, @AuthenticationPrincipal LoginDetail user, HttpServletRequest request) throws UnsupportedEncodingException {
 
 		long userId = 0;
 
+		List<Store> likesList = new ArrayList<>();
 		if (user == null) {
-
+			String likes = cookieManager.findCookie("likesList", request);
+			if(!likes.equals("")) {
+				likesList = storeService.likesListNonUser(likes);
+			}
+			
 		} else {
 			userId = user.getUser().getId();
-
-			List likesList = storeService.likesList(userId);
-			model.addAttribute("likesList", likesList);
+			likesList = storeService.likesList(userId);
 		}
+		model.addAttribute("likesList", likesList);
 
 		return "/store/likes";
 	}
@@ -192,9 +192,6 @@ public class StoreController {
 	public String search(String address1, String keyword, Model model, @PathVariable Optional<Integer> movePage, HttpServletResponse response,
 			HttpServletRequest request) throws UnsupportedEncodingException {
 
-		System.out.println("keyword = " + keyword);
-		System.out.println("address1 = " + address1);
-
 		CookieManager cookieManager = new CookieManager();
 		
 		String findCookie = cookieManager.findCookie("keyword", request);
@@ -202,13 +199,10 @@ public class StoreController {
 		LinkedHashSet<String> set = null;
 		
 		if(keyword == null ) {
-				
 			set = cookieManager.cookieSave(response, findCookie);
 			
 		} else {
-			
 			set = cookieManager.cookieSave(response, keyword, findCookie);
-			
 			cookieManager.addCookie(set.toString(), "keyword", response);
 		}
 		
@@ -217,7 +211,6 @@ public class StoreController {
 	
 		// 방금 검색한 키워드
 		model.addAttribute("keyword", keyword);
-		
 		
 		if (address1 != null && !address1.equals("")) {
 			Page p = new Page(movePage);
@@ -249,15 +242,9 @@ public class StoreController {
 	@DeleteMapping("/store/keyword-one")
 	public void keywordDelete(String keyword, HttpServletResponse response, HttpServletRequest request)
 			throws UnsupportedEncodingException {
-		
-		System.out.println("검색어 " + keyword + "삭제");
-		
 		CookieManager cookieManager = new CookieManager();
-		
 		String findCookie = cookieManager.findCookie("keyword", request);
-
 		cookieManager.removeKeyword(response, findCookie, keyword);
-		
 	}
 
 }

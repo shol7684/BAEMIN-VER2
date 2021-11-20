@@ -79,7 +79,7 @@ public class AdminDAOImp implements AdminDAO {
 	}
 
 	@Override
-	public void addMenuOption(Map<String, Object> map) {
+	public void addMenuOption(Map map) {
 		sql.insert("admin.addMenuOption", map);
 
 	}
@@ -121,7 +121,7 @@ public class AdminDAOImp implements AdminDAO {
 	
 
 	@Override
-	public Map selectCard(String giftCardNum) {
+	public Map<String, Object> selectCard(String giftCardNum) {
 		return sql.selectOne("admin.selectCard", giftCardNum);
 	}
 
@@ -146,6 +146,21 @@ public class AdminDAOImp implements AdminDAO {
 		map.put("time", time);
 		map.put("month", month);
 		return sql.selectList("admin.salesMonth", map);
+	}
+
+	@Override
+	public void modifyMenu(Food food) {
+		sql.update("admin.modifyMenu", food);
+	}
+
+	@Override
+	public void modifyMenuOption(Map<String, Object> map) {
+		sql.update("admin.modifyMenuOption", map);
+	}
+
+	@Override
+	public void deleteOPtion(long optionId) {
+		sql.delete("admin.deleteOption", optionId);
 	}
 
 

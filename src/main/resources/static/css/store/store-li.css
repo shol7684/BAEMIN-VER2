@@ -98,12 +98,16 @@
 
 
 @media (max-width:1024px) {
+	.box .store {
+		background: #eee;
+	}
 	.box .store li {
 	    width: 100%;
 	    border:none;
 	    border-radius: 0;
 	    border-bottom: 2px solid #ddd;
-	    margin: 0 auto;
+	    margin: 0 auto 10px;
+	    background: #fff;
 	}
 	
 	.store .is_open {

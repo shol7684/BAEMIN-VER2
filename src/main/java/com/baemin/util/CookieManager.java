@@ -10,6 +10,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class CookieManager {
 
 	
@@ -63,21 +66,15 @@ public class CookieManager {
 	}
 	
 	
-	public void addCookie(String cookie, String saveName, HttpServletResponse response) throws UnsupportedEncodingException {
+	public void addCookie(String cookie, String cookieName, HttpServletResponse response) throws UnsupportedEncodingException {
+		cookie = cookie.replaceAll("[\\[\\]]", "");
 		
-		if(cookie.startsWith("[")) {
-			cookie =cookie.substring(1, cookie.length());
-		}
-		
-		if(cookie.endsWith("]")) {
-			cookie = cookie.substring(0, cookie.length()-1);
-		}
-		
-		Cookie ck = new Cookie(saveName, URLEncoder.encode(cookie, "UTF-8"));
+		Cookie ck = new Cookie(cookieName, URLEncoder.encode(cookie, "UTF-8"));
 		ck.setMaxAge(60 * 60 * 24 * 30);
+		ck.setPath("/");
 		response.addCookie(ck);
 	}
-	
+	 
 	
 	public LinkedHashSet<String> removeKeyword(HttpServletResponse response, String cookie, String keyword) throws UnsupportedEncodingException {
 		
@@ -101,9 +98,31 @@ public class CookieManager {
 	}
 	
 	
-	
-	
-	
+	public LinkedHashSet<String> add(String cookie, String addValue) {
+		
+		LinkedHashSet<String> list = new LinkedHashSet<>();
+		
+		if(cookie == null || cookie.equals("")) {
+			list.add(addValue);
+			return list;
+		}
+		
+		cookie = cookie.replaceAll("[\\[\\]]", "");
+		StringTokenizer st = new StringTokenizer(cookie, ", ");
+		list.add(addValue);
+		
+		while(st.hasMoreTokens()) {
+			String str = st.nextToken();
+			
+			if(!list.add(str)) {
+				list.remove(str);
+			} else {
+				list.add(str);
+			}
+		}
+		
+		return list;
+	}
 	
 	
 	

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.HashMap;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.baemin.util.UploadFile;
+
+import net.nurigo.java_sdk.Coolsms;
+import net.nurigo.java_sdk.api.Message;
+import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Controller
 public class MainController {
@@ -127,8 +134,36 @@ public class MainController {
 		String name = upload.fildUpload(file);
 		
 		System.out.println("파일네임 = " + name);
+		
+		
+
+        
 
 		return "redirect:/test";
 	}
+	
+	@ResponseBody
+	@PostMapping("/test2")
+	public ResponseEntity<String> test2() throws CoolsmsException {
+		
+//		String api_key = "NCSBCO0L4HYHKWDM";
+//        String api_secret = "3CF0OO1BYCLWIYBRWRMHZGJL5OABFHXK";
+//        Message coolsms = new Message(api_key, api_secret);
+//        
+//        // 4 params(to, from, type, text) are mandatory. must be filled
+//        HashMap<String, String> params = new HashMap<String, String>();
+//        params.put("to", "01028857684");
+//        params.put("from", "");
+//        params.put("type", "SMS");
+//        params.put("text", "인증번호");
+//        params.put("app_version", "test app 1.2"); // application name and version
+//
+//        coolsms.send(params);
+//        
+//        
+		return new ResponseEntity<String>(HttpStatus.OK);
+		
+	}
+	
 
 }

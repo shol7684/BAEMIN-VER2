@@ -1,120 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-
- <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<%@ include file="/WEB-INF/view/include/link.jsp" %>
 
 <style>
-
-	body,html {
-	margin: 0;
-	padding: 0;
-	}
-
-	.room {
-	width: 400px;
-	height: 500px;
-	background: black;
-	}
-	
-	.room > div {
-	color:  #fff;
-	
-	}
-	
-	@media(max-width: 1024px) {
-		body {
-			background: red;
-			
-	
-}
-		}
-	
 </style>
 
-</head>
-<body>
 
-
-<div class="room">
-	<div></div>
-
-</div>
-
-<div class="room">
-	<div></div>
-
-</div>
-
-<div class="room">
-	<div></div>
-
-</div>
-
-
-<input type="text" class="input">
-<button type="button" class="btn">전송</button>
+<button>버튼</button>
 
 
 <script>
-	console.log("location.host = " + location.host);
-	
-	var ws;
-	
-	
-	connect();
-
-	function connect(){
-		
-		/* ws = new WebSocket("ws://localhost:8080/chating"); */ 
-		ws = new WebSocket("ws://211.247.99.55:8080/chating");
-		/* ws = new WebSocket("ws://" + location.host + "/chating"); */
-		
-		ws.onopen = function(data){
-			//소켓이 열리면 동작
-			console.log("소켯 오픈");
-		}
-		
-		ws.onmessage = function(data) {
-			//메시지를 받으면 동작
-			
-			console.log("메시지 도착");
-			console.log(data.data);
-			
-			const text = `<div>\${data.data}</div>`;
-			$(".room").append(text);	
-		}
-		
-		ws.onclose = function(event) {
-			console.log("클로즈");
-		}
-		
-		ws.onerror = function(event) {
-			console.log("에러");
-		}
-	}
-	
+swal("2");
 	$("button").click(function(){
-		console.log(1);
-		ws.send($(".input").val());
-	})
-	
-	$(".input").keyup(function(e){
-		if(e.keyCode == 13) {
-			ws.send($(".input").val());
-		}
-		
+
+		$.ajax({
+			url: "/test22",
+			type: "POST"
+		})
+		.done(function(result) {
+			console.log("성공");
+		})
+		.fail(function(result) {
+			console.log("실패");
+		})
 		
 	})
 
-	
-	</script>
-	
+</script>
+
+
 </body>
 </html>

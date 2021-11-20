@@ -98,7 +98,7 @@
     
     <!-- 콘텐츠 -->
 
-	<a href="/chating2">채팅방</a>
+	<a href="/chating2">테스트</a>
 
     <!-- 하단 메뉴 -->
 	<%@ include file="/WEB-INF/view/include/nav.jsp" %>

@@ -39,8 +39,6 @@ public class CartController {
 		List<Long> totalPriceList = null;
 		
 		CartDetail cartDetail = (CartDetail) session.getAttribute("cart");
-		System.out.println("null ?????");
-		System.out.println(cartDetail == null);
 		
 		// 메뉴가격 + 추가옵션 총합구하기
 		long totalPrice = FoodPriceCalc.foodPriceCalc(cart, amount);

@@ -1,15 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="EUC-KR">
-<title>Insert title here</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ include file="/WEB-INF/view/include/link.jsp" %>
 <style>
 body {
 	text-align: center;
+	font-size: 3rem;
 }
 
 img {
@@ -19,20 +14,23 @@ img {
 	margin: 0 auto;
 }
 
+div {
+	margin: 0 0 20px 0;
+}
+
 button {
 	border: 1px solid #999;
 	background: #fff;
-	padding: 20px 50px;
+	padding: 10px 30px;
 	cursor: pointer;
 }
 </style>
 
 </head>
 <body>
-
-<%-- 	<img alt="ÀÌ¹ÌÁö" src="/img/error.png">
-${errorCode }
-	<button>È¨À¸·Î µ¹¾Æ°¡±â</button>
+ 	<img alt="ì´ë¯¸ì§€" src="/img/error.png">
+	<div>${errorCode }</div>
+	<button>í™ˆìœ¼ë¡œ ëŒì•„ê°€ê¸°</button>
 </body>
 
 <script>
@@ -44,6 +42,5 @@ ${errorCode }
 </script>
 
 
- --%>
 
 </html>

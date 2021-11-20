@@ -3,7 +3,17 @@
 	right: 1%;
 	bottom: 1%;
 	cursor: pointer;
-	font-size: 40px;
+	width: 40px;
+	height: 40px;
+	background: #fff;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;justify-content:center;
+	overflow: hidden;
+}
+
+.move_top i{
+	font-size: 45px;	
 }
 
 .wrap {
@@ -146,48 +156,19 @@ main {
 #cont_box .order_box .payMethod {
 	border: 1px solid #ccc;
 	font-size: 1.3rem;
-	display: inline-block;
-	padding: 5px;
-	margin-left: 10px;
+	padding: 7px;
+	margin-left: 5px;
 	background: #fff;
 	color: red;
-	position: absolute;
 }
 /* 메인 */
 
-/* ------------------ 주문 거부 모달--------------------- */
-.order_cancle_modal {
-	z-index: 202 !important;
-}
 
-.order_cancle_modal .modal_box {
-	background: #F0F0F0;
-	height: 100%;
-}
 
-.order_cancle_modal h2 {
-	text-align: center;
-	padding: 5% 0;
-}
 
-.order_cancle_modal li {
-	background: #fff;
-}
 
-.order_cancle_modal li {
-	border: 1px solid #DBDBDB;
-	width: 80%;
-	height: 50px;
-	text-align: center;
-	line-height: 50px;
-	margin: 0 auto;
-}
 
-.order_cancle_modal button.order_cancle {
-	background: #30DAD9;
-}
 
-/* ------------------ 주문 거부 모달--------------------- */
 @media ( max-width :1024px) {
 	.aside_tab .active {
 		background: #30DAD9;
@@ -255,43 +236,9 @@ main {
 		border-radius: 10px;
 	}
 
-	/* 
-	main ul .order_box .time {
-		top: 30px;
-		margin-left: 0px;
-	}
-	main ul .order_box .info {
-		font-size: 16px;
-		padding-left: 95px;
-	}
-	main ul .order_box .time>div:first-child {
-		font-size: 16px;
-	}
-	main ul .order_box .time>div:last-child {
-		font-size: 23px;
-	}
-	main ul .order_box .payMethod {
-		font-size: 10px;
-		padding: 3px;
-	}
-	 */
 }
 
 @media ( max-width :480px) {
-	section.tab ul li {
-		
-	}
-	/* 
-	main ul .order_box .button_box {
-		width: 100%;
-	}
-	main ul .order_box .button_box .btn {
-		background: none;
-		width: 100%;
-		font-size: 0;
-		border: none;
-	}
-	 */
 	#cont_box .order_box .time {
 		width: 80px;
 		padding: 20px 0;

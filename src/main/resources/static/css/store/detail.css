@@ -16,6 +16,7 @@
 	margin: 0 auto;
 	flex-wrap: wrap;
 	display: flex;
+	min-height: calc(100vh - 210px);
 }
 
 /* -------------- 상단 가게 정보 -------------- */
@@ -152,7 +153,6 @@ nav .inf button {
 }
 
 #cart .cart li .cart_menu_option {
-	font-size: 1.5rem;
 	color: #999;
 }
 
@@ -451,6 +451,8 @@ main .comment li .boss_comment_box {
 }
 /* 리뷰탭 */
 
+
+
 /* 메뉴 클릭 모달 */
 .food_modal img {
 	width: 100%;
@@ -492,26 +494,26 @@ main .comment li .boss_comment_box {
 
 .food_modal .amount_box {
 	border: 1px solid #ddd;
+	display: flex;
+	width: 150px;
 	border-radius: 40px;
-	font-size: 2rem;
-	padding: 5px;
-	text-align: center;
-}
-
-.food_modal .amount_box #amount {
-	width: 50%;
-	border: none;
-	background: none;
-	text-align: center;
-	vertical-align: middle;
+	height: 35px;
+	overflow: hidden;
 }
 
 .food_modal .amount_box button {
 	border: none;
 	background: #fff;
-	font-size: 2rem;
-	vertical-align: middle;
+	font-size: 2.2rem;
+	width: 30%;
 }
+
+.food_modal .amount_box #amount {
+	text-align: center;
+	border: none;
+	width: 40%;
+}
+
 
 .food_modal .amount .amount_text {
 	font-size: 18px;
@@ -520,16 +522,17 @@ main .comment li .boss_comment_box {
 }
 
 .food_modal .modal_box {
-	height: calc(100% - 134px);
+	height: calc(100% - 130px);
 }
 
 .food_modal #btn_box {
-	/* height: 92px; */
+	height: 90px;
 	
 }
 
 .food_modal #btn_box>div {
 	text-align: center;
+	height: 45px;
 }
 
 .food_modal .min_delevery {
@@ -587,12 +590,13 @@ main .comment li .boss_comment_box {
 }
 
 @media ( max-width :767px) {
+	html {
+		font-size: 60%;
+	}
+	
+	
 	#wrap {
 		width: 99%;
-	}
-	.add_menu_modal .modal_box ul li .input_area {
-		/* width: 80%; */
-		height: 35px;
 	}
 	nav .inf button {
 		width: 100px;
@@ -619,4 +623,9 @@ main .comment li .boss_comment_box {
 		height: 10vh;
 		line-height: 10vh;
 	}
+	
+	
+	
+	
+	
 }

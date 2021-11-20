@@ -1,11 +1,14 @@
 package com.baemin.controller;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
+import java.util.*;
 
-import org.apache.commons.lang3.RandomUtils;
+import org.assertj.core.util.Arrays;
 import org.json.JSONException;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,8 +19,13 @@ import com.google.gson.Gson;
 
 class JunitTest {
 
-	
 	@Test
+	void list() {
+	}
+	
+	
+	
+//	@Test
 	void upload() {
 		String path = "C:\\resource";
 		

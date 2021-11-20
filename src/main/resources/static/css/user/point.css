@@ -46,9 +46,12 @@ main h2 {
 }
 
 .my_point .point_regi .point_number_area {
+	display: none;	
+}
+
+.my_point .point_regi .point_number_area > div {
 	border-top: 1px solid #ddd;
 	height: 50px;
-	display: none;
 	display: flex;
 	justify-content: space-between;
 	padding: 0 15px;

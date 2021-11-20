@@ -121,10 +121,28 @@
                                 <li>
 									<div>
 										<div class="img_box">
-                                           <img src="/img/jockbal3.png" alt="이미지">
+                                           <img src="/img/bibimbap.jpg" alt="이미지">
 										</div>
                                     </div>
                                     <div class="name">한식</div>
+                                </li>
+                    
+                                <li>
+									<div>
+										<div class="img_box">
+                                           <img src="/img/jockbal3.png" alt="이미지">
+										</div>
+                                    </div>
+                                    <div class="name">1인분</div>
+                                </li>
+                    
+                                <li>
+									<div>
+										<div class="img_box">
+                                           <img src="/img/dosirac.jpg" alt="이미지">
+										</div>
+                                    </div>
+                                    <div class="name">도시락</div>
                                 </li>
                             </ul>
                 	</div>

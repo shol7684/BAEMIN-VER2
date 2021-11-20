@@ -19,15 +19,7 @@
 
 
 <div class="wrap">
-    <section class="tab">
-         <ul class="box">
-			<li class=""><a href="/admin/main">주문접수</a></li>
-			<li class="store_management"><a href="/admin/storeManagement">매장 관리</a></li>
-			<li class="sales"><a href="/admin/salesManagement">매출 확인</a></li>
-			<li class="order_search"><a href="#">주문번호 검색</a></li>
-			<li class="home"><a href="/">홈으로</a></li>
-		</ul>
-    </section>
+    <%@ include file="/WEB-INF/view/admin/admin-tab.jsp" %>
 
     <aside>
         <ul class="aside_tab">
@@ -71,41 +63,8 @@
 
 	
 
+<%@ include file="/WEB-INF/view/admin/modal_adminMain.jsp" %>
 
-
-
-
-	
-
-	
-
-<!-- 주문 접수 모달 -->
-<%@ include file="/WEB-INF/view/admin/orderAcceptModal.jsp" %>
-
-<div class="order_cancle_modal modal">
-		<div id="modal_header">
-			<h1>주문거부</h1>
-			<button class="closeA"><i class="fas fa-times"></i></button>
-		</div>
-		
-		<div class="modal_box">
-			<h2>주문거부 사유를 선택해주세요</h2>
-			<ul>
-				<li data-reason="배달불가지역" >배달불가지역</li>
-				<li data-reason="재료소진" >재료소진</li>
-				<li data-reason="배달지연" >배달지연</li>
-				<li data-reason="기타" >기타</li>
-			</ul>
-		</div>
-		
-		<div id="btn_box">
-	        <button class="closeB">취소</button>
-	        <button class="order_cancle">거부하기</button>
-	    </div>
-	</div>
-	
-<!-- 주문 접수 배달시간 설정 모달 -->
-<%@ include file="/WEB-INF/view/admin/deleveryTimerModal.jsp" %>
 
 
 <script type="text/javascript" src="/js/util/util.js" ></script>

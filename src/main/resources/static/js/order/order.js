@@ -1,5 +1,60 @@
 
 
+
+// 메뉴 1개 삭제
+$(".order_info li .delete").click(function(){
+	const index = $(this).parent().parent().parent("li").index();
+	deleteCartOne(index);
+	
+	if($(".order_info li").length > 1) {
+		$(".order_info li").eq(index).remove();
+	} else {
+		menuReset();
+	}
+	
+})
+
+//메뉴 전체삭제
+$(".order_info .delete_all").click(function(){
+	deleteCartAll();
+})
+
+function menuReset(){
+	$(".temp_img_box").show();
+	$("main").remove();
+	$("section").remove();
+}
+
+
+function deleteCartOne(index){
+	$.ajax({
+		url: "/cartOne",
+		type: "DELETE",
+		data: {index : index}
+	})	
+	.done(function(result){
+		priceModify(result)
+	})
+	.fail(function(){
+		swal("에러가 발생했습니다");
+	})
+}
+
+function deleteCartAll(){
+	$.ajax({
+		url: "/cartAll",
+		type: "DELETE"
+	})
+	.done(function(){
+		menuReset();
+	})
+	.fail(function(){
+		swal("에러가 발생했습니다");
+	})
+}
+	
+
+
 $(".amount_box button").click(function(){
 	const amount = $(this).siblings("#amount");
 	const cartId = $(this).parent().parent().parent("li").index() / 2;
@@ -22,22 +77,24 @@ $(".amount_box button").click(function(){
 			foodPrice.text(result["totalPriceList"][cartId].toLocaleString() + "원");
 	    	amount.val(result["amountList"][cartId]);
 	    	
-	    	const menuTotalPrice = result["menuTotalPrice"];
-	    	const deleveryTip = result["deleveryTip"];
-	    	
-	    	$(".order_price").text("주문금액 : " + menuTotalPrice.toLocaleString() + "원");
-	    	$(".total").text((menuTotalPrice + deleveryTip).toLocaleString() +  "원 결제하기");
-	    	$("#total").val(menuTotalPrice + deleveryTip);
-	    	
+	    	priceModify(result);
 		},
 		fail : function(){
 			alert("다시 시도해주세요");
 		}
 	}); // ajax
-	
 })
 
-
+function priceModify(result){
+	if(!result) return;
+	
+	const menuTotalPrice = result["menuTotalPrice"];
+	const deleveryTip = result["deleveryTip"];
+	
+	$(".order_price").text("주문금액 : " + menuTotalPrice.toLocaleString() + "원");
+	$(".total").text((menuTotalPrice + deleveryTip).toLocaleString() +  "원 결제하기");
+	$("#total").val(menuTotalPrice + deleveryTip);
+}
 
 	
 if($("#user_id").val() != ""){
@@ -78,8 +135,7 @@ if($("#user_id").val() != ""){
 			$(this).val(null);
 	});
 	
-} 
-else {
+} else {
 	 swal("", {
 		  buttons: ["비회원으로 주문하기", "로그인"],
 		})
@@ -183,7 +239,7 @@ function payment(){
 // 현장에서 결제
 function paymentCash(data){
 	messageSend();
-	/*
+	
 	$.ajax({
 		url: "/order/payment-cash",
         method: "POST",
@@ -205,7 +261,7 @@ function paymentCash(data){
 		alert("에러");
 		location.replace("/");
 	}) 
-	*/
+	
 }
 
 // 계산 완료

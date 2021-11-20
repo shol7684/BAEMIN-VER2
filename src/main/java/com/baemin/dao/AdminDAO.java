@@ -24,7 +24,7 @@ public interface AdminDAO {
 
 	long addMenu(Food food);
 
-	void addMenuOption(Map<String, Object> map);
+	void addMenuOption(Map map);
 
 	void storeModify(Store store);
 
@@ -32,7 +32,7 @@ public interface AdminDAO {
 	
 	int orderCancle(String orderNum, String cancleReason, long userId);
 
-	Map selectCard(String giftCardNum);
+	Map<String, Object> selectCard(String giftCardNum);
 
 	int pointUpdate(long userId, String info, int point);
 
@@ -41,6 +41,12 @@ public interface AdminDAO {
 	List<Sales> salesYear();
 
 	List<Sales> sales(String time, String month);
+
+	void modifyMenu(Food food);
+
+	void modifyMenuOption(Map<String, Object> map);
+
+	void deleteOPtion(long optionId);
 
 
 

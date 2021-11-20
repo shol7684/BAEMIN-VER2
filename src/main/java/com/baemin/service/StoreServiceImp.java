@@ -25,19 +25,8 @@ public class StoreServiceImp implements StoreService {
 	private StoreDAO storeDAO;
 
 	@Override
-	public List<Store> storeList(int category, int address1, int page) {
-		
-		Page p = new Page(page, 20);
-		
-		Map<String, Object> map = new HashMap<>();
-
-		map.put("category", category);
-		map.put("address1", address1);
-		map.put("startPage", p.getPageStart());
-		map.put("endPage", p.getPageEnd());
-		
-		
-		return storeDAO.storeList(map);
+	public List<Store> storeList(int category, int address1) {
+		return storeList(category, address1, "주문접수 대기 중", 1);
 	}
 	
 	@Override
@@ -113,16 +102,23 @@ public class StoreServiceImp implements StoreService {
 	}
 
 	@Override
-	public List likesList(long userId) {
+	public List<Store> likesList(long userId) {
 		return storeDAO.likesList(userId);
 	}
 
+	@Override
+	public List<Store> likesListNonUser(String likes) {
+		return storeDAO.likesListNonUser(likes);
+	}
+	
 	@Override
 	public List<Store> storeSearch(int address1, String keyword, Optional<Integer> movePage) {
 		Page p = new Page(movePage);
 		
 		return storeDAO.storeSearch(address1, keyword, p.getPageStart(), p.getPageEnd());
 	}
+
+	
 
 
 	

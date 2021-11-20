@@ -11,14 +11,21 @@
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
 	
 	
-	<!-- <script>
-		if("${cart}" == "") {
-			alert(123);
-		}
-	</script> -->
+	<div class="temp_img_box">
+		<img src="/img/temp3.png" class="temp_img" alt="이미지">
+	</div>
+	
+	<c:if test="${empty cart.storeName }">
+		<img src="/img/temp3.png" class="temp_img" alt="이미지">
+	</c:if>
+	
+	<c:if test="${!empty cart.storeName }">
+	
+	
 	
 	<input type="hidden" value="${user.id }" id="user_id">
-	
+		
+
    
 	<section class="title">
 		<h1>주문하기</h1>
@@ -31,16 +38,19 @@
 	<ul>
 		<li>
 			<div class="order_info">
-				<h2>${cart.storeName }</h2><hr>
+				<h2><span>${cart.storeName }</span><button type="button" class="delete_all">전체삭제</button></h2><hr>
+				
 				<h2>주문정보</h2>
 				
 				
 				<ul>
-					<c:if test="${fn:length(cart.cartList) > 0}">
 					<c:forEach begin="0" end="${fn:length(cart.cartList) -1 }" var="j"  >
 					
 						<li>
-							<div class="food_name">${cart.cartList[j].foodName }</div>
+							<div class="food_name_box">
+								<div class="food_name">${cart.cartList[j].foodName }</div>
+								<div><i class="fas fa-times delete"></i></div>
+							</div>
 							<div class="price">ㆍ기본가격 <fm:formatNumber value="${cart.cartList[j].foodPrice }"  pattern="###,###" />원</div>
 						
 							
@@ -60,17 +70,16 @@
 									<fm:formatNumber value="${cart.totalPriceList[j] }" pattern="###,###" />원
 								</div>
 								<!-- 메뉴 하나 총합 -->
-								<span class="amount_box">
+								<div class="amount_box">
 				                    <button type="button" class="minus">-</button>
 				                    <input type="number" id="amount" min="1" value="${cart.amountList[j] }" readonly >
 				                    <button type="button" class="plus">+</button>
-			                   </span>
+			                   </div>
 							</div>
 							
-						</li><hr>
+						</li>
 						
 					</c:forEach>
-					</c:if>
 				</ul>
 			</div>
 		</li>
@@ -82,7 +91,7 @@
 				<div>
 					<span>주소 :</span> 
 					<span class="address1">${BMaddress2}</span> 
-					<button type="button" onclick="sample2_execDaumPostcode()" id="sample2_btn" >주소 변경하기</button>
+					<button type="button" onclick="sample2_execDaumPostcode()" id="delevery_modify" >주소 변경하기</button>
 	             <%@ include file="/WEB-INF/view/include/modifyAddress.jsp" %>
 				</div>
 				
@@ -91,7 +100,7 @@
 				
 				
 				<div>상세 주소</div>
-				<div class="input_area"><input type="text" id="deleveryAddress3" value="${BMaddress3 }"  name="deleveryAddress3"> </div>
+				<div class="input_area"><input type="text" id="deleveryAddress3" maxlength="100" value="${BMaddress3 }"  name="deleveryAddress3"> </div>
 				 
 				<div>전화번호</div>
 				<c:if test="${!empty user  }">
@@ -138,10 +147,8 @@
 				</div>
 				
 				<div class="point_input_box" >
-					<span>
-						<input type="number" name="usedPoint" value="0" min="0" class="point_input" placeholder="사용 할 포인트"  >
-						<button class="use_point" type="button">사용하기</button>
-					</span>
+					<input type="number" name="usedPoint" value="0" pattern="/d" class="point_input" placeholder="사용 할 포인트"  >
+					<button class="use_point" type="button">사용하기</button>
 				</div>
 			
 			</div><hr>
@@ -177,7 +184,7 @@
 
 	
 
-
+	</c:if>
 
     <!-- 하단 메뉴 -->
    	<%-- <%@ include file="/WEB-INF/view/include/nav.jsp" %> --%>
