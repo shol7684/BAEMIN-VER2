@@ -1,9 +1,12 @@
 package com.baemin.service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,16 +24,13 @@ public class AdminServiceImp implements AdminService {
 	@Autowired
 	private AdminDAO adminDAO;
 	
-	@Override
-	public List<OrderList> orderList(String list) {
-		
-		return orderList(list, 1);
-	}
+	@Autowired
+	private PaymentService payment;
+	
 	
 	@Override
-	public List<OrderList> orderList(String list, int page) {
-		Page p = new Page(page, 20);
-		
+	public List<OrderList> orderList(String list, Optional<Integer> page) {
+		Page p = new Page(page);
 		return adminDAO.orderList(list,p);
 	}
 	
@@ -96,8 +96,18 @@ public class AdminServiceImp implements AdminService {
 	}
 	
 	@Override
-	public int orderCancle(String orderNum, String cancleReason, long userId) {
-		return adminDAO.orderCancle(orderNum, cancleReason, userId);
+	public int orderCancle(OrderList orderList, String cancleReason) throws IOException, ParseException {
+		if(!orderList.getImpUid().equals("")) {
+			String token = payment.getToken(); 
+			int price = orderList.getTotalPrice();
+			int usedPoint = orderList.getUsedPoint();
+			int deleveryTip = orderList.getDeleveryTip();
+			int refundPrice = price + deleveryTip - usedPoint;
+			
+			payment.payMentCancle(token, orderList.getImpUid(), refundPrice+"", cancleReason);
+		}
+		
+		return adminDAO.orderCancle(orderList.getOrderNum(), cancleReason, orderList.getUserId());
 	}
 	
 	@Override

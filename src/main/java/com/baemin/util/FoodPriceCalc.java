@@ -4,9 +4,9 @@ import com.baemin.vo.Cart;
 
 public class FoodPriceCalc {
 
-	public static long foodPriceCalc(Cart cart,long amount) {
+	public static int foodPriceCalc(Cart cart) {
 		
-		int[] optionPrice = cart.getFoodOptionPrice();
+		int[] optionPrice = cart.getOptionPrice();
 		
 		int optionPriceTotal = 0;
 		if(optionPrice != null) {
@@ -15,8 +15,8 @@ public class FoodPriceCalc {
 			}
 		}
 		
-		long foodPrice = cart.getFoodPrice() * amount;
+		int foodPrice = cart.getFoodPrice() * cart.getAmount();
 		
-		return foodPrice + (optionPriceTotal * amount);
+		return foodPrice + (optionPriceTotal * cart.getAmount());
 	}
 }

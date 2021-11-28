@@ -93,9 +93,9 @@
 	            	FROM 	bm_review where store_id = #{id } ) 
 	            ,(SELECT COUNT(*) LIKES_COUNT FROM BM_LIKES WHERE STORE_ID = #{id } )
 	            ,(SELECT SUM(order_count) order_count from (
-                    SELECT count(*) order_count FROM bm_order_detail_user WHERE store_id = #{id }
+                    SELECT count(*) order_count FROM bm_order_user WHERE store_id = #{id }
                         UNION ALL
-                    SELECT count(*) order_count FROM bm_order_detail_non_user WHERE store_id = #{id } ))
+                    SELECT count(*) order_count FROM bm_order_non_user WHERE store_id = #{id } ))
         		) C
         WHERE 	ID = #{id }
     	) RESULT

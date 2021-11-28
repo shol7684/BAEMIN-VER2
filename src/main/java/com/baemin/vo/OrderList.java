@@ -13,25 +13,26 @@ import lombok.ToString;
 public class OrderList {
 
 	private String orderNum;
+	private long storeId;
 	private long userId;
-	private String phone;
 	private Timestamp orderDate;
-	private String payMethod;
 	private String deleveryStatus;
 	private int deleveryAddress1;
 	private String deleveryAddress2;
 	private String deleveryAddress3;
-	private long storeId;
-	private String amount;
-	private String foodPrice;
-	private long totalPrice;
+	private String payMethod;
+	private int totalPrice;
+	private int usedPoint;
+	private String phone;
+	private String request;
+
 	private String foodInfo;
+	
+	
 	private String storeName;
 	private String storeImg;
 	private String StoreThumb;
-	private long deleveryTip;
-	private int usedPoint;
-	private String request;
+	private int deleveryTip;
 	
 	// 리뷰 상태 추가
 	private String reviewContent;
@@ -45,4 +46,8 @@ public class OrderList {
 	
 	// 주문목록 총 갯수
 	private int listCount;
+	
+	// 아임포트 결제번호 추가
+	private String impUid; 
+
 }

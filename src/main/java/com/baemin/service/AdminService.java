@@ -1,7 +1,11 @@
 package com.baemin.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import org.json.simple.parser.ParseException;
 
 import com.baemin.util.Page;
 import com.baemin.vo.Food;
@@ -12,9 +16,7 @@ import com.baemin.vo.Store;
 public interface AdminService {
 
 	// 관리자 메인 주문 목록
-	List<OrderList> orderList(String list);
-	
-	List<OrderList> orderList(String list, int page);
+	List<OrderList> orderList(String list, Optional<Integer> page);
 
 	// 매장관리 탭 가게 목록
 	List<Store> storeList(Page p);
@@ -39,8 +41,8 @@ public interface AdminService {
 	// 상품권 등록
 	Map<String, Object> pointRegist(String giftCardNum, long id);
 
-	int orderCancle(String orderNum, String cancleReason, long userId);
-
+	int orderCancle(OrderList orderList, String cancleReason) throws IOException, ParseException ;
+	
 	int orderComplete(String orderNum, long userId);
 
 	List<Sales> sales(String time, String month);
@@ -48,6 +50,10 @@ public interface AdminService {
 	void modifyMenu(Food food, String[] foodOption, Integer[] foodOptionPrice, Integer[] optionId);
 
 	void deleteOption(long optionId);
+
+	
+
+	
 
 	
 

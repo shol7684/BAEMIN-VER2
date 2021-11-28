@@ -15,11 +15,11 @@
 		<img src="/img/temp3.png" class="temp_img" alt="이미지">
 	</div>
 	
-	<c:if test="${empty cart.storeName }">
+	<c:if test="${empty cartList }">
 		<img src="/img/temp3.png" class="temp_img" alt="이미지">
 	</c:if>
 	
-	<c:if test="${!empty cart.storeName }">
+	<c:if test="${!empty cartList }">
 	
 	
 	
@@ -38,28 +38,29 @@
 	<ul>
 		<li>
 			<div class="order_info">
-				<h2><span>${cart.storeName }</span><button type="button" class="delete_all">전체삭제</button></h2><hr>
+				<h2><span>${cartList.storeName }</span><button type="button" class="delete_all">전체삭제</button></h2><hr>
 				
 				<h2>주문정보</h2>
 				
 				
 				<ul>
-					<c:forEach begin="0" end="${fn:length(cart.cartList) -1 }" var="j"  >
+					<c:set var="cart2" value="${cartList.cart }" />
 					
+					<c:forEach begin="0" end="${fn:length(cart2) -1 }" var="j"  >
 						<li>
 							<div class="food_name_box">
-								<div class="food_name">${cart.cartList[j].foodName }</div>
+								<div class="food_name">${cart2[j].foodName }</div>
 								<div><i class="fas fa-times delete"></i></div>
 							</div>
-							<div class="price">ㆍ기본가격 <fm:formatNumber value="${cart.cartList[j].foodPrice }"  pattern="###,###" />원</div>
+							<div class="price">ㆍ기본가격 <fm:formatNumber value="${cart2[j].foodPrice }"  pattern="###,###" />원</div>
 						
 							
-							<c:if test="${fn:length(cart.cartList[j].foodOptionName) > 0 }">
-								<c:forEach  begin="0" end="${fn:length(cart.cartList[j].foodOptionName) -1 }" var="i"  >
+							<c:if test="${fn:length(cart2[j].optionName) > 0 }">
+								<c:forEach  begin="0" end="${fn:length(cart2[j].optionName) -1 }" var="i"  >
 								
 									<div class="menu_option"> 
-										<span>ㆍ${cart.cartList[j].foodOptionName[i]  }</span>
-										<span><fm:formatNumber  value="${cart.cartList[j].foodOptionPrice[i] }" pattern="###,###" />원</span>
+										<span>ㆍ${cart2[j].optionName[i]  }</span>
+										<span><fm:formatNumber  value="${cart2[j].optionPrice[i] }" pattern="###,###" />원</span>
 									</div>
 															
 								</c:forEach> 
@@ -67,12 +68,12 @@
 							
 							<div class="amount">
 								<div class="sum">
-									<fm:formatNumber value="${cart.totalPriceList[j] }" pattern="###,###" />원
+									<fm:formatNumber value="${cart2[j].totalPrice }" pattern="###,###" />원
 								</div>
 								<!-- 메뉴 하나 총합 -->
 								<div class="amount_box">
 				                    <button type="button" class="minus">-</button>
-				                    <input type="number" id="amount" min="1" value="${cart.amountList[j] }" readonly >
+				                    <input type="number" id="amount" min="1" value="${cart2[j].amount }" readonly >
 				                    <button type="button" class="plus">+</button>
 			                   </div>
 							</div>
@@ -156,18 +157,17 @@
 		</li>
 		
 		<li class="pay">
-		
-			<div class="order_price">주문금액 : <fm:formatNumber value="${cart.menuTotalPrice }"  pattern="###,###" />원</div>
-			<div>배달팁 <fm:formatNumber value="${cart.deleveryTip }"  pattern="###,###" />원 </div> 
+			<div class="order_price">주문금액 : <fm:formatNumber value="${cartList.cartTotal }"  pattern="###,###" />원</div>
+			<div>배달팁 <fm:formatNumber value="${cartList.deleveryTip }"  pattern="###,###" />원 </div> 
 			
 			<div class="point_dis"><span>포인트 할인 </span><span></span> </div>
 				
 			<div class="total">
-				<fm:formatNumber value="${cart.menuTotalPrice + cart.deleveryTip}"  pattern="###,###" />원 결제하기
+				<fm:formatNumber value="${cartList.cartTotal + cartList.deleveryTip}"  pattern="###,###" />원 결제하기
 			</div>
 			
-			<input type="hidden" value="${cart.menuTotalPrice + cart.deleveryTip}" name="total" id="total"> 
-			<input type="hidden" value="${cart.deleveryTip }" name="deleveryTip" id="delevery_tip"> 
+			<input type="hidden" value="${cartList.cartTotal + cartList.deleveryTip}" name="total" id="total"> 
+			<input type="hidden" value="${cartList.deleveryTip }" name="deleveryTip" id="delevery_tip"> 
 			<input type="hidden" value="${orderNum }" id="order_num">
 			
 			<input type="button" value="주문하기" class="order_btn">
@@ -177,9 +177,6 @@
 		</ul>
 		
 		</form>
-	
-		<button class="com">컴플릿</button>
-		
 	</main>
 
 	

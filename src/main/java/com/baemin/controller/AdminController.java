@@ -2,9 +2,9 @@ package com.baemin.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,7 @@ import com.baemin.util.FoodInfoFromJson;
 import com.baemin.util.Page;
 import com.baemin.util.UploadFile;
 import com.baemin.util.UserInfoSessionUpdate;
+import com.baemin.vo.Cart;
 import com.baemin.vo.Food;
 import com.baemin.vo.OrderList;
 import com.baemin.vo.Sales;
@@ -57,6 +59,7 @@ public class AdminController {
 	
 	private static final Logger LOGGER = LogManager.getLogger(AdminController.class);
 
+	
 	@GetMapping("/admin/main")
 	public String adminHome() {
 
@@ -65,34 +68,19 @@ public class AdminController {
 
 	@ResponseBody
 	@GetMapping("/admin/orderList")
-	public List<Map<String, Object>> orderList(String list) {
-
-		System.out.println(list);
-		
-		List<OrderList> orderList = adminService.orderList(list);
-		
-		List<Map<String, Object>> deleveryInfo = new ArrayList<>();
-		
-		for(int i=0;i<orderList.size();i++) {
-			deleveryInfo.add(FoodInfoFromJson.foodInfoFromJson(orderList.get(i)));
-		}
-		
-		return deleveryInfo;
-	}
-	
-	@ResponseBody
-	@GetMapping("/admin/orderNextPage")
-	public ResponseEntity<List<Map<String, Object>>> orderListNextPage(String list, int page){
-		
+	public Map<String, Object> orderList(String list, Optional<Integer> page) {
 		List<OrderList> orderList = adminService.orderList(list, page);
+		List<List<Cart>> cartList = new ArrayList<>();
+		Map<String, Object> map = new HashMap<>();
 		
-		List<Map<String, Object>> deleveryInfo = new ArrayList<>();
-		
-		for(int i=0;i<orderList.size();i++) {
-			deleveryInfo.add(FoodInfoFromJson.foodInfoFromJson(orderList.get(i)));
+		for (int i=0;i<orderList.size();i++) {
+			cartList.add(FoodInfoFromJson.foodInfoFromJson(orderList.get(i).getFoodInfo()));
 		}
 		
-		return new ResponseEntity<>(deleveryInfo, HttpStatus.OK);
+		map.put("orderList", orderList);
+		map.put("cartList", cartList);
+		
+		return map;
 	}
 	
 	
@@ -148,17 +136,14 @@ public class AdminController {
 	public String adminStoreDetail(@PathVariable int id,Model model, @AuthenticationPrincipal LoginDetail user) throws NotFoundException {
 		
 		long userId = 0;
-		String role = "";
 		if(user != null) {
 			userId = user.getUser().getId();
-			role = user.getUser().getRole();
 			model.addAttribute("adminPage" , true);
 		}
 		
 		StoreDetail storeDetail = storeService.storeDetail(id, userId);
 
 		model.addAttribute("store", storeDetail);
-		model.addAttribute("role", role);
 		
 		return "admin/adminStoreDetail";
 	}
@@ -251,17 +236,16 @@ public class AdminController {
 	@PatchMapping("/admin/orderAccept")
 	public ResponseEntity<String> orderAccept(String orderNum, int time, long userId) {
 //		userId == 0 비회원
-		int result = adminService.orderAccept(orderNum, time, userId);
+		adminService.orderAccept(orderNum, time, userId);
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@ResponseBody
 	@PatchMapping("/admin/orderCancle")
-	public ResponseEntity<String> orderCancle(String orderNum, String cancleReason, long userId) {
+	public ResponseEntity<String> orderCancle(OrderList orderList, String cancleReason) throws IOException, ParseException {
 //		userId == 0 비회원
-		int result = adminService.orderCancle(orderNum, cancleReason, userId);
-		
+		adminService.orderCancle(orderList, cancleReason);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	

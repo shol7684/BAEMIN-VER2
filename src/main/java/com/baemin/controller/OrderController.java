@@ -3,7 +3,6 @@ package com.baemin.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
@@ -12,7 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,15 +20,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.baemin.config.LoginDetail;
 import com.baemin.service.OrderService;
-import com.baemin.service.Payment;
+import com.baemin.service.PaymentServiceImp;
 import com.baemin.util.CreateOrderNum;
 import com.baemin.util.FoodInfoFromJson;
 import com.baemin.util.Page;
-import com.baemin.vo.CartDetail;
+import com.baemin.vo.Cart;
+import com.baemin.vo.CartList;
 import com.baemin.vo.OrderInfo;
 import com.baemin.vo.OrderList;
 
@@ -43,21 +41,21 @@ public class OrderController {
 	private static final Logger LOGGER = LogManager.getLogger(OrderController.class);
 
 	@Autowired
-	private Payment payment;
+	private PaymentServiceImp payment;
 
 	@ResponseBody
 	@PostMapping("/order/payment-cash")
 	public ResponseEntity<String> payment(HttpSession session, OrderInfo orderInfo, long totalPrice, @AuthenticationPrincipal LoginDetail user) throws IOException {
 		
-		CartDetail cartDetail = (CartDetail) session.getAttribute("cart");
+		CartList cartList = (CartList) session.getAttribute("cartList");
 		
-		long orderPriceCheck = orderService.orderPriceCheck(cartDetail);
+		long orderPriceCheck = orderService.orderPriceCheck(cartList);
 		
 		System.out.println("계산금액 = " + totalPrice + " 실제 계산해야할 금액 = " + orderPriceCheck );
 		
 		if(orderPriceCheck == totalPrice) {
-			orderService.order(cartDetail, orderInfo, user, session);
-			session.removeAttribute("cart");
+			orderService.order(cartList, orderInfo, user, session);
+			session.removeAttribute("cartList");
 		}
 
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -69,11 +67,9 @@ public class OrderController {
 			@AuthenticationPrincipal LoginDetail user) throws IOException, ParseException {
 		// imp_uid 아임포트 주문시 고유 아이디
 		// 주문번호 merchant_uid, OrderNum
-
 		String accessToken = payment.getToken();
 		// 결제된 가격 가져오기
 		String amount = payment.paymentInfo(imp_uid, accessToken);
-		System.out.println("amount = " + amount);
 
 		try {
 			int usedPoint = orderInfo.getUsedPoint();
@@ -95,21 +91,20 @@ public class OrderController {
 				}
 			}
 
-			CartDetail cartDetail = (CartDetail) session.getAttribute("cart");
+			CartList cartList = (CartList) session.getAttribute("cartList");
 
 			// 실제 계산 되어야할 가격
-			long orderPriceCheck = orderService.orderPriceCheck(cartDetail) - usedPoint;
+			long orderPriceCheck = orderService.orderPriceCheck(cartList) - usedPoint;
 
 			if (orderPriceCheck != Long.parseLong(amount)) {
 				LOGGER.info("결제 금액 오류");
 				// 결제 취소
 				payment.payMentCancle(accessToken, imp_uid, amount, "결제 금액 오류");
 				return new ResponseEntity<String>("결제 금액 오류, 결제 취소", HttpStatus.BAD_REQUEST);
-
 			}
-
-			String orderNum = orderService.order(cartDetail, orderInfo, user, session);
-			session.removeAttribute("cart");
+			orderInfo.setImpUid(imp_uid);
+			orderService.order(cartList, orderInfo, user, session);
+			session.removeAttribute("cartList");
 
 			return new ResponseEntity<String>("주문이 완료되었습니다", HttpStatus.OK);
 
@@ -126,9 +121,9 @@ public class OrderController {
 	@GetMapping("/order")
 	public String order(HttpSession session, Model model, @AuthenticationPrincipal LoginDetail user) {
 
-		CartDetail cartDetail = (CartDetail) session.getAttribute("cart");
+		CartList cartList = (CartList) session.getAttribute("cartList");
 
-		model.addAttribute("cart", cartDetail);
+		model.addAttribute("cartList", cartList);
 
 		System.out.println(user);
 
@@ -140,42 +135,21 @@ public class OrderController {
 		return "order/order";
 	}
 
-//	@PostMapping("/order")
-//	public String orderProc(HttpSession session, long total, OrderInfo info, @AuthenticationPrincipal LoginDetail user,
-//			RedirectAttributes rttr) {
-//
-//		CartDetail cartDetail = (CartDetail) session.getAttribute("cart");
-//
-//		long orderPriceCheck = orderService.orderPriceCheck(cartDetail);
-//
-//		if (total != orderPriceCheck) {
-//			LOGGER.info("주문금액 오류");
-//			return "redirect:/";
-//		}
-//
-////		결제 서비스 마지막에 구현
-////		orderService.payment();
-//
-//		String orderNum = orderService.order(cartDetail, info, user, session);
-//		rttr.addFlashAttribute("orderMessage", "주문이 완료되었습니다");
-//		rttr.addFlashAttribute("orderNum", orderNum);
-//		session.removeAttribute("cart");
-//
-//		return "redirect:/";
-//	}
 
-	@GetMapping({ "/orderList", "/orderList/{movePage}" })
+	
+	
+	@GetMapping({ "/orderList", "/orderList/{page}" })
 	public String orderList(@AuthenticationPrincipal LoginDetail user, Model model,
-			@PathVariable Optional<Integer> movePage) {
+			@PathVariable Optional<Integer> page) {
 		if (user == null) {
 			System.out.println("비로그인");
 		} else {
 			System.out.println("로그인");
 			long userId = user.getUser().getId();
 
-			Page p = new Page(movePage, 20);
+			Page p = new Page(page, 20);
 
-			List<OrderList> orderList = orderService.orderList(userId, p.getPageStart(), p.getPageEnd());
+			List<OrderList> orderList = orderService.orderList(userId, p);
 
 			if (orderList.size() == 0) {
 				return "order/orderList";
@@ -184,14 +158,16 @@ public class OrderController {
 			model.addAttribute("user", user.getUser());
 			model.addAttribute("page", p);
 
-			List<Map<String, Object>> deleveryInfo = new ArrayList<>();
+			List<List<Cart>> cartList = new ArrayList<>();
 
-			for (int i = 0; i < orderList.size(); i++) {
-				deleveryInfo.add(FoodInfoFromJson.foodInfoFromJson(orderList.get(i)));
+			for (int i=0;i<orderList.size();i++) {
+				cartList.add(FoodInfoFromJson.foodInfoFromJson(orderList.get(i).getFoodInfo()));
 			}
-
+			
+			
 			model.addAttribute("lastPage", p.lastPage(orderList.get(0).getListCount()));
-			model.addAttribute("deleveryInfo", deleveryInfo);
+			model.addAttribute("cartList", cartList);
+			model.addAttribute("orderList", orderList);
 
 		}
 
@@ -201,40 +177,23 @@ public class OrderController {
 	@GetMapping("/orderListDetail/{orderNum}")
 	public String orderDetail(@PathVariable String orderNum, Model model, @AuthenticationPrincipal LoginDetail user) {
 
-		OrderList orderListDetail = orderService.orderListDetail(orderNum);
-
-		if (user != null && (user.getUser().getId() != orderListDetail.getUserId())) {
+		OrderList orderDetail = orderService.orderListDetail(orderNum);
+		System.out.println("orderListdetail = " + orderDetail);
+		if (user != null && (user.getUser().getId() != orderDetail.getUserId())) {
 			System.out.println("다른 사용자");
 			return "redirect:/";
 		} else if (user == null) {
 			System.out.println("비로그인");
 			return "redirect:/";
 		}
+		
+		List<Cart> list = FoodInfoFromJson.foodInfoFromJson(orderDetail.getFoodInfo());
 
-		Map<String, Object> detail = FoodInfoFromJson.foodInfoFromJson(orderListDetail);
-
-		model.addAttribute("orderListDetail", detail.get("orderListDetail"));
-		model.addAttribute("cart", detail.get("cart"));
-		model.addAttribute("amount", detail.get("amount"));
+		model.addAttribute("orderDetail", orderDetail);
+		model.addAttribute("cart", list);
 
 		return "order/orderListDetail";
 	}
 
-//	@ResponseBody
-//	@GetMapping("/paymentPage")
-//	public String paymentPage(HttpSession session, @AuthenticationPrincipal LoginDetail user ) {
-//		
-//		Map cartMap = (Map)session.getAttribute("cartMap");
-//		
-//		Gson gson = new Gson();
-//		
-//		String s = gson.toJson(cartMap);
-//		
-//		System.out.println(s);
-//		
-//		orderService.payment(cartMap, user);
-//		
-//		return "결제페이지";
-//	}
 
 }

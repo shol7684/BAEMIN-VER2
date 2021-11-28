@@ -14,17 +14,38 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.baemin.vo.Cart;
+import com.baemin.vo.CartDetail;
 import com.google.gson.Gson;
 
 class JunitTest {
 
+	
 	@Test
-	void list() {
+	void list() throws ParseException {
+		System.out.println(123);
+		
+		String ss  = "{\"foodId\":1,\"foodName\":\"불고기피자\",\"foodPrice\":12000,\"amount\":1,\"totalPrice\":12000}\r\n"+ "/{\"foodId\":1,\"foodName\":\"불고기피자\",\"foodPrice\":12000,\"amount\":1,\"totalPrice\":14000,\"optionName\":[\"베이컨 토핑 추가\",\"치즈 토핑 추가\"],\"optionPrice\":[1000,1000],\"optionId\":[3,5]}";
+		
+		System.out.println(ss);
+		
+		String[] arr = ss.split("/");
+		
+		Gson gson = new Gson();
+		
+		for(int i=0;i<arr.length;i++) {
+			Cart cart = gson.fromJson(arr[i], Cart.class);
+			System.out.println(cart);
+		}
+		
+		
+		
 	}
 	
 	
-	
+	         
 //	@Test
 	void upload() {
 		String path = "C:\\resource";

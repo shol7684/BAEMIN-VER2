@@ -1,24 +1,5 @@
 
 
-
-// 메뉴 1개 삭제
-$(".order_info li .delete").click(function(){
-	const index = $(this).parent().parent().parent("li").index();
-	deleteCartOne(index);
-	
-	if($(".order_info li").length > 1) {
-		$(".order_info li").eq(index).remove();
-	} else {
-		menuReset();
-	}
-	
-})
-
-//메뉴 전체삭제
-$(".order_info .delete_all").click(function(){
-	deleteCartAll();
-})
-
 function menuReset(){
 	$(".temp_img_box").show();
 	$("main").remove();
@@ -36,7 +17,7 @@ function deleteCartOne(index){
 		priceModify(result)
 	})
 	.fail(function(){
-		swal("에러가 발생했습니다");
+		alert("에러가 발생했습니다");
 	})
 }
 
@@ -49,41 +30,11 @@ function deleteCartAll(){
 		menuReset();
 	})
 	.fail(function(){
-		swal("에러가 발생했습니다");
+		alert("에러가 발생했습니다");
 	})
 }
-	
 
 
-$(".amount_box button").click(function(){
-	const amount = $(this).siblings("#amount");
-	const cartId = $(this).parent().parent().parent("li").index() / 2;
-	let foodPrice = $(this).parent().siblings(".sum");
-	let clickBtn = "";
-	
-	if($(this).hasClass("plus")){
-		clickBtn = "plus";
-	} else {
-		if(amount.val() <= 1) {
-			return;
-		}
-		clickBtn = "minus";
-	}
-	$.ajax({
-		url : "/cartAmount",
-	    type : "PATCH",
-	    data : {cartNum : cartId, clickBtn : clickBtn },
-	    success : function(result){
-			foodPrice.text(result["totalPriceList"][cartId].toLocaleString() + "원");
-	    	amount.val(result["amountList"][cartId]);
-	    	
-	    	priceModify(result);
-		},
-		fail : function(){
-			alert("다시 시도해주세요");
-		}
-	}); // ajax
-})
 
 function priceModify(result){
 	if(!result) return;
@@ -178,7 +129,7 @@ function payment(){
 		deleveryAddress1 : $("#deleveryAddress1").val(),
 	 	deleveryAddress2 : $("#deleveryAddress2").val(),
 	 	deleveryAddress3 : $("#deleveryAddress3").val(),
-	 	totalPrice : $("#total").val()
+	 	// totalPrice : $("#total").val()
 	}
 	
 	if(!data.deleveryAddress1 || !data.deleveryAddress2 ) {
@@ -307,24 +258,56 @@ function messageSend() {
 	       
 
 
-
+// 메뉴 1개 삭제
+$(".order_info li .delete").click(function(){
+	const index = $(this).parent().parent().parent("li").index();
+	deleteCartOne(index);
 	
-/*폰번호 길이제한 11자*/
-function lenthCheck(e, length) {
-	
-	if(e.value.length >= length) {
-		return false;
+	if($(".order_info li").length > 1) {
+		$(".order_info li").eq(index).remove();
+	} else {
+		menuReset();
 	}
 	
-	$(this).off().focusout(function(){
-		if(e.value.length > length) {
-			e.value = "";
+})
+
+//메뉴 전체삭제
+$(".order_info .delete_all").click(function(){
+	deleteCartAll();
+})
+
+	
+
+
+$(".amount_box button").click(function(){
+	const amount = $(this).siblings("#amount");
+	const cartId = $(this).parent().parent().parent("li").index() / 2;
+	let foodPrice = $(this).parent().siblings(".sum");
+	let clickBtn = "";
+	
+	if($(this).hasClass("plus")){
+		clickBtn = "plus";
+	} else {
+		if(amount.val() <= 1) {
+			return;
 		}
+		clickBtn = "minus";
+	}
+	$.ajax({
+		url : "/cartAmount",
+	    type : "PATCH",
+	    data : {cartNum : cartId, clickBtn : clickBtn }
 	})
-	
-	return true;
-}
-	
+	.done(function(result){
+		foodPrice.text(result["totalPriceList"][cartId].toLocaleString() + "원");
+    	amount.val(result["amountList"][cartId]);
+    	priceModify(result);
+	})
+	.fail(function(){
+		alert("다시 시도해주세요");
+	})
+})
+
 
 	
 	

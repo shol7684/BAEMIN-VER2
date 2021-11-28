@@ -13,22 +13,20 @@ import lombok.ToString;
 public class Cart {
 	private long foodId;
 	private String foodName;
-	private long foodPrice;
-//	private long amount;
-//	private long totalPrice;
+	private int foodPrice;
+	private int amount;
+	private int totalPrice;
 
-	private String[] foodOptionName;
-	private int[] foodOptionPrice;
-	private long[] foodOptionId;
-	
-	
+	private String[] optionName;
+	private int[] optionPrice;
+	private long[] optionId;
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(foodOptionId);
-		result = prime * result + Arrays.hashCode(foodOptionName);
-		result = prime * result + Arrays.hashCode(foodOptionPrice);
+		result = prime * result + Arrays.hashCode(optionId);
+		result = prime * result + Arrays.hashCode(optionName);
+		result = prime * result + Arrays.hashCode(optionPrice);
 		result = prime * result + Objects.hash(foodId, foodName, foodPrice);
 		return result;
 	}
@@ -41,11 +39,11 @@ public class Cart {
 		if (getClass() != obj.getClass())
 			return false;
 		Cart other = (Cart) obj;
-		return foodId == other.foodId && Objects.equals(foodName, other.foodName)
-				&& Arrays.equals(foodOptionId, other.foodOptionId)
-				&& Arrays.equals(foodOptionName, other.foodOptionName)
-				&& Arrays.equals(foodOptionPrice, other.foodOptionPrice) && foodPrice == other.foodPrice;
+		return foodId == other.foodId && Objects.equals(foodName, other.foodName) && foodPrice == other.foodPrice
+				&& Arrays.equals(optionId, other.optionId) && Arrays.equals(optionName, other.optionName)
+				&& Arrays.equals(optionPrice, other.optionPrice);
 	}
+	
 	
 	
 	

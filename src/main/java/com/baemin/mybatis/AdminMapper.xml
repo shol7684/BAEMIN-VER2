@@ -5,44 +5,45 @@
 <mapper namespace="admin">
 
 	<select id="orderList" resultType="OrderList">
-	SELECT RESULT.* FROM (
+    SELECT RESULT.* FROM (
 	    SELECT ROWNUM RN, T.* FROM (
-	        SELECT O.*,S.STORE_NAME,C.* FROM 
-	           ( SELECT * FROM 
-	              ( SELECT COUNT(*) COUNT1 FROM ( SELECT  delevery_status FROM bm_order_non_user  UNION ALL SELECT delevery_status FROM bm_order_user ) WHERE delevery_status = '주문접수 대기 중' ),
-	              ( SELECT COUNT(*) COUNT2 FROM ( SELECT  delevery_status FROM bm_order_non_user  UNION ALL SELECT delevery_status FROM bm_order_user ) WHERE delevery_status = '처리 중' )
-               ) C	
-	           ,( SELECT
-	                U.order_num, U.user_id, U.order_date, U.pay_method, U.delevery_status, U.phone, U.delevery_address1,
-	                U.delevery_address2, U.delevery_address3, UD.store_id, UD.amount, UD.used_point, UD.food_price,
-	                UD.total_price, UD.food_info, UD.request
-	            FROM bm_order_user U LEFT JOIN     
-	                bm_order_detail_user UD ON  U.ORDER_NUM = UD.ORDER_NUM
-	                
-	              UNION ALL 
+	        SELECT o.*, s.store_name, s.delevery_tip, c.* FROM 
+	           (SELECT * FROM 
+	              (SELECT COUNT(*) COUNT1 FROM ( SELECT  delevery_status FROM bm_order_non_user  UNION ALL SELECT delevery_status FROM bm_order_user ) WHERE delevery_status = '주문접수 대기 중' ),
+	              (SELECT COUNT(*) COUNT2 FROM ( SELECT  delevery_status FROM bm_order_non_user  UNION ALL SELECT delevery_status FROM bm_order_user ) WHERE delevery_status LIKE '배달 준비 중%' )) C
+	           ,(SELECT
+	                o.order_num, o.store_id, o.user_id, o.order_date, o.pay_method, o.delevery_status, o.phone, o.delevery_address1,
+	                o.delevery_address2, o.delevery_address3, o.imp_uid, o.total_price, o.used_point, o.request, d.food_info
+	            FROM bm_order_user o 
+                LEFT JOIN  
+                	(SELECT  ORDER_NUM, 
+	                             LISTAGG(FOOD_INFO, '/') food_info
+	                    FROM     BM_ORDER_DETAIL_USER 
+	                    GROUP BY ORDER_NUM) d
+                ON o.order_num = d.order_num
+                
+	            UNION ALL
 	             
 	            SELECT
-	                NU.order_num, NU.user_id, NU.order_date, NU.pay_method, NU.delevery_status, NU.phone, NU.delevery_address1,
-	                NU.delevery_address2, NU.delevery_address3, NUD.store_id, NUD.amount, NUD.used_point, NUD.food_price,
-	                NUD.total_price, NUD.food_info, NUD.request
-	            FROM bm_order_non_user NU LEFT JOIN 
-	                bm_order_detail_non_user NUD ON  NU.ORDER_NUM = NUD.ORDER_NUM  
-	        ) O
+	                o.order_num, o.store_id, o.user_id, o.order_date, o.pay_method, o.delevery_status, o.phone, o.delevery_address1,
+	                o.delevery_address2, o.delevery_address3, o.imp_uid, o.total_price, o.used_point, o.request, d.food_info
+	            FROM bm_order_non_user o 
+                LEFT JOIN 
+	                (SELECT  ORDER_NUM, 
+	                             LISTAGG(FOOD_INFO, '/') food_info
+	                    FROM     BM_ORDER_DETAIL_NON_USER 
+	                    GROUP BY ORDER_NUM) d
+                 
+                ON o.ORDER_NUM = d.ORDER_NUM ) O
 	        LEFT JOIN
 	            BM_STORE S
 	        ON 
 	            O.STORE_ID = S.ID
 	        WHERE 
-	            DELEVERY_STATUS = #{list }
+	            DELEVERY_STATUS LIKE '${list }%'
 	        ORDER BY ORDER_DATE 
 	    ) T
 	) RESULT WHERE RN BETWEEN #{pageStart } AND #{pageEnd }
-	    
-    
-    
-   
-        
-    
 	</select>
 	
 	
@@ -61,9 +62,9 @@
 	        ON S.ID = R.STORE_ID
 	        LEFT JOIN
 	            ( SELECT store_id, SUM(order_count) order_count from (
-	                SELECT store_id, count(*) order_count FROM bm_order_detail_user GROUP BY store_id
+	                SELECT store_id, count(*) order_count FROM bm_order_user GROUP BY store_id
 	                    UNION ALL
-	                SELECT store_id, count(*) order_count FROM bm_order_detail_non_user GROUP BY store_id ) GROUP BY store_id ) C 
+	                SELECT store_id, count(*) order_count FROM bm_order_non_user GROUP BY store_id ) GROUP BY store_id ) C 
 	        ON S.ID = C.STORE_ID
 		) T 
 		<if test="keyword != null">
@@ -209,31 +210,25 @@
 	
 	<update id="orderAccept">
 		<if test="userId == 0">
-			UPDATE BM_ORDER_NON_USER SET 
-			DELEVERY_STATUS = '처리 중'
-			WHERE ORDER_NUM = #{orderNum }
+			UPDATE BM_ORDER_NON_USER SET
 		</if>
-		
 		<if test="userId != 0">
 			UPDATE BM_ORDER_USER SET
-			DELEVERY_STATUS = '처리 중'
-			WHERE ORDER_NUM = #{orderNum }
 		</if>
+			DELEVERY_STATUS = '배달 준비 중(약 ${time}분 후에 도착)'
+			WHERE ORDER_NUM = #{orderNum }
 	</update>
 	
 	
 	<update id="orderCancle">
 		<if test="userId == 0">
 			UPDATE BM_ORDER_NON_USER SET 
-			DELEVERY_STATUS = #{cancleReason }
-			WHERE ORDER_NUM = #{orderNum }
 		</if>
-		
 		<if test="userId != 0">
 			UPDATE BM_ORDER_USER SET
+		</if>
 			DELEVERY_STATUS = #{cancleReason }
 			WHERE ORDER_NUM = #{orderNum }
-		</if>
 	
 	</update>
 	
@@ -242,15 +237,12 @@
 	<update id="orderComplete">
 		<if test="userId == 0">
 			UPDATE BM_ORDER_NON_USER SET 
-			DELEVERY_STATUS = '배달 완료'
-			WHERE ORDER_NUM = #{orderNum }
 		</if>
-		
 		<if test="userId != 0">
 			UPDATE BM_ORDER_USER SET
+		</if>
 			DELEVERY_STATUS = '배달 완료'
 			WHERE ORDER_NUM = #{orderNum }
-		</if>
 	</update>
 	
 	
@@ -280,14 +272,14 @@
 	FROM 
 			(SELECT		OU.ORDER_NUM
 	        			,TO_CHAR(OU.ORDER_DATE, 'YYYY-MM') ORDER_DATE
-	        			,OUD.TOTAL_PRICE
+	        			,OU.TOTAL_PRICE
 	    	FROM		BM_ORDER_USER OU
 	    	LEFT JOIN	BM_ORDER_DETAIL_USER OUD
 	    	ON			OU.ORDER_NUM = OUD.ORDER_NUM
     UNION ALL
 	     	SELECT		ONU.ORDER_NUM
 	        			,TO_CHAR(ONU.ORDER_DATE, 'YYYY-MM') ORDER_DATE
-	        			,ONUD.TOTAL_PRICE
+	        			,ONU.TOTAL_PRICE
 	    	FROM		BM_ORDER_NON_USER ONU
 	    	LEFT JOIN	BM_ORDER_DETAIL_NON_USER ONUD
 	    	ON			ONU.ORDER_NUM = ONUD.ORDER_NUM    
@@ -346,14 +338,14 @@
 	   		,SUM(TOTAL_PRICE) TOTAL
     FROM 	(SELECT		OU.ORDER_NUM
         				,TO_CHAR(OU.ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE
-        				,OUD.TOTAL_PRICE
+        				,OU.TOTAL_PRICE
     		FROM		BM_ORDER_USER OU
 	    	LEFT JOIN	BM_ORDER_DETAIL_USER OUD
 	    	ON			OU.ORDER_NUM = OUD.ORDER_NUM
     UNION ALL
 	    	SELECT		ONU.ORDER_NUM
 	        			,TO_CHAR(ONU.ORDER_DATE, 'YYYY-MM-DD') ORDER_DATE
-	        			,ONUD.TOTAL_PRICE
+	        			,ONU.TOTAL_PRICE
 	    	FROM		BM_ORDER_NON_USER ONU
 	    	LEFT JOIN	BM_ORDER_DETAIL_NON_USER ONUD
 	    	ON			ONU.ORDER_NUM = ONUD.ORDER_NUM

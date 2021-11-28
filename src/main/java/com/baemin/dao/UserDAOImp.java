@@ -50,7 +50,7 @@ public class UserDAOImp implements UserDAO {
 	}
 
 	@Override
-	public void infoModify(String value, String valueType, long id) {
+	public void modifyInfo(String valueType, String value, long id) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("value", value);
 		map.put("valueType", valueType);
@@ -64,6 +64,15 @@ public class UserDAOImp implements UserDAO {
 		System.out.println("userDAO email = "  + email);
 		
 		return sql.selectList("user.findId", email);
+	}
+
+	@Override
+	public String authCheck(String username, String value, String valueType) {
+		Map<String, String> map = new HashMap<>();
+		map.put("username", username);
+		map.put("value", value);
+		map.put("valueType", valueType);
+		return sql.selectOne("user.authCheck", map);
 	}
 	
 

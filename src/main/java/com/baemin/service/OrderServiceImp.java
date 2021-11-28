@@ -1,8 +1,7 @@
 package com.baemin.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
@@ -19,7 +18,8 @@ import com.baemin.util.CreateOrderNum;
 import com.baemin.util.Page;
 import com.baemin.util.UserInfoSessionUpdate;
 import com.baemin.vo.Cart;
-import com.baemin.vo.CartDetail;
+import com.baemin.vo.CartList;
+import com.baemin.vo.OrderDetail;
 import com.baemin.vo.OrderInfo;
 import com.baemin.vo.OrderList;
 import com.google.gson.Gson;
@@ -37,73 +37,67 @@ public class OrderServiceImp implements OrderService {
 	
 	@Transactional
 	@Override
-	public long orderPriceCheck(CartDetail cartDetail) {
+	public long orderPriceCheck(CartList cartList) {
 
-		System.out.println("cartDetail = " + cartDetail);
+		System.out.println("cartDetail = " + cartList);
 
-		List<Cart> cartList = cartDetail.getCartList();
-		List<Integer> amountList = cartDetail.getAmountList();
-		int deleveryTip = orderDAO.getDeleveryTip(cartDetail.getStoreId());
-
-		List<Long> foodPriceList = orderDAO.foodPriceList(cartList);
-		List<Integer> optionPriceList = orderDAO.optionPriceList(cartList);
-
-		long sum = 0;
-
-		for (int i = 0; i < cartList.size(); i++) {
-			long foodPrice = foodPriceList.get(i);
-			int amount = amountList.get(i);
+		List<Cart> cart = cartList.getCart();
+		List<Integer> foodPriceList = orderDAO.foodPriceList(cart);
+		List<Integer> optionPriceList = orderDAO.optionPriceList(cart);
+		int deleveryTip = orderDAO.getDeleveryTip(cartList.getStoreId());
+		System.out.println("foodPriceList = " + foodPriceList);
+		System.out.println("optionPriceList = " + optionPriceList);
+		
+		int sum = 0;
+		
+		for (int i = 0; i < cart.size(); i++) {
+			int foodPrice = foodPriceList.get(i);
+			int amount = cart.get(i).getAmount();
 			int optionPrice = optionPriceList.get(i);
 
 			sum += (foodPrice + optionPrice) * amount;
 		}
 
-		return sum + deleveryTip;
+		return sum + deleveryTip; 
 	}
 
 	@Transactional
 	@Override
-	public String order(CartDetail cartDetail, OrderInfo info, LoginDetail user, HttpSession session) {
-		
+	public String order(CartList cart, OrderInfo info, LoginDetail user, HttpSession session) {
+		Gson gson = new Gson();
 		String orderNum = CreateOrderNum.createOrderNum();
+		int total = cart.getCartTotal();
 		
+		info.setStoreId(cart.getStoreId());
 		info.setOrderNum(orderNum);
+		info.setTotalPrice(total);
+		
 		long userId = 0;
 		if (user != null) {
 			userId = user.getUser().getId();
 			info.setUserId(userId);
 		}
 		
-
-		Map<String, String> orderDetail = new HashMap<>();
-		Gson gson = new Gson();
+		List<Cart> cartList = cart.getCart();
 		
-		String amount = cartDetail.getAmountList().toString();
-		String foodPrice = cartDetail.getTotalPriceList().toString();
-		String cartList = gson.toJson(cartDetail.getCartList());
-			   cartList = cartList.substring(1, cartList.length()-1); 
-		String totalPrice = cartDetail.getMenuTotalPrice()+"";
-		String storeId = cartDetail.getStoreId() + "";
+		OrderDetail[] detail = new OrderDetail[cartList.size()];
 		
-		orderDetail.put("orderNum", orderNum);
-		orderDetail.put("amount", amount);
-		orderDetail.put("foodPrice", foodPrice);
-		orderDetail.put("totalPrice", totalPrice);
-		orderDetail.put("foodInfo", cartList);
-		orderDetail.put("storeId", storeId);
-		orderDetail.put("usedPoint", info.getUsedPoint() + "");
-		orderDetail.put("request", info.getRequest());
-		orderDetail.put("userId", userId + "");
+		
+		for(int i=0;i<detail.length;i++) {
+			String cartJSON = gson.toJson(cartList.get(i));
+			detail[i] = new OrderDetail(orderNum, cartJSON);
+		}
+		
+		orderDAO.order(info);
+		orderDAO.orderDetail(detail, userId);
 		
 		LOGGER.info("사용 포인트 = " + info.getUsedPoint());
 
-		orderDAO.order(info);
-		orderDAO.orderDetail(orderDetail);
-		
+		System.out.println("info2 = "+ info  );
 		
 		// 로그인 사용자가 포인트 사용했을때
 		if(info.getUsedPoint() != 0 ) {
-			String storeName =  cartDetail.getStoreName();
+			String storeName =  cart.getStoreName();
 			int usedPoint =  -info.getUsedPoint();
 			int result = adminDAO.pointUpdate(userId, storeName, usedPoint);
 			
@@ -119,12 +113,9 @@ public class OrderServiceImp implements OrderService {
 		
 		// 회원 포인트 적립
 		if (user != null) {
-			String storeName =  cartDetail.getStoreName();
-			int point = Integer.parseInt(totalPrice);
-				point = (int) (point * 0.01);
-			
+			String storeName = cart.getStoreName();
+			int point = (int)(total * 0.01); 
 			int result = adminDAO.pointUpdate(userId, storeName, point);
-			
 			if(result == 1) {
 				UserInfoSessionUpdate.sessionUpdate(point+"", "point", user, session);
 			}
@@ -133,10 +124,12 @@ public class OrderServiceImp implements OrderService {
 		
 		return orderNum;
 	}
-
+	
+	
 	@Override
-	public List<OrderList> orderList(long userId, int startPage,int endPage) {
-		return orderDAO.orderList(userId, startPage, endPage);
+	public List<OrderList> orderList(long userId, Page p) {
+		
+		return orderDAO.orderList(userId, p.getPageStart(), p.getPageEnd());
 	}
 
 	

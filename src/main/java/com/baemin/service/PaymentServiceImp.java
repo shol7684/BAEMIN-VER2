@@ -10,17 +10,22 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.baemin.controller.AdminController;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 @Service
-public class Payment {
+public class PaymentServiceImp implements PaymentService {
+	
+	private static final Logger LOGGER = LogManager.getLogger(PaymentServiceImp.class);
 
 	@Value("${imp_key}")
 	private String impKey;
@@ -95,8 +100,8 @@ public class Payment {
 	
 	
 	
-	public void payMentCancle(String access_token, String imp_uid, String amount, String reason) throws IOException {
-		
+	public void payMentCancle(String access_token, String imp_uid, String amount, String reason) throws IOException, ParseException {
+		System.out.println("imp_uid = " + imp_uid);
 		HttpsURLConnection conn = null;
 		URL url = new URL("https://api.iamport.kr/payments/cancel");
 
@@ -125,7 +130,14 @@ public class Payment {
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
 
-		System.out.println("결제 취소" + br.readLine());
+		String cancleResult = br.readLine();
+		
+		JSONParser parser = new JSONParser();
+		
+		LOGGER.info("결제 취소" + parser.parse(cancleResult));
+		
+		
+		
 	}
 	
 	

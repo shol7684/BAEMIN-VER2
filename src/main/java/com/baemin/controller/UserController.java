@@ -1,11 +1,15 @@
 package com.baemin.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
+import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +34,6 @@ import com.baemin.util.UserInfoSessionUpdate;
 import com.baemin.vo.Point;
 import com.baemin.vo.Review;
 import com.baemin.vo.User;
-import com.nimbusds.oauth2.sdk.Request;
 
 import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 
@@ -156,55 +159,36 @@ public class UserController {
 	
 	@ResponseBody
 	@PatchMapping("/user/infoModify")
-	public String infoModify(String value, String valueType, String password, @AuthenticationPrincipal LoginDetail user, HttpSession session) {
+	public String infoModify(String value, String valueType, String prevPassword, @AuthenticationPrincipal LoginDetail user, HttpSession session) {
 //		value = 변경할값
 //		valueType = nickname, password, phone
 		
-		if(valueType.equals("password")) {
-			String presentPassword = user.getUser().getPassword();
-			if(!encodePwd.matches(password, presentPassword)) {
+		long id = user.getUser().getId();
+		
+		switch (valueType) {
+		case "password":
+			String currentPassword = user.getUser().getPassword();
+			if(!encodePwd.matches(prevPassword, currentPassword)) {
 				return "현재 비밀번호가 일치하지 않습니다";
 			}
 			value = encodePwd.encode(value);
- 		}
+			userService.modifyPassword(id, value);
+			break;
+			
+			
+		case "nickname":
+			userService.modifyNickname(id, value);
+			break;
+			
+			
+		case "phone":
+			System.out.println("phone");
+			break;
+		}
 		
-		long id = user.getUser().getId();
-		userService.infoModify(value, valueType, id);
 		UserInfoSessionUpdate.sessionUpdate(value, valueType, user, session);
 		
 		return "변경되었습니다";
-	}
-	
-	
-	
-	@ResponseBody
-	@GetMapping("/oauth")
-	public String oauthLogin(@AuthenticationPrincipal LoginDetail user) {
-		
-		System.out.println(user);
-		
-		
-		return"";
-	}
-	
-	@GetMapping("/findId")
-	public String findId() throws ServletException, IOException {
-		return "user/findId";
-	}
-	
-	@PostMapping("/findId")
-	public String findId(String email, RedirectAttributes rttr) throws ServletException, IOException {
-		
-		List<String> usernames = userService.findId(email);
-		
-		System.out.println(email);
-		
-		if(usernames.size() != 0) {
-			mailService.sendMail(email, usernames);
-		}
-		rttr.addFlashAttribute("sendEmailMessage", email);
-			
-		return "redirect:/findId";
 	}
 	
 

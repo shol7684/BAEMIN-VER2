@@ -1,6 +1,7 @@
-package com.baemin.config;
+package com.baemin.oauth2;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import com.baemin.config.LoginDetail;
 import com.baemin.controller.AdminController;
 import com.baemin.dao.UserDAO;
 import com.baemin.vo.User;
@@ -33,58 +35,26 @@ public class OauthUserService extends DefaultOAuth2UserService {
 	private SqlSession sql;
 	
 	@Autowired
-	private BCryptPasswordEncoder encodePwd;
+	private OauthUserInfo oauthUserInfo;
 	
 	private static final Logger LOGGER = LogManager.getLogger(OauthUserService.class);
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		
-		System.out.println();
-		System.out.println("getClientRegistration = " + userRequest.getClientRegistration());
-		System.out.println();
-		System.out.println("getProviderDetails = " + userRequest.getClientRegistration().getProviderDetails());
-		System.out.println();
-		System.out.println("super.loadUser(userRequest) = " + super.loadUser(userRequest).getAttributes());
-		System.out.println();
 		OAuth2User oauth2user = super.loadUser(userRequest);
-		System.out.println();
-		System.out.println("oauth2user = " + oauth2user);
-		
-		
-		
-		String registrationId = userRequest.getClientRegistration().getRegistrationId();
-		String id = "";
-		
-		switch (registrationId) {
-		
-		case "google":
-			id = oauth2user.getAttribute("sub");
-			break;
-
-		case "facebook": 
-			id = oauth2user.getAttribute("id");
-			break;
-		}
-		
-		String username = registrationId + "_" + id;
-		User user = sql.selectOne("user.login" , username);
-		
+		String provider = userRequest.getClientRegistration().getRegistrationId();
+		String username = oauthUserInfo.getOauthUsername(provider, oauth2user);
+ 		User user = sql.selectOne("user.login" , username);
 		
 		if(user == null) {
-			String password = encodePwd.encode("랜덤"); 
-			String email = oauth2user.getAttribute("email");
-			String phone = oauth2user.getAttribute("phone") == null ? "" : oauth2user.getAttribute("phone");
-			
-			user = new User(username, password, email, username, phone);
-			
+			user = oauthUserInfo.oauthUserInfo(provider, username, oauth2user);
 			userDAO.join(user);
 			
 			// id = selectKey	
 			// 회원가입후 재로그인 하기 전까지 role이 null
 			user.setRole("ROLE_USER");
-			
-			LOGGER.info("oauth2 회원가입" +  registrationId);
+			LOGGER.info("oauth2 회원가입" +  provider);
 
 		}
 		LoginDetail loginDetail = new LoginDetail();

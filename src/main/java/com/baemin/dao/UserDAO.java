@@ -18,9 +18,11 @@ public interface UserDAO {
 
 	public List<Point> myPoint(long id);
 
-	public void infoModify(String value, String valueType, long id);
+	public void modifyInfo(String valueType, String value, long id);
 
 	public List<String> findId(String email);
+
+	public String authCheck(String username, String value, String valueType);
 	
 	
 }

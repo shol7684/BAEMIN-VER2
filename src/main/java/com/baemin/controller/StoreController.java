@@ -175,7 +175,8 @@ public class StoreController {
 		List<Store> likesList = new ArrayList<>();
 		if (user == null) {
 			String likes = cookieManager.findCookie("likesList", request);
-			if(!likes.equals("")) {
+			
+			if(likes != null && !likes.equals("")) {
 				likesList = storeService.likesListNonUser(likes);
 			}
 			

@@ -1,16 +1,6 @@
 
 $(document).ready(function() {
 
-
-	let size = $(window).width();
-
-	$(window).resize(function() {
-		size = $(window).width();
-	})
-	
-/*openModal($(".review_modal"), 1000);*/
-
-
 	// 리뷰 쓰기 버튼
 	$(".review").click(function() {
 		let modal;
@@ -30,12 +20,10 @@ $(document).ready(function() {
 			
 		}
 
-		openModal(modal, size);
+		openModal(modal);
 
 		const orderNum = $(this).siblings(".order_num").val();
 		const storeId = $(this).siblings(".store_id").val();
-		
-		console.log(orderNum);
 
 		modal.find(".order_num").val(orderNum);
 		modal.find(".store_id").val(storeId);
@@ -69,10 +57,6 @@ $(document).ready(function() {
 			let text = modal.find(".review_text textarea").val();
 			let score = modal.find(".score").val();
 			
-			console.log("text = " + text) ;
-			console.log("score = " + score) ;
-			 
-			
 			if(text.length == 0 || score == "" || score == null) {
 				modal.find(".review_submit_btn").css("background", "#ddd");
 				modal.find(".review_submit_btn").attr("disabled", true);
@@ -80,80 +64,23 @@ $(document).ready(function() {
 				modal.find(".review_submit_btn").attr("disabled", false);
 				modal.find(".review_submit_btn").css("background", "#30DAD9");
 			}
-			
-			console.log("채ㅔ크");
 		}
 	});
 	
+
+
+
+
+	$(".img").change(function(e){
+		imgPreview(e, $(this));
+	})
 	
-
-
-
-
-
-$(".img").change(function(e){
-	const preview = $(this).siblings("div").find(".preview");
-	const fileReader = new FileReader();
-	
-	fileReader.readAsDataURL(e.target.files[0]);
-	
-	fileReader.onload = function(){
-		preview.attr("src", fileReader.result);
-		$(".img_box div").css("display", "block");
-	}
-})
-
-$(".img_close").click(function(){
-	$(".preview").attr("src", "");
-	$("#img").val("");
-	$(".img_box div").css("display", "none");
-	
-})
-
-
-
-/*	var modal = $(".modal");
-	var closeA = $(".closeA");
-	var closeB = $(".closeB");
-	var modalBg = $(".modal_bg");
-	closeB.click(function() {
-		closeModal();
-	});
-
-	modalBg.click(function() {
-		closeModal();
-	});
-
-	closeA.click(function() {
-		closeModal();
-	});*/
-
-
-/*
-
-	function imgClose() {
-		$(".preview").attr("src", "");
-		$(".img_box div").css("display", "none");
-	}
-
-
-	function closeModal() {
-		modal.scrollTop(0);
-		modalBg.hide();
-		modal.css("top", "100%");
-
+	$(".img_close").click(function(){
 		imgClose();
+	})
 
-		text.val("");
-		score = 0;
-		$(".score_box i").removeClass("fas");
 
-		$(".submit_btn").css("background", "#ddd");
-		$(".submit_btn").attr("disabled", true);
 
-		$("body").css("overflow", "visible");
-	};
-*/
 	$(".order_detail").click(function() {
 		const orderNum = $(this).siblings(".order_num").val();
 		location.href = "/orderListDetail/" + orderNum;

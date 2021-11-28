@@ -35,9 +35,9 @@
 					</div>
 					
 		            <div>
-		            	<span class="id_search"><a href="/findId">아이디</a></span>
+		            	<span class="id_search"><a href="/find/id">아이디</a></span>
 			            <span> ㅣ </span>
-			            <span><a href="">비밀번호 찾기</a></span>
+			            <span><a href="/find/password">비밀번호 찾기</a></span>
 			            
 		            </div>
 	            </div>
@@ -45,13 +45,13 @@
             
 			<div id="oauth_login">
 				<div>
-					<a href="/oauth2/authorization/google">	
+					<a href="/oauth2/authorization/kakao">	
 						<img src="/img/kakao_login_btn.png">
 					</a>
 				</div>
 
 				<div>
-					<a href="/kakkoLogin">
+					<a href="/oauth2/authorization/naver">
 						<img src="/img/naver_login_btn2.png">
 					</a>
 				</div>
@@ -62,12 +62,12 @@
 					</a>
 				</div>
 				
-				<div>
+				<!-- <div>
 					<a href="/oauth2/authorization/facebook">
 						페이스북
 						<img src="/img/google_login_btn.png">
 					</a>
-				</div>
+				</div> -->
 			</div>
 			
 			<div class="join"><a href="/join" >회원 가입하러 가기</a></div>

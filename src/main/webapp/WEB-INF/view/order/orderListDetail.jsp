@@ -14,26 +14,21 @@
 <main>
 	<div class="detail_box">
 		<div class="order_cont">
-			<div>${orderListDetail.deleveryStatus }</div>
-			<div class="store_name">${orderListDetail.storeName }</div>
+			<div>${orderDetail.deleveryStatus }</div>
+			<div class="store_name">${orderDetail.storeName }</div>
 
 			<div class="order_info">
 				<div>
 					주문일시 :
-					<fm:formatDate value="${orderListDetail.orderDate }"
+					<fm:formatDate value="${orderDetail.orderDate }"
 						pattern="yyyy년 MM월 dd일 (E) a hh:mm" />
 				</div>
-				<div>주문번호 : ${orderListDetail.orderNum }</div>
+				<div>주문번호 : ${orderDetail.orderNum }</div>
 			</div>
 		</div>
 
 		<ul class="order_menu">
-			<c:set value="0" var="sum"></c:set>
-			<c:set value="0" var="sum"></c:set>
-
-
-
-			<c:forEach begin="0" end="${fn:length(cart) - 1}" var="i">
+			<c:forEach begin="0" end="${fn:length(cart) -1 }" var="i">
 				<li>
 					<div><span>${cart[i].foodName } ${amount[i] }개</span></div>
 					
@@ -41,15 +36,15 @@
 						<li>기본가격 <fm:formatNumber value="${cart[i].foodPrice }" />원</li>
 
 						<c:set var="foodTotalPrice" value="${cart[i].foodPrice }" />
-						<c:if test="${fn:length(cart[i].foodOptionName) != 0}">
-							<c:forEach begin="0" end="${fn:length(cart[i].foodOptionName) -1 }" var="j">
+						<c:if test="${fn:length(cart[i].optionName) != 0}">
+							<c:forEach begin="0" end="${fn:length(cart[i].optionName) -1 }" var="j">
 								<li>
-									<span>${cart[i].foodOptionName[j] }</span> 
-									<span><fm:formatNumber value="${cart[i].foodOptionPrice[j] }" pattern="###,###" />원</span>
+									<span>${cart[i].optionName[j] }</span> 
+									<span><fm:formatNumber value="${cart[i].optionPrice[j] }" pattern="###,###" />원</span>
 								</li>
 								
 								
-								<c:set var="foodTotalPrice" value="${foodTotalPrice + cart[i].foodOptionPrice[j] }" />
+								<c:set var="foodTotalPrice" value="${foodTotalPrice + cart[i].optionPrice[j] }" />
 							</c:forEach>
 						</c:if>
 						<li class="menu_price_sum"><fm:formatNumber value="${foodTotalPrice }" pattern="###,###" />원</li>
@@ -62,15 +57,15 @@
 
 		<div class="price">
 			<div>
-				<span>총 주문금액 </span><span><fm:formatNumber value="${orderListDetail.totalPrice }" pattern="###,###" />원</span>
+				<span>총 주문금액 </span><span><fm:formatNumber value="${orderDetail.totalPrice }" pattern="###,###" />원</span>
 			</div>
 			<div>
-				<span>배달팁 </span><span><fm:formatNumber value="${orderListDetail.deleveryTip }" pattern="###,###" />원</span>
+				<span>배달팁 </span><span><fm:formatNumber value="${orderDetail.deleveryTip }" pattern="###,###" />원</span>
 			</div>
 			<div>
-				<c:if test="${orderListDetail.usedPoint != 0 }">
+				<c:if test="${orderDetail.usedPoint != 0 }">
 					<span>포인트 사용 </span>
-					<span>-<fm:formatNumber value="${orderListDetail.usedPoint }" pattern="###,###" />원</span>
+					<span>-<fm:formatNumber value="${orderDetail.usedPoint }" pattern="###,###" />원</span>
 				</c:if>
 			</div>
 			<hr>
@@ -79,11 +74,11 @@
 		<div class="total">
 			<div>
 				<span>총 결제금액 </span>
-				<span class="sum"><fm:formatNumber value="${orderListDetail.totalPrice + orderListDetail.deleveryTip - orderListDetail.usedPoint  }" pattern="###,###" />원</span>
+				<span class="sum"><fm:formatNumber value="${orderDetail.totalPrice + orderDetail.deleveryTip - orderDetail.usedPoint  }" pattern="###,###" />원</span>
 			</div>
 			
 			<div>
-				<span>결제방법 </span><span>${orderListDetail.payMethod }</span>
+				<span>결제방법 </span><span>${orderDetail.payMethod }</span>
 			</div>
 		</div>
 		<hr>
@@ -93,9 +88,9 @@
 		<div class="address">
 			<div>배달주소</div>
 			<ul>
-				<li>${orderListDetail.deleveryAddress1 }</li>
-				<li>${orderListDetail.deleveryAddress2 }</li>
-				<li>${orderListDetail.deleveryAddress3 }</li>
+				<li>${orderDetail.deleveryAddress1 }</li>
+				<li>${orderDetail.deleveryAddress2 }</li>
+				<li>${orderDetail.deleveryAddress3 }</li>
 			</ul>
 			<hr>
 
@@ -103,14 +98,14 @@
 
 		<div>
 			<div>전화번호</div>
-			<div>${orderListDetail.phone }</div>
+			<div>${orderDetail.phone }</div>
 			<hr>
 
 		</div>
 
 		<div>
 			<div>요청사항</div>
-			<div>${orderListDetail.request }</div>
+			<div>${orderDetail.request }</div>
 			<hr>
 
 		</div>

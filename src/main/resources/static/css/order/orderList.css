@@ -13,6 +13,14 @@ a:hover {
 	min-height: calc(100vh - 210px);
 }
 
+.temp_img {
+	margin: 20px auto;
+	display: block;
+	width: 90%;
+	max-width: 500px;
+}
+
+
 section.title {
 	width: 100%;
 }
@@ -25,13 +33,6 @@ section.title h1 {
 /* main */
 main {
 	width: 100%;
-}
-
-main .order_list .temp_img {
-	margin: 20px auto;
-	display: block;
-	width: 90%;
-	max-width: 500px;
 }
 
 main ul .order_box {

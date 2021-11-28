@@ -41,7 +41,7 @@
                   	<div>예상 배달시간 ${store.storeInfo.deleveryTime  }분</div>
                   	<div id="delevery_tip" data-delevery_tip="${store.storeInfo.deleveryTip }">배달팁 <fm:formatNumber value="${store.storeInfo.deleveryTip }" pattern="###,###" />원</div>
                   
-                  	<c:if test="${adminPage && role == 'ROLE_ADMIN'  }">
+                  	<c:if test="${adminPage && SPRING_SECURITY_CONTEXT.authentication.principal.user.role == 'ROLE_ADMIN' }"> 
 	                  	<div id="admin_button_box" data-is_admin="true">
 		                   	<button class="inf_modify">가게정보 수정</button>
 		                   	<button class="add_menu">메뉴 추가</button>
@@ -107,7 +107,7 @@
 	        <ul class="menu">
 	        <c:forEach items="${store.foodList }" var="foodList" >
 	            <li>
-		            <c:if test="${adminPage && role == 'ROLE_ADMIN' }">
+		            <c:if test="${adminPage && SPRING_SECURITY_CONTEXT.authentication.principal.user.role == 'ROLE_ADMIN' }">
 		                <label class="menu_delete_label">
 		                	<i class="fas fa-check-square" ></i>
 		                	<input type="checkbox" class="menu_delete_checkbox" name="deleteNumber" value="${foodList.id }">

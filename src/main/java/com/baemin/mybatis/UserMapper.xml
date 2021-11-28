@@ -105,4 +105,11 @@
 	</select>
 		
 		
+	<select id="authCheck" resultType="String">
+		SELECT 	ID
+		FROM 	BM_USER 
+		WHERE 	USERNAME = #{username }
+		AND		${valueType } = #{value }
+	</select>	
+		
 </mapper>

@@ -1,12 +1,12 @@
 
 $(".pwd_modify").click(function() {
-	const prePassword = $(".present_password").val();
+	const prevPassword = $(".present_password").val();
 	const newPassword = $(".new_password").val();
 	
 	const data = {
 		value: newPassword,
 		valueType: "password",
-		password : prePassword
+		prevPassword : prevPassword
 	};
 	
 	infoModify(data);
@@ -16,18 +16,16 @@ $(".pwd_modify").click(function() {
 
 $(".nickname_modify").click(function() {
 	const nickname = $(".nickname").val();
-	const nicknameCheck = $(".nickname_check");
-
-	const regNickname = /^[가-힣|a-z|A-Z|0-9|]+$/;
+	const checkMsg = $(".nickname_check");
 
 	if (nickname == null || nickname == "") {
-		nicknameCheck.html("닉네임을 입력 해주세요");
-		return false;
+		checkMsg.html("닉네임을 입력 해주세요");
+		return;
 	}
 
-	if (!regNickname.test(nickname)) {
-		nicknameCheck.html("닉네임은 한글, 영어, 숫자만 4 ~10자리로 입력 가능합니다.");
-		return false;
+	if (!nicknameCheck(nickname)) {
+		checkMsg.html("닉네임은 한글, 영어, 숫자만 4 ~10자리로 입력 가능합니다.");
+		return;
 	}
 	
 	const data = {
@@ -40,47 +38,42 @@ $(".nickname_modify").click(function() {
 		url: "/overlapCheck",
 		type: "get",
 		data: data,
-		async: false,
-		success: function(result) {
+	})
+	.then(function(result){
+		if (result != 0) {
+			checkMsg.html("이미 사용중인 닉네임입니다");
+		} else {
+			checkMsg.html("");
 
-			if (result != 0) {
-				nicknameCheck.html("이미 사용중인 닉네임입니다");
-			} else {
-				nicknameCheck.html("");
-
-				swal(nickname + "으로 변경하시겠습니까?", {
-					buttons: ["취소", "변경하기"],
-				}).then((value) => {
-					if (value == true) {
-
-						infoModify(data);
-
-					}
-				});
-			}
-		}, error: function() {
-			swal("실패");
-		}// success
-	}); // ajax
+			swal(nickname + "으로 변경하시겠습니까?", {
+				buttons: ["취소", "변경하기"],
+			})
+			.then(function(value){
+				if (value == true) {
+					infoModify(data);
+				}
+			})
+		}
+	})
+	.fail(function(){
+		alert("에러가 발생했습니다");
+	})
 }); // nickname_modify
 
 
-function infoModify(data) {
 
+
+function infoModify(data) {
 	$.ajax({
 		url: "/user/infoModify",
 		type: "PATCH",
-		data: data,
-		success: function(result) {
-
-			swal(result);
-		}, // success
-
-		error: function() {
-			swal("실패");
-		}
-
-	}); // ajax
-
+		data: data
+	})
+	.then(function(result){
+		swal(result);
+	})
+	.fail(function(){
+		alert("에러가 발생했습니다");
+	})
 } // nicknameModify
 

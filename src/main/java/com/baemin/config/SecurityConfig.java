@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.baemin.oauth2.OauthUserService;
+
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -68,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.and()
 			.oauth2Login()
 			.loginPage("/login")
+			.defaultSuccessUrl("/myPage")
 			.userInfoEndpoint()
 			.userService(oauthUserService)
 		;

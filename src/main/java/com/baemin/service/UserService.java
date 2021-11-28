@@ -19,9 +19,19 @@ public interface UserService {
 
 	public List<Point> myPoint(long id);
 
-	public void infoModify(String value, String valueType, long id);
+//	public void infoModify(String value, String valueType, long id);
+	
+	public void modifyPassword(long userId, String password);
+	
+	public void modifyNickname(long userId, String nickname);
+	
+	public void modifyPhone(long userId, String phone);
 
 	public List<String> findId(String email);
+
+	public String authCheck(String username, String value, String valueType);
+	
+	
 	
 
 }

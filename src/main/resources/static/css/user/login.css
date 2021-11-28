@@ -16,21 +16,18 @@ main {
 }
 
 .login_box .input_aera {
-	border-radius: 10px;
-	border: 1px solid #ddd;
 	margin: 10px auto;
-	height: 50px;
 	width: 80%;
 }
 
 .login_box input {
-	display: block;
-	margin: 10px auto;
-	width: 97%;
-	height: 30px;
-	font-size: 15px;
-	border: none;
-	padding-left: 3%;
+	margin: 3px auto;
+	width: 100%;
+	height: 40px;
+	font-size: 1.5rem;
+	padding: 0 2%;
+	border: 1px solid #ddd;
+	box-sizing: border-box;
 }
 
 .login_box .login_btn,

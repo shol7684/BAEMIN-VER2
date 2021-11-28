@@ -1,5 +1,5 @@
-$(document).ready(function(){
-	
+/*$(document).ready(function(){
+	안씀
 	var stompClient = null;
 	
 	$(function() {
@@ -29,7 +29,6 @@ $(document).ready(function(){
 	
 		stompClient.send("/message/order-complete-message", {}, $("#message").val());
 	
-		// JSON.stringify({'name': $("#name").val()})
 	}
 	
 })
@@ -39,3 +38,4 @@ $(document).ready(function(){
 
 
 
+*/

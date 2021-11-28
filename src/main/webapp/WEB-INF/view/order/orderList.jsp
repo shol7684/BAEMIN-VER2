@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/view/include/link.jsp" %>
- 
 	<link rel="stylesheet" href="/css/modal.css" >
 	<link rel="stylesheet" href="/css/layout/nav.css" >
 	<link rel="stylesheet" href="/css/order/orderList.css" >
@@ -11,54 +10,59 @@
     
 	<div class="wrap">
     
-		<c:if test="${!empty deleveryInfo }">
+		<c:if test="${!empty orderList }">
+			<style>body {background: #fff; } </style> 
 		    <section class="title">
 		        <h1>주문 내역</h1>
 		    </section>
 		</c:if>    
 		
+		<c:if test="${empty orderList }" >
+       		<img alt="이미지" src="/img/temp.png" class="temp_img"> 
+       	</c:if> 
+	       
+	       
+       <c:if test="${fn:length(orderList) >0 }"> 	
 	    <main>
 	        <div class="order_list">
-	         	<c:if test="${empty deleveryInfo }" >
-	        		<img alt="이미지" src="/img/temp.png" class="temp_img"> 
-	        	</c:if> 
+	         	
 	        	
-	         	<c:if test="${!empty deleveryInfo }" >
-	        		<style>body {background: #fff; } </style> 
-	        	</c:if> 
 	        	
         		<ul id="order_list">
         		
-	        	<c:forEach items="${deleveryInfo }" var="deleveryInfo" varStatus="i">
+        		
+	        	<c:forEach begin="0" end="${fn:length(orderList)-1 }" var="i">
                     <li>
                     	<div class="img_box">
-                    		<a href="#"><img src="${deleveryInfo.orderListDetail.storeImg }" alt="이미지"></a>
+                    		<a href="/store/detail/${orderList[i].storeId }" >
+                    			<img src="${orderList[i].storeImg }" alt="이미지">
+                   			</a>
                    		</div>
                     
                     
                     	<div class="info_box">
                     		<span>
-                    			<fm:formatDate value="${deleveryInfo.orderListDetail.orderDate }" pattern="M월d일" />
-	                   			<span>${deleveryInfo.orderListDetail.deleveryStatus}</span> 
+                    			<fm:formatDate value="${orderList[i].orderDate }" pattern="M월d일" />
+	                   			<span>${orderList[i].deleveryStatus}</span> 
                     		</span>
 
                            	<h2>
-                           		<a href="/store/detail/${deleveryInfo.orderListDetail.storeId }" >
-                           			${deleveryInfo.orderListDetail.storeName }
+                           		<a href="/store/detail/${orderList[i].storeId }" >
+                           			${orderList[i].storeName }
                            		</a>
                            	</h2>
                            	 
                             <span class="info">
-	                       	 	<a href="/store/detail/${deleveryInfo.orderListDetail.storeId }" >
+	                       	 	<a href="/store/detail/${orderList[i].storeId }" >
 	                       	 	
-	                           		<c:set value="${fn:length(deleveryInfo.cart)}" var="cart" />
+	                           		<c:set value="${fn:length(cartList[i] )}" var="cart" />
 	                           		<c:if test="${cart > 1 }">
-	                           			<span>${deleveryInfo.cart[0].foodName } 외 ${cart -1 }개</span>
+	                           			<span>${cartList[0][0].foodName } 외 ${cart -1 }개</span>
 	                           		</c:if>
 	                           		<c:if test="${cart <= 1 }">
-		                                <span>${deleveryInfo.cart[0].foodName } ${deleveryInfo.amount[0] }개 </span>
+		                                <span>${cartList[0][0].foodName } ${cartList[0][0].amount }개 </span>
 	                           		</c:if>     
-	                                <span><fm:formatNumber value="${deleveryInfo.orderListDetail.totalPrice + deleveryInfo.orderListDetail.deleveryTip - deleveryInfo.orderListDetail.usedPoint }" pattern="###,###" /> 원</span>
+	                                <span><fm:formatNumber value="${orderList[i].totalPrice + orderList[i].deleveryTip - orderList[i].usedPoint }" pattern="###,###" /> 원</span>
 		                        </a>
                              </span>
                         </div>
@@ -67,33 +71,30 @@
 	                        <button class="order_detail">상세보기</button>
 	                        <c:if test="${!empty user }">
 	                        
-                    			<input type="hidden" class="order_num" value="${deleveryInfo.orderListDetail.orderNum }">
-	                        	<input type="hidden" class="store_id" value="${deleveryInfo.orderListDetail.storeId }">
+                    			<input type="hidden" class="order_num" value="${orderList[i].orderNum }">
+	                        	<input type="hidden" class="store_id" value="${orderList[i].storeId }">
 	                        	
-	                        	<c:if test="${empty deleveryInfo.orderListDetail.reviewContent }">
+	                        	<c:if test="${empty orderList[i].reviewContent }">
 		                        	<button class="review regi">리뷰쓰기</button>
 	                        	</c:if>
-	                        	<c:if test="${!empty deleveryInfo.orderListDetail.reviewContent }">
+	                        	<c:if test="${!empty orderList[i].reviewContent }">
 		                        	<button class="review modify">리뷰 수정하기</button>
-		                        	<input type="hidden" value="${deleveryInfo.orderListDetail.reviewContent }" class="review_content" >
-		                        	<input type="hidden" value="${deleveryInfo.orderListDetail.score }" class="review_score" >
-		                        	<input type="hidden" value="${deleveryInfo.orderListDetail.reviewImg}" class="review_img" name="store_img">
+		                        	<input type="hidden" value="${orderList[i].reviewContent }" class="review_content" >
+		                        	<input type="hidden" value="${orderList[i].score }" class="review_score" >
+		                        	<input type="hidden" value="${orderList[i].reviewImg}" class="review_img" name="store_img">
 	                        	</c:if>
 		                        	
 	                        </c:if>
                         </div>
-                        
-                        
-                        
-                        
 					</li>
         	</c:forEach>
+        	
             </ul>
         </div>
         <c:set var="movePage" value="/orderList/" />
         <%@ include file="/WEB-INF/view/include/pageBox.jsp" %>
-	           
     </main>
+    </c:if>
 </div>
 
     <!-- 하단 메뉴 -->

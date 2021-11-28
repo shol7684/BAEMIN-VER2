@@ -34,11 +34,13 @@ header .admin_page_btn a {
 			</c:if>
 
 			<!-- 임시 -->
+			<c:if test="${SPRING_SECURITY_CONTEXT.authentication.principal.user.role == 'ROLE_ADMIN' }"> 
 			<div class="admin_page_btn">
 				<div>
 					<a href="/admin/main">사장님 페이지</a>
 				</div>
 			</div>
+			</c:if>
 			<!-- 임시 -->
 			
 			<div class="menu_tab_box active">
@@ -52,4 +54,5 @@ header .admin_page_btn a {
 		</div>
 	</header>
 	<!-- 헤더 -->
+ 
 

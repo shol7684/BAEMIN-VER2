@@ -43,9 +43,25 @@ public class UserServiceImp implements UserService {
 		
 	}
 
+//	@Override
+//	public void infoModify(String value, String valueType, long id) {
+//		userDAO.infoModify(value, valueType, id);
+//	}
+
 	@Override
-	public void infoModify(String value, String valueType, long id) {
-		userDAO.infoModify(value, valueType, id);
+	public void modifyPassword(long userId, String password) {
+		userDAO.modifyInfo("password", password, userId);
+	}
+
+	@Override
+	public void modifyNickname(long userId, String nickname) {
+		 userDAO.modifyInfo("nickname", nickname, userId);
+		
+	}
+
+	@Override
+	public void modifyPhone(long userId, String phone) {
+		 userDAO.modifyInfo("phone", phone, userId);
 		
 	}
 
@@ -53,6 +69,12 @@ public class UserServiceImp implements UserService {
 	public List<String> findId(String email) {
 		return userDAO.findId(email);
 	}
+
+	@Override
+	public String authCheck(String username, String value, String valueType) {
+		return userDAO.authCheck(username, value, valueType);
+	}
+
 	
 
 }

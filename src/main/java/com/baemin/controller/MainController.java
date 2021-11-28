@@ -1,11 +1,11 @@
 package com.baemin.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -24,9 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.baemin.util.UploadFile;
+import com.baemin.vo.Cart;
 
-import net.nurigo.java_sdk.Coolsms;
-import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
 @Controller
@@ -61,7 +60,7 @@ public class MainController {
 			System.out.println("쿠키 address ");
 
 		}
-
+		
 		return "home";
 	}
 

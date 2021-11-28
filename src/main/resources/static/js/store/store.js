@@ -8,12 +8,11 @@ $(document).ready(function() {
 	$("li[data-category = '" + category + "'] > span").css("border-bottom", "3px solid #333333");
 	$("li[data-category = '" + category + "'] > span").css("color", "#333333");
 
-	
 	let winHeight = 0;
 	let docHeight = 0;
 	let page = 1;
 	let run = false;
-
+	
 	$(window).scroll(function(){
 		winHeight = $(window).height();
 		docHeight = $(document).height();
