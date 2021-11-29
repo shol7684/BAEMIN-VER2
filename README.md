@@ -1,6 +1,7 @@
 # BAEMIN-VER2
 
-![erd](https://user-images.githubusercontent.com/90321316/143832862-04f76e43-2601-473a-9193-134634336e5a.png)
+
+![erd](https://user-images.githubusercontent.com/90321316/143839025-c1fd246b-3554-4bf0-a7f8-606f241b0f3a.png)
 
 
 
