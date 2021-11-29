@@ -5,16 +5,16 @@
 
 
 
-  create table bm_user (
-    id number primary key,
-    username varchar2(100) NOT NULL,
-    password varchar2(100) NOT NULL,
-    email varchar2(50) ,
-    nickname varchar2(50),
-    point number DEFAULT 0,
-    phone varchar2(20) ,
-    rating varchar2(50) DEFAULT 0
-    role varchar2(20) DEFAULT 'ROLE_USER'
+  CREATE TABLE BM_USER (
+    ID NUMBER PRIMARY KEY,
+    USERNAME VARCHAR2(100) NOT NULL,
+    PASSWORD VARCHAR2(100) NOT NULL,
+    EMAIL VARCHAR2(50) ,
+    NICKNAME VARCHAR2(50),
+    POINT NUMBER DEFAULT 0,
+    PHONE VARCHAR2(20) ,
+    RATING VARCHAR2(50) DEFAULT 0
+    ROLE VARCHAR2(20) DEFAULT 'ROLE_USER'
 ); 
     
     -- 유저 번호 자동증가    
